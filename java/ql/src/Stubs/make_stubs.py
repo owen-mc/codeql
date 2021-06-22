@@ -72,11 +72,12 @@ def print_javac_output():
 
     print("\nJavac output:\n")
 
-    with open(logFile) as f:
-        for line in f:
-            b1 = line.find(']')
-            b2 = line.find(']', b1+1)
-            print(line[b2+2:], end="")
+    for logFile in logFiles:
+        with open(logFile) as f:
+            for line in f:
+                b1 = line.find(']')
+                b2 = line.find(']', b1+1)
+                print(line[b2+2:], end="")
 
 def run(cmd):
     """Runs the given command, returning the exit code (nonzero on failure)"""
