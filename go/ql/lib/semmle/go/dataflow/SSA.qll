@@ -154,6 +154,13 @@ class SsaDefinition extends TSsaDefinition {
   abstract predicate hasLocationInfo(
     string filepath, int startline, int startcolumn, int endline, int endcolumn
   );
+
+  /**
+   * Gets the first instruction that the value of this `SsaDefinition` can
+   * reach without passing through any other instructions, but possibly through
+   * phi nodes.
+   */
+  IR::Instruction getAFirstUse() { firstUse(this, result) }
 }
 
 /**
@@ -187,13 +194,6 @@ class SsaExplicitDefinition extends SsaDefinition, TExplicitDef {
   ) {
     this.getInstruction().hasLocationInfo(filepath, startline, startcolumn, endline, endcolumn)
   }
-
-  /**
-   * Gets the first instruction that the value of this `SsaDefinition` can
-   * reach without passing through any other instructions, but possibly through
-   * phi nodes.
-   */
-  IR::Instruction getAFirstUse() { firstUse(this, result) }
 }
 
 /** Provides a helper predicate for working with explicit SSA definitions. */
