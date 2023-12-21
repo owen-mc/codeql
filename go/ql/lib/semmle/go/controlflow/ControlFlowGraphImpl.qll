@@ -17,6 +17,10 @@ private predicate notBlankIdent(Expr e) { not e instanceof BlankIdent }
 
 private predicate pureLvalue(ReferenceExpr e) { not e.isRvalue() }
 
+private newtype TBranchCondition =
+  TExprBranchCondition(Expr e) { isCondRoot(e) } or
+  TCaseCheckBranchCondition(CaseClause cc, int i) { exists(MkCaseCheckNode(cc, i)) }
+
 /**
  * Holds if `e` is a branch condition, including the LHS of a short-circuiting binary operator.
  */
