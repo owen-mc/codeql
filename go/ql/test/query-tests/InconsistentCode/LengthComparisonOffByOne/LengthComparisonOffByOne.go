@@ -13,3 +13,19 @@ func containsBad(searchName string, names string) bool {
 	}
 	return false
 }
+
+func switchSanitizer(args []string) string {
+	if len(args) < 2 {
+		return ""
+	}
+	var x string
+	switch len(args) {
+	case 4:
+		x = args[3]
+	case 3:
+		// GOOD, but the query treats it as bad (FP)
+		x = args[2]
+
+	}
+	return x
+}
