@@ -17,9 +17,50 @@ private predicate notBlankIdent(Expr e) { not e instanceof BlankIdent }
 
 private predicate pureLvalue(ReferenceExpr e) { not e.isRvalue() }
 
-newtype TBranchCondition =
+private newtype TBranchCondition =
   TExprBranchCondition(Expr e) { isCondRoot(e) } or
   TCaseCheckBranchCondition(CaseClause cc, int i) { exists(MkCaseCheckNode(cc, i)) }
+
+abstract class BranchCondition extends TBranchCondition {
+  abstract Expr getExpr();
+
+  /** Gets a textual representation of this branch condition. */
+  abstract string toString();
+
+  /**
+   * Holds if this element is at the specified location.
+   * The location spans column `startcolumn` of line `startline` to
+   * column `endcolumn` of line `endline` in file `filepath`.
+   * For more information, see
+   * [Locations](https://codeql.github.com/docs/writing-codeql-queries/providing-locations-in-codeql-queries/).
+   */
+  predicate hasLocationInfo(
+    string filepath, int startline, int startcolumn, int endline, int endcolumn
+  ) {
+    this.getExpr().hasLocationInfo(filepath, startline, startcolumn, endline, endcolumn)
+  }
+}
+
+class ExprBranchCondition extends BranchCondition {
+  Expr e;
+
+  ExprBranchCondition() { this = TExprBranchCondition(e) }
+
+  override Expr getExpr() { result = e }
+
+  override string toString() { result = "expression branch condition: " + e.toString() }
+}
+
+class CaseCheckBranchCondition extends BranchCondition {
+  CaseClause cc;
+  int i;
+
+  CaseCheckBranchCondition() { this = TCaseCheckBranchCondition(cc, i) }
+
+  override Expr getExpr() { result = cc.getExpr(i) }
+
+  override string toString() { result = "case check branch condition: " + cc.getExpr(i).toString() }
+}
 
 /**
  * Holds if `e` is a branch condition, including the LHS of a short-circuiting binary operator.
@@ -223,7 +264,7 @@ newtype TControlFlowNode =
    * A control-flow node that represents the fact that `bc` is known to evaluate to
    * `outcome`.
    */
-  MkConditionGuardNode(TBranchCondition bc, Boolean outcome) or
+  MkConditionGuardNode(BranchCondition bc, Boolean outcome) or
   /**
    * A control-flow node that represents an increment or decrement statement.
    */
