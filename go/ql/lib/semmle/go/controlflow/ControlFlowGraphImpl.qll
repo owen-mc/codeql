@@ -21,7 +21,13 @@ private newtype TBranchCondition =
   TExprBranchCondition(Expr e) { isCondRoot(e) } or
   TCaseCheckBranchCondition(CaseClause cc, int i) { exists(MkCaseCheckNode(cc, i)) }
 
+/**
+ * An expression that is evaluated to determine whether to take a branch, or
+ * for switch statements where there isn't such an expression the corresponding
+ * control flow node
+ */
 abstract class BranchCondition extends TBranchCondition {
+  /** Gets an expression for the branch condition. */
   abstract Expr getExpr();
 
   /** Gets a textual representation of this branch condition. */
@@ -57,6 +63,11 @@ class CaseCheckBranchCondition extends BranchCondition {
 
   CaseCheckBranchCondition() { this = TCaseCheckBranchCondition(cc, i) }
 
+  /**
+   * Gets an expression for the branch condition.
+   *
+   * Note that there isn't one expression,
+   */
   override Expr getExpr() { result = cc.getExpr(i) }
 
   override string toString() { result = "case check branch condition: " + cc.getExpr(i).toString() }
