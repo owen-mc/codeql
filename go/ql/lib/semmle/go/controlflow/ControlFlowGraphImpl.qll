@@ -17,7 +17,7 @@ private predicate notBlankIdent(Expr e) { not e instanceof BlankIdent }
 
 private predicate pureLvalue(ReferenceExpr e) { not e.isRvalue() }
 
-private newtype TBranchCondition =
+newtype TBranchCondition =
   TExprBranchCondition(Expr e) { isCondRoot(e) } or
   TCaseCheckBranchCondition(CaseClause cc, int i) { exists(MkCaseCheckNode(cc, i)) }
 
@@ -220,10 +220,10 @@ newtype TControlFlowNode =
    */
   MkGoNode(GoStmt go) or
   /**
-   * A control-flow node that represents the fact that `e` is known to evaluate to
+   * A control-flow node that represents the fact that `bc` is known to evaluate to
    * `outcome`.
    */
-  MkConditionGuardNode(Expr e, Boolean outcome) { isCondRoot(e) } or
+  MkConditionGuardNode(TBranchCondition bc, Boolean outcome) or
   /**
    * A control-flow node that represents an increment or decrement statement.
    */
@@ -963,7 +963,7 @@ module CFG {
     }
 
     private ControlFlow::Node getGuard(boolean outcome) {
-      result = MkConditionGuardNode(this.getLeftOperand(), outcome)
+      result = MkConditionGuardNode(TExprBranchCondition(this.getLeftOperand()), outcome)
     }
 
     override predicate lastNode(ControlFlow::Node last, Completion cmpl) {
@@ -1075,9 +1075,9 @@ module CFG {
 
     ControlFlow::Node getExprEnd(int i, Boolean outcome) {
       exists(Expr e | e = this.getExpr(i) |
-        result = MkConditionGuardNode(e, outcome)
+        result = MkConditionGuardNode(TExprBranchCondition(e), outcome)
         or
-        not exists(MkConditionGuardNode(e, _)) and
+        not exists(MkConditionGuardNode(TExprBranchCondition(e), _)) and
         result = MkCaseCheckNode(this, i)
       )
     }
@@ -1232,7 +1232,7 @@ module CFG {
 
   private class IfStmtTree extends ControlFlowTree, IfStmt {
     private ControlFlow::Node getGuard(boolean outcome) {
-      result = MkConditionGuardNode(this.getCond(), outcome)
+      result = MkConditionGuardNode(TExprBranchCondition(this.getCond()), outcome)
     }
 
     override predicate firstNode(ControlFlow::Node first) {
@@ -1260,7 +1260,7 @@ module CFG {
       or
       exists(Completion condCmpl |
         lastNode(this.getCond(), pred, condCmpl) and
-        succ = MkConditionGuardNode(this.getCond(), condCmpl.getOutcome())
+        succ = MkConditionGuardNode(TExprBranchCondition(this.getCond()), condCmpl.getOutcome())
       )
       or
       pred = this.getGuard(true) and
@@ -1341,7 +1341,7 @@ module CFG {
 
   private class ForTree extends LoopTree, ForStmt {
     private ControlFlow::Node getGuard(boolean outcome) {
-      result = MkConditionGuardNode(this.getCond(), outcome)
+      result = MkConditionGuardNode(TExprBranchCondition(this.getCond()), outcome)
     }
 
     override predicate firstNode(ControlFlow::Node first) {

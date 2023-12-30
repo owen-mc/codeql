@@ -175,13 +175,13 @@ module ControlFlow {
    * Boolean value at this point in the program.
    */
   class ConditionGuardNode extends IR::Instruction, MkConditionGuardNode {
-    Expr cond;
+    TBranchCondition cond;
     boolean outcome;
 
     ConditionGuardNode() { this = MkConditionGuardNode(cond, outcome) }
 
     private predicate ensuresAux(Expr expr, boolean b) {
-      expr = cond and b = outcome
+      TExprBranchCondition(expr) = cond and b = outcome
       or
       expr = any(ParenExpr par | this.ensuresAux(par, b)).getExpr()
       or
