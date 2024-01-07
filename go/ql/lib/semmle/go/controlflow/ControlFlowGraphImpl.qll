@@ -1272,7 +1272,7 @@ module CFG {
       or
       exists(Completion condCmpl |
         lastNode(this.getCond(), pred, condCmpl) and
-        succ = MkConditionGuardNode(this.getCond(), condCmpl.getOutcome())
+        succ = this.getGuard(condCmpl.getOutcome())
       )
       or
       pred = this.getGuard(true) and
