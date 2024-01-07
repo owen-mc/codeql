@@ -174,11 +174,50 @@ module ControlFlow {
    * A control-flow node recording the fact that a certain expression has a known
    * Boolean value at this point in the program.
    */
-  class ConditionGuardNode extends IR::Instruction, MkConditionGuardNode {
+  abstract class ConditionGuardNode extends IR::Instruction {
+    /** Holds if this guard ensures that the result of `nd` is `b`. */
+    abstract predicate ensures(DataFlow::Node nd, boolean b);
+
+    /** Holds if this guard ensures that `lesser <= greater + bias` holds. */
+    abstract predicate ensuresLeq(DataFlow::Node lesser, DataFlow::Node greater, int bias);
+
+    /** Holds if this guard ensures that `i = j` holds. */
+    abstract predicate ensuresEq(DataFlow::Node i, DataFlow::Node j);
+
+    /** Holds if this guard ensures that `i != j` holds. */
+    abstract predicate ensuresNeq(DataFlow::Node i, DataFlow::Node j);
+
+    /**
+     * Holds if this guard dominates basic block `bb`, that is, the guard
+     * is known to hold at `bb`.
+     */
+    abstract predicate dominates(ReachableBasicBlock bb);
+
+    /**
+     * Gets the condition whose outcome the guard concerns.
+     */
+    abstract Expr getCondition();
+
+    override Root getRoot() { result.isRootOf(this.getCondition()) }
+
+    override predicate hasLocationInfo(
+      string filepath, int startline, int startcolumn, int endline, int endcolumn
+    ) {
+      this.getCondition().hasLocationInfo(filepath, _, _, startline, startcolumn) and
+      endline = startline and
+      endcolumn = startcolumn
+    }
+  }
+
+  /**
+   * A control-flow node recording the fact that a certain expression has a known
+   * Boolean value at this point in the program.
+   */
+  class ConditionGuardExpr extends ConditionGuardNode, MkConditionGuardNode {
     Expr cond;
     boolean outcome;
 
-    ConditionGuardNode() { this = MkConditionGuardNode(cond, outcome) }
+    ConditionGuardExpr() { this = MkConditionGuardNode(cond, outcome) }
 
     private predicate ensuresAux(Expr expr, boolean b) {
       expr = cond and b = outcome
@@ -195,12 +234,12 @@ module ControlFlow {
     }
 
     /** Holds if this guard ensures that the result of `nd` is `b`. */
-    predicate ensures(DataFlow::Node nd, boolean b) {
+    override predicate ensures(DataFlow::Node nd, boolean b) {
       this.ensuresAux(any(Expr e | nd = DataFlow::exprNode(e)), b)
     }
 
     /** Holds if this guard ensures that `lesser <= greater + bias` holds. */
-    predicate ensuresLeq(DataFlow::Node lesser, DataFlow::Node greater, int bias) {
+    override predicate ensuresLeq(DataFlow::Node lesser, DataFlow::Node greater, int bias) {
       exists(DataFlow::RelationalComparisonNode rel, boolean b |
         this.ensures(rel, b) and
         rel.leq(b, lesser, greater, bias)
@@ -211,7 +250,7 @@ module ControlFlow {
     }
 
     /** Holds if this guard ensures that `i = j` holds. */
-    predicate ensuresEq(DataFlow::Node i, DataFlow::Node j) {
+    override predicate ensuresEq(DataFlow::Node i, DataFlow::Node j) {
       exists(DataFlow::EqualityTestNode eq, boolean b |
         this.ensures(eq, b) and
         eq.eq(b, i, j)
@@ -219,7 +258,7 @@ module ControlFlow {
     }
 
     /** Holds if this guard ensures that `i != j` holds. */
-    predicate ensuresNeq(DataFlow::Node i, DataFlow::Node j) {
+    override predicate ensuresNeq(DataFlow::Node i, DataFlow::Node j) {
       exists(DataFlow::EqualityTestNode eq, boolean b |
         this.ensures(eq, b.booleanNot()) and
         eq.eq(b, i, j)
@@ -230,7 +269,7 @@ module ControlFlow {
      * Holds if this guard dominates basic block `bb`, that is, the guard
      * is known to hold at `bb`.
      */
-    predicate dominates(ReachableBasicBlock bb) {
+    override predicate dominates(ReachableBasicBlock bb) {
       this = bb.getANode() or
       this.dominates(bb.getImmediateDominator())
     }
@@ -238,19 +277,9 @@ module ControlFlow {
     /**
      * Gets the condition whose outcome the guard concerns.
      */
-    Expr getCondition() { result = cond }
-
-    override Root getRoot() { result.isRootOf(cond) }
+    override Expr getCondition() { result = cond }
 
     override string toString() { result = cond + " is " + outcome }
-
-    override predicate hasLocationInfo(
-      string filepath, int startline, int startcolumn, int endline, int endcolumn
-    ) {
-      cond.hasLocationInfo(filepath, _, _, startline, startcolumn) and
-      endline = startline and
-      endcolumn = startcolumn
-    }
   }
 
   /**
