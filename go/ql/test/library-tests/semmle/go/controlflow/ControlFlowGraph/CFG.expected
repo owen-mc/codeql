@@ -35,6 +35,61 @@ edges
 | DuplicateSwitchCase.go:16:1:16:14 | function declaration | DuplicateSwitchCase.go:0:0:0:0 | exit |
 | DuplicateSwitchCase.go:16:6:16:9 | skip | DuplicateSwitchCase.go:16:1:16:14 | function declaration |
 | DuplicateSwitchCase.go:16:13:16:14 | skip | DuplicateSwitchCase.go:16:14:16:14 | exit |
+| SwitchStatements.go:0:0:0:0 | entry | SwitchStatements.go:3:6:3:16 | skip |
+| SwitchStatements.go:3:1:3:1 | entry | SwitchStatements.go:3:18:3:20 | argument corresponding to msg |
+| SwitchStatements.go:3:1:12:1 | function declaration | SwitchStatements.go:14:6:14:16 | skip |
+| SwitchStatements.go:3:6:3:16 | skip | SwitchStatements.go:3:1:12:1 | function declaration |
+| SwitchStatements.go:3:18:3:20 | argument corresponding to msg | SwitchStatements.go:3:18:3:20 | initialization of msg |
+| SwitchStatements.go:3:18:3:20 | initialization of msg | SwitchStatements.go:4:2:4:2 | true |
+| SwitchStatements.go:4:2:4:2 | true | SwitchStatements.go:5:7:5:9 | msg |
+| SwitchStatements.go:5:7:5:9 | msg | SwitchStatements.go:5:14:5:20 | "start" |
+| SwitchStatements.go:5:7:5:20 | ...==... | SwitchStatements.go:5:7:5:20 | case ...==... |
+| SwitchStatements.go:5:7:5:20 | case ...==... | SwitchStatements.go:5:20:5:20 | ...==... is false |
+| SwitchStatements.go:5:7:5:20 | case ...==... | SwitchStatements.go:5:20:5:20 | ...==... is true |
+| SwitchStatements.go:5:14:5:20 | "start" | SwitchStatements.go:5:7:5:20 | ...==... |
+| SwitchStatements.go:5:20:5:20 | ...==... is false | SwitchStatements.go:7:7:7:9 | msg |
+| SwitchStatements.go:5:20:5:20 | ...==... is true | SwitchStatements.go:6:3:6:7 | start |
+| SwitchStatements.go:6:3:6:7 | start | SwitchStatements.go:6:3:6:9 | call to start |
+| SwitchStatements.go:6:3:6:9 | call to start | SwitchStatements.go:12:1:12:1 | exit |
+| SwitchStatements.go:7:7:7:9 | msg | SwitchStatements.go:7:14:7:19 | "stop" |
+| SwitchStatements.go:7:7:7:19 | ...==... | SwitchStatements.go:7:7:7:19 | case ...==... |
+| SwitchStatements.go:7:7:7:19 | case ...==... | SwitchStatements.go:7:19:7:19 | ...==... is false |
+| SwitchStatements.go:7:7:7:19 | case ...==... | SwitchStatements.go:7:19:7:19 | ...==... is true |
+| SwitchStatements.go:7:14:7:19 | "stop" | SwitchStatements.go:7:7:7:19 | ...==... |
+| SwitchStatements.go:7:19:7:19 | ...==... is false | SwitchStatements.go:10:3:10:7 | panic |
+| SwitchStatements.go:7:19:7:19 | ...==... is true | SwitchStatements.go:8:3:8:6 | stop |
+| SwitchStatements.go:8:3:8:6 | stop | SwitchStatements.go:8:3:8:8 | call to stop |
+| SwitchStatements.go:8:3:8:8 | call to stop | SwitchStatements.go:12:1:12:1 | exit |
+| SwitchStatements.go:10:3:10:7 | panic | SwitchStatements.go:10:9:10:33 | "Message not understood." |
+| SwitchStatements.go:10:3:10:34 | call to panic | SwitchStatements.go:12:1:12:1 | exit |
+| SwitchStatements.go:10:9:10:33 | "Message not understood." | SwitchStatements.go:10:3:10:34 | call to panic |
+| SwitchStatements.go:14:1:14:1 | entry | SwitchStatements.go:14:18:14:20 | argument corresponding to msg |
+| SwitchStatements.go:14:1:23:1 | function declaration | SwitchStatements.go:25:6:25:10 | skip |
+| SwitchStatements.go:14:6:14:16 | skip | SwitchStatements.go:14:1:23:1 | function declaration |
+| SwitchStatements.go:14:18:14:20 | argument corresponding to msg | SwitchStatements.go:14:18:14:20 | initialization of msg |
+| SwitchStatements.go:14:18:14:20 | initialization of msg | SwitchStatements.go:15:9:15:11 | msg |
+| SwitchStatements.go:15:9:15:11 | msg | SwitchStatements.go:16:7:16:13 | "start" |
+| SwitchStatements.go:16:7:16:13 | "start" | SwitchStatements.go:16:7:16:13 | case "start" |
+| SwitchStatements.go:16:7:16:13 | case "start" | SwitchStatements.go:17:3:17:7 | start |
+| SwitchStatements.go:16:7:16:13 | case "start" | SwitchStatements.go:18:7:18:12 | "stop" |
+| SwitchStatements.go:17:3:17:7 | start | SwitchStatements.go:17:3:17:9 | call to start |
+| SwitchStatements.go:17:3:17:9 | call to start | SwitchStatements.go:23:1:23:1 | exit |
+| SwitchStatements.go:18:7:18:12 | "stop" | SwitchStatements.go:18:7:18:12 | case "stop" |
+| SwitchStatements.go:18:7:18:12 | case "stop" | SwitchStatements.go:19:3:19:6 | stop |
+| SwitchStatements.go:18:7:18:12 | case "stop" | SwitchStatements.go:21:3:21:7 | panic |
+| SwitchStatements.go:19:3:19:6 | stop | SwitchStatements.go:19:3:19:8 | call to stop |
+| SwitchStatements.go:19:3:19:8 | call to stop | SwitchStatements.go:23:1:23:1 | exit |
+| SwitchStatements.go:21:3:21:7 | panic | SwitchStatements.go:21:9:21:33 | "Message not understood." |
+| SwitchStatements.go:21:3:21:34 | call to panic | SwitchStatements.go:23:1:23:1 | exit |
+| SwitchStatements.go:21:9:21:33 | "Message not understood." | SwitchStatements.go:21:3:21:34 | call to panic |
+| SwitchStatements.go:25:1:25:1 | entry | SwitchStatements.go:25:14:25:15 | skip |
+| SwitchStatements.go:25:1:25:15 | function declaration | SwitchStatements.go:27:6:27:9 | skip |
+| SwitchStatements.go:25:6:25:10 | skip | SwitchStatements.go:25:1:25:15 | function declaration |
+| SwitchStatements.go:25:14:25:15 | skip | SwitchStatements.go:25:15:25:15 | exit |
+| SwitchStatements.go:27:1:27:1 | entry | SwitchStatements.go:27:13:27:14 | skip |
+| SwitchStatements.go:27:1:27:14 | function declaration | SwitchStatements.go:0:0:0:0 | exit |
+| SwitchStatements.go:27:6:27:9 | skip | SwitchStatements.go:27:1:27:14 | function declaration |
+| SwitchStatements.go:27:13:27:14 | skip | SwitchStatements.go:27:14:27:14 | exit |
 | equalitytests.go:0:0:0:0 | entry | equalitytests.go:3:1:5:1 | skip |
 | equalitytests.go:3:1:5:1 | skip | equalitytests.go:7:1:9:1 | skip |
 | equalitytests.go:7:1:9:1 | skip | equalitytests.go:11:6:11:18 | skip |
