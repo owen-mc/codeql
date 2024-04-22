@@ -21,6 +21,17 @@ from
   Flow::PathNode source, Flow::PathNode sink, DataFlow::CallNode call, DataFlow::Node sinkConverted
 where
   Flow::flowPath(source, sink) and
+  (
+    source.getState().getArchitectureBitSize() = 64
+    or
+    source.getState().getArchitectureBitSize() = 32 and
+    not exists(Flow::PathNode source2, Flow::PathNode sink2 |
+      Flow::flowPath(source2, sink2) and
+      source2.getNode() = source.getNode() and
+      sink2.getNode() = sink.getNode() and
+      source2.getState().getArchitectureBitSize() = 64
+    )
+  ) and
   call.getResult(0) = source.getNode() and
   sinkConverted = sink.getNode().getASuccessor()
 select sinkConverted, source, sink,

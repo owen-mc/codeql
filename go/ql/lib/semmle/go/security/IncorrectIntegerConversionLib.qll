@@ -181,28 +181,11 @@ deprecated class ConversionWithoutBoundsCheckConfig extends TaintTracking::Confi
 
 private int validBitSize() { result = [7, 8, 15, 16, 31, 32, 63, 64] }
 
-private newtype TArchitectureBitSize =
-  TMk32Bit() or
-  TMk64Bit() or
-  TMkUnknown()
-
-private class ArchitectureBitSize extends TArchitectureBitSize {
-  /** Gets an integer for the architecture bit size, if known. */
-  int toInt() {
-    this = TMk32Bit() and result = 32
-    or
-    this = TMk64Bit() and result = 64
-  }
-
-  /** Holds if the architecture bit size is unknown. */
-  predicate isUnknown() { this = TMkUnknown() }
+private class ArchitectureBitSize extends int {
+  ArchitectureBitSize() { this = [32, 64] }
 
   /** Gets a textual representation of this element. */
-  string toString() {
-    result = this.toInt() + "-bit"
-    or
-    this.isUnknown() and result = "unknown"
-  }
+  string toString() { result = this.(int).toString() + "-bit" }
 }
 
 private newtype TMaxValueState =
@@ -223,32 +206,12 @@ private class MaxValueState extends TMaxValueState {
    */
   int getBitSize() { this = TMkMaxValueState(result, _) }
 
-  private ArchitectureBitSize architectureBitSize() { this = TMkMaxValueState(_, result) }
-
   /** Gets whether the architecture is 32 bit or 64 bit, if it is known. */
-  int getArchitectureBitSize() { result = this.architectureBitSize().toInt() }
-
-  /** Holds if the architecture is not known. */
-  predicate architectureBitSizeUnknown() { this.architectureBitSize().isUnknown() }
-
-  /**
-   * Gets the bitsize we should use for a sink of type `uint`.
-   *
-   * If the architecture bit size is known, then we should use that. Otherwise,
-   * we should use 32 bits, because that will find results that only exist on
-   * 32-bit architectures.
-   */
-  int getSinkBitSize() {
-    if this = TMkMaxValueState(_, TMk64Bit()) then result = 64 else result = 32
-  }
+  ArchitectureBitSize getArchitectureBitSize() { this = TMkMaxValueState(_, result) }
 
   /** Gets a textual representation of this element. */
   string toString() {
-    exists(string suffix |
-      suffix = " (on " + this.getArchitectureBitSize() + "-bit architecture)"
-      or
-      this.architectureBitSizeUnknown() and suffix = ""
-    |
+    exists(string suffix | suffix = " (on " + this.getArchitectureBitSize() + " architecture)" |
       result = "MaxValueState(max value <= 2^(" + this.getBitSize() + ")-1" + suffix
     )
   }
@@ -277,18 +240,14 @@ abstract class FlowStateTransformer extends DataFlow::Node {
    * ```
    */
   MaxValueState transform(MaxValueState state) {
-    this.barrierFor(state.getBitSize(), state.getSinkBitSize()) and
+    this.barrierFor(state.getBitSize(), state.getArchitectureBitSize()) and
     result.getBitSize() =
       max(int bitsize |
         bitsize = validBitSize() and
         bitsize < state.getBitSize() and
-        not this.barrierFor(bitsize, state.getSinkBitSize())
+        not this.barrierFor(bitsize, state.getArchitectureBitSize())
       ) and
-    (
-      result.getArchitectureBitSize() = state.getArchitectureBitSize()
-      or
-      state.architectureBitSizeUnknown() and result.architectureBitSizeUnknown()
-    )
+    result.getArchitectureBitSize() = state.getArchitectureBitSize()
   }
 }
 
@@ -489,12 +448,12 @@ private module ConversionWithoutBoundsCheckConfig implements DataFlow::StateConf
       isSourceWithBitSize(source, effectiveBitSize, sourceIsSigned) and
       if effectiveBitSize = 0
       then
-        exists(int b | b = [32, 64] |
+        exists(ArchitectureBitSize b |
           state.getBitSize() = adjustBitSize(0, sourceIsSigned, b) and
           state.getArchitectureBitSize() = b
         )
-      else (
-        state.architectureBitSizeUnknown() and
+      else
+        // we deliberately don't constrain `state.getArchitectureBitSize()`
         state.getBitSize() =
           min(int bitsize |
             bitsize = validBitSize() and
@@ -502,7 +461,6 @@ private module ConversionWithoutBoundsCheckConfig implements DataFlow::StateConf
             // branch `effectiveBitSize != 0`.
             adjustBitSize(effectiveBitSize, sourceIsSigned, 64) <= bitsize
           )
-      )
     )
   }
 
@@ -514,9 +472,9 @@ private module ConversionWithoutBoundsCheckConfig implements DataFlow::StateConf
    */
   additional predicate isSink2(DataFlow::TypeCastNode sink, FlowState state) {
     sink.asExpr() instanceof ConversionExpr and
-    exists(int architectureBitSize, IntegerType integerType, int sinkBitsize, boolean sinkIsSigned |
-      architectureBitSize = getIntTypeBitSize(sink.getFile(), state.getSinkBitSize()) and
-      not (state.getArchitectureBitSize() = 32 and architectureBitSize = 64) and
+    exists(IntegerType integerType, int sinkBitsize, boolean sinkIsSigned |
+      state.getArchitectureBitSize() =
+        getIntTypeBitSize(sink.getFile(), state.getArchitectureBitSize()) and
       sink.getResultType().getUnderlyingType() = integerType and
       (
         sinkBitsize = integerType.getSize()
@@ -529,7 +487,7 @@ private module ConversionWithoutBoundsCheckConfig implements DataFlow::StateConf
         then sinkIsSigned = true
         else sinkIsSigned = false
       ) and
-      adjustBitSize(sinkBitsize, sinkIsSigned, architectureBitSize) < state.getBitSize()
+      adjustBitSize(sinkBitsize, sinkIsSigned, state.getArchitectureBitSize()) < state.getBitSize()
     ) and
     not exists(ShrExpr shrExpr |
       shrExpr.getLeftOperand().getGlobalValueNumber() =
@@ -551,7 +509,7 @@ private module ConversionWithoutBoundsCheckConfig implements DataFlow::StateConf
     // Safely guarded by a barrier guard.
     exists(FlowStateTransformer fst |
       node = fst and
-      fst.barrierFor(state.getBitSize(), state.getSinkBitSize())
+      fst.barrierFor(state.getBitSize(), state.getArchitectureBitSize())
     )
     or
     // When there is a flow from a source to a sink, do not allow the flow to
