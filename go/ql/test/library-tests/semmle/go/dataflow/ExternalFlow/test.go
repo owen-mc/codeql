@@ -83,6 +83,7 @@ func simpleflow() {
 
 	taint8 := test.StepArgResArrayContent(src)
 	b.Sink1(taint8[0]) // $ hasTaintFlow="index expression"
+	b.Sink1(taint8)    // $ hasTaintFlow="taint8"
 
 	srcArray := []interface{}{nil, src}
 	taint9 := test.StepArgArrayContentRes(srcArray)
@@ -91,6 +92,7 @@ func simpleflow() {
 	taint10 := test.StepArgResCollectionContent(a.Src1()).(chan interface{})
 	b.Sink1(test.GetElement(taint10)) // $ hasTaintFlow="call to GetElement"
 	b.Sink1(<-taint10)                // $ hasTaintFlow="<-..."
+	b.Sink1(taint10)                  // $ hasTaintFlow="taint10"
 
 	srcCollection := test.SetElement(a.Src1())
 	taint11 := test.StepArgCollectionContentRes(srcCollection)
@@ -119,6 +121,7 @@ func simpleflow() {
 	slice := make([]interface{}, 0)
 	slice = append(slice, src)
 	b.Sink1(slice[0]) // $ hasTaintFlow="index expression"
+	b.Sink1(slice)    // $ hasTaintFlow="slice"
 
 	ch := make(chan string)
 	ch <- a.Src1().(string)
@@ -128,34 +131,42 @@ func simpleflow() {
 	c1 := test.C{""}
 	c1.Set(a.Src1().(string))
 	b.Sink1(c1.F) // $ hasTaintFlow="selection of F"
+	b.Sink1(c1)   // $ hasTaintFlow="c1"
 
 	c2 := test.C{a.Src1().(string)}
 	b.Sink1(c2.Get()) // $ hasTaintFlow="call to Get"
+	b.Sink1(c2)       // $ hasTaintFlow="c2"
 
 	c3 := test.C{""}
 	c3.Set(a.Src1().(string))
 	b.Sink1(c3.Get()) // $ hasTaintFlow="call to Get"
+	b.Sink1(c3)       // $ hasTaintFlow="c3"
 
 	c4 := test.C{""}
 	c4.Set(a.Src1().(string))
 	c4.Set("")
 	b.Sink1(c4.Get()) // $ SPURIOUS: hasTaintFlow="call to Get" // because we currently don't clear content
+	b.Sink1(c4)       // $ SPURIOUS: hasTaintFlow="call to c4" // because we currently don't clear content
 
 	cp1 := &test.C{""}
 	cp1.SetThroughPointer(a.Src1().(string))
 	b.Sink1(cp1.F) // $ hasTaintFlow="selection of F"
+	b.Sink1(cp1)   // $ hasTaintFlow="cp1"
 
 	cp2 := &test.C{a.Src1().(string)}
 	b.Sink1(cp2.GetThroughPointer()) // $ hasTaintFlow="call to GetThroughPointer"
+	b.Sink1(cp2)                     // $ hasTaintFlow="cp2"
 
 	cp3 := &test.C{""}
 	cp3.SetThroughPointer(a.Src1().(string))
 	b.Sink1(cp3.GetThroughPointer()) // $ hasTaintFlow="call to GetThroughPointer"
+	b.Sink1(cp3)                     // $ hasTaintFlow="cp3"
 
 	cp4 := &test.C{""}
 	cp4.SetThroughPointer(a.Src1().(string))
 	cp4.SetThroughPointer("")
 	b.Sink1(cp4.GetThroughPointer()) // $ SPURIOUS: hasTaintFlow="call to GetThroughPointer" // because we currently don't clear content
+	b.Sink1(cp4)                     // $ SPURIOUS: hasTaintFlow="cp4" // because we currently don't clear content
 
 	arg1 := src
 	arg2 := src
