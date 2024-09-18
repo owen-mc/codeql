@@ -391,6 +391,47 @@ private class DefaultLoggerCall extends LoggerCall::Range, DataFlow::CallNode {
 }
 
 /**
+ * A call to an interface that looks like a logger. It is common to use a
+ * locally-defined interface for logging to make it easy to changing logging
+ * library.
+ */
+private class HeuristicLoggerCall extends LoggerCall::Range, DataFlow::CallNode {
+  Method m;
+
+  HeuristicLoggerCall() {
+    exists(string tp, string name, string x |
+      m.hasQualifiedName(_, tp, name) and
+      tp.matches("%Logger") and
+      x = ["Debug", "Error", "Fatal", "Info", "Log", "Panic", "Print", "Trace", "Warn"] and
+      name.matches(x + "%")
+    |
+      m.getReceiverBaseType().getUnderlyingType() instanceof InterfaceType and
+      this = m.getACall()
+    )
+  }
+
+  override DataFlow::Node getAMessageComponent() {
+    exists(int i, Type t |
+      result = this.getSyntacticArgument(i) and
+      if
+        m.isVariadic() and
+        i >= m.getNumParameter() - 1
+      then
+        t =
+          m.getParameterType(m.getNumParameter() - 1)
+              .(SliceType)
+              .getElementType()
+              .getUnderlyingType()
+      else t = m.getParameterType(i).getUnderlyingType()
+    |
+      t instanceof StringType
+      or
+      t instanceof EmptyInterfaceType
+    )
+  }
+}
+
+/**
  * A function that encodes data into a binary or textual format.
  *
  * Extend this class to refine existing API models. If you want to model new APIs,
