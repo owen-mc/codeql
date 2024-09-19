@@ -402,7 +402,7 @@ private class HeuristicLoggerCall extends LoggerCall::Range, DataFlow::CallNode 
     exists(string tp, string name, string x |
       m.hasQualifiedName(_, tp, name) and
       tp.regexpMatch(".*[lL]ogger") and
-      x = ["Debug", "Error", "Fatal", "Info", "Log", "Panic", "Print", "Trace", "Warn"] and
+      x = ["Debug", "Error", "Fatal", "Info", "Log", "Output", "Panic", "Print", "Trace", "Warn"] and
       name.matches(x + "%")
     |
       m.getReceiverBaseType().getUnderlyingType() instanceof InterfaceType and
