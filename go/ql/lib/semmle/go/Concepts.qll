@@ -410,25 +410,7 @@ private class HeuristicLoggerCall extends LoggerCall::Range, DataFlow::CallNode 
     )
   }
 
-  override DataFlow::Node getAMessageComponent() {
-    exists(int i, Type t |
-      result = this.getSyntacticArgument(i) and
-      if
-        m.isVariadic() and
-        i >= m.getNumParameter() - 1
-      then
-        t =
-          m.getParameterType(m.getNumParameter() - 1)
-              .(SliceType)
-              .getElementType()
-              .getUnderlyingType()
-      else t = m.getParameterType(i).getUnderlyingType()
-    |
-      t instanceof StringType
-      or
-      t instanceof EmptyInterfaceType
-    )
-  }
+  override DataFlow::Node getAMessageComponent() { result = this.getASyntacticArgument() }
 }
 
 /**
