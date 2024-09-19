@@ -401,7 +401,7 @@ private class HeuristicLoggerCall extends LoggerCall::Range, DataFlow::CallNode 
   HeuristicLoggerCall() {
     exists(string tp, string name, string x |
       m.hasQualifiedName(_, tp, name) and
-      tp.matches("%Logger") and
+      tp.regexpMatch(".*[lL]ogger") and
       x = ["Debug", "Error", "Fatal", "Info", "Log", "Panic", "Print", "Trace", "Warn"] and
       name.matches(x + "%")
     |
