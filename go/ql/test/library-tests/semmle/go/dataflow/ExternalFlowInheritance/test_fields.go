@@ -39,6 +39,11 @@ func TestFieldsSEmbedSEmbedS1(t test.SEmbedSEmbedS1) {
 	t.SinkField = a // $ S1[t] ql_S1 SEmbedS1[t]
 }
 
+func TestFieldsSEmbedS1AndSEmbedS1(t test.SEmbedS1AndSEmbedS1) {
+	a := t.SourceField
+	t.SinkField = a // $ S1[t] ql_S1
+}
+
 // This is needed because of a bug that causes some things to not work unless we
 // extract the pointer to a named type.
 func doNothingFields(
@@ -58,5 +63,6 @@ func doNothingFields(
 	_ *test.SImplEmbedS2,
 	_ *test.SEmbedSEmbedI1,
 	_ *test.SEmbedSEmbedS1,
+	_ *test.SEmbedS1AndSEmbedS1,
 ) {
 }

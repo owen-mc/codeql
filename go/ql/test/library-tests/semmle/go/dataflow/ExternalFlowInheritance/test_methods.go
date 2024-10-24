@@ -100,6 +100,12 @@ func TestMethodsSEmbedSEmbedS1(t test.SEmbedSEmbedS1) {
 	t.Sink(y) // $ I1[t] S1[t] SEmbedS1[t] ql_S1
 }
 
+func TestMethodsSEmbedS1AndSEmbedS1(t test.SEmbedS1AndSEmbedS1) {
+	x := t.Source()
+	y := t.Step(x)
+	t.Sink(y) // $ I1[t] S1[t] ql_S1
+}
+
 // This is needed because of a bug that causes some things to not work unless we
 // extract the pointer to a named type.
 func doNothingMethods(
@@ -119,5 +125,6 @@ func doNothingMethods(
 	_ *test.SImplEmbedS2,
 	_ *test.SEmbedSEmbedI1,
 	_ *test.SEmbedSEmbedS1,
+	_ *test.SEmbedS1AndSEmbedS1,
 ) {
 }
