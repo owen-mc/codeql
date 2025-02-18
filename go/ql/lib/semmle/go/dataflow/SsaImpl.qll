@@ -5,6 +5,7 @@
  */
 
 import go
+private import codeql.ssa.Ssa as SsaImplCommon
 
 cached
 private module Internal {
@@ -290,6 +291,92 @@ private module Internal {
     or
     rewindReads(bb, i, v) = 1 and result = getDefReachingEndOf(bb.getImmediateDominator(), v)
   }
+
+  ////////////////
+  // /** Holds if `n` must update the locally tracked variable `v`. */
+  // pragma[nomagic]
+  // private predicate certainVariableUpdate(TrackedVar v, ControlFlowNode n, BasicBlock b, int i) {
+  // exists(VariableUpdate a | a.getControlFlowNode() = n | getDestVar(a) = v) and
+  // b.getNode(i) = n and
+  // hasDominanceInformation(b)
+  // or
+  // certainVariableUpdate(v.getQualifier(), n, b, i)
+  // }
+  // /** Holds if `v` has an implicit definition at the entry, `b`, of the callable. */
+  // pragma[nomagic]
+  // private predicate hasEntryDef(TrackedVar v, BasicBlock b) {
+  // exists(LocalScopeVariable l, Callable c |
+  //   v = TLocalVar(c, l) and c.getBody().getControlFlowNode() = b
+  // |
+  //   l instanceof Parameter or
+  //   l.getCallable() != c
+  // )
+  // or
+  // v instanceof SsaSourceField and v.getEnclosingCallable().getBody().getControlFlowNode() = b
+  // }
+  // /** Holds if `n` might update the locally tracked variable `v`. */
+  // pragma[nomagic]
+  // private predicate uncertainVariableUpdate(TrackedVar v, ControlFlowNode n, BasicBlock b, int i) {
+  // exists(Call c | c = n.asCall() | updatesNamedField(c, v, _)) and
+  // b.getNode(i) = n and
+  // hasDominanceInformation(b)
+  // or
+  // uncertainVariableUpdate(v.getQualifier(), n, b, i)
+  // }
+  private module SsaInput implements SsaImplCommon::InputSig<Location> {
+    private import go as G
+
+    class BasicBlock = G::BasicBlock;
+
+    class ControlFlowNode = G::ControlFlow::Node;
+
+    BasicBlock getImmediateBasicBlockDominator(BasicBlock bb) {
+      result = bb.getImmediateDominator()
+    }
+
+    BasicBlock getABasicBlockSuccessor(BasicBlock bb) { result = bb.getASuccessor() }
+
+    class SourceVariable = SsaSourceVariable;
+
+    /**
+     * Holds if the `i`th node of basic block `bb` is a (potential) write to source
+     * variable `v`. The Boolean `certain` indicates whether the write is certain.
+     *
+     * This includes implicit writes via calls.
+     */
+    predicate variableWrite(BasicBlock bb, int i, SourceVariable v, boolean certain) {
+      defAt(bb, i, v) and
+      certain = true
+      // or
+      // hasEntryDef(v, bb) and
+      // i = 0 and
+      // certain = true
+      // or
+      // uncertainVariableUpdate(v, _, bb, i) and
+      // certain = false
+    }
+
+    /**
+     * Holds if the `i`th of basic block `bb` reads source variable `v`.
+     *
+     * This includes implicit reads via calls.
+     */
+    predicate variableRead(BasicBlock bb, int i, SourceVariable v, boolean certain) {
+      useAt(bb, i, v) and certain = true
+      or
+      mayCapture(bb, i, v) and certain = false
+    }
+  }
+
+  import SsaImplCommon::Make<Location, SsaInput> as Impl
+
+  final class Definition = Impl::Definition;
+
+  final class WriteDefinition = Impl::WriteDefinition;
+
+  final class UncertainWriteDefinition = Impl::UncertainWriteDefinition;
+
+  final class PhiNode = Impl::PhiNode;
 }
 
 import Internal
