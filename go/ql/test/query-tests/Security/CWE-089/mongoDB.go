@@ -38,7 +38,7 @@ func security_test(w http.ResponseWriter, r *http.Request) {
 	// Get a handle for your collection
 	db := client.Database("test")
 	coll := db.Collection("collection")
-	untrustedInput := r.Referer()
+	untrustedInput := r.Referer() // $ Source
 
 	filter := bson.D{{"name", untrustedInput}}
 
@@ -58,14 +58,14 @@ func security_test(w http.ResponseWriter, r *http.Request) {
 	update := bson.D{{"$inc", bson.D{{"age", 1}}}}
 	unsafe_update := bson.D{{untrustedInput, bson.D{{"age", 1}}}}
 	safe_update := bson.D{{"$inc", bson.D{{"age", untrustedInput}}}}
-	json.NewDecoder(r.Body).Decode(&requestBody)
+	json.NewDecoder(r.Body).Decode(&requestBody) // $ Source
 	find_update_object_unsafe := bson.D{{"$match", requestBody}}
 
 	// Different kinds of filters
 	find_filter_safe := bson.D{{"$match", untrustedInput}}
 	find_filter_unsafe := bson.D{{untrustedInput, "unsafe"}}
 	//Not strongly typed - could be anything
-	json.NewDecoder(r.Body).Decode(&requestBody)
+	json.NewDecoder(r.Body).Decode(&requestBody) // $ Source
 	find_filter_object_unsafe := bson.D{{"$match", requestBody}}
 
 	models := []mongo.WriteModel{
@@ -86,26 +86,26 @@ func security_test(w http.ResponseWriter, r *http.Request) {
 
 	//Aggregation operation
 	// for now, we can say anyting that goes into pipeline is unsafe always, since certain operations allow "columns" as the value
-	coll.Aggregate(ctx, pipeline, nil)
+	coll.Aggregate(ctx, pipeline, nil) // $ Alert
 
 	// Depends on operation in model
 	coll.BulkWrite(ctx, models, nil)
 
 	// CRUD operations
 	// unsafe if unsafe filter and safe is safe filter, likewise for update
-	coll.FindOneAndDelete(ctx, find_filter_object_unsafe, nil)
+	coll.FindOneAndDelete(ctx, find_filter_object_unsafe, nil) // $ Alert
 	coll.FindOneAndReplace(ctx, find_filter_unsafe, nil)
 	coll.FindOneAndUpdate(ctx, find_filter_unsafe, nil)
 	coll.ReplaceOne(ctx, find_filter_unsafe, replacement)
 	coll.UpdateMany(ctx, find_filter_unsafe, safe_update)
 	coll.UpdateOne(ctx, find_filter_unsafe, find_update_object_unsafe)
-	coll.DeleteMany(ctx, find_filter_safe, nil)
+	coll.DeleteMany(ctx, find_filter_safe, nil) // $ Alert
 	coll.DeleteOne(ctx, find_filter_unsafe, nil)
-	coll.DeleteMany(ctx, find_filter_safe, nil)
-	coll.Watch(ctx, pipeline)
+	coll.DeleteMany(ctx, find_filter_safe, nil) // $ Alert
+	coll.Watch(ctx, pipeline)                   // $ Alert
 	//unsafe is filter is unsafe and return value is used
 	count, _ := coll.CountDocuments(ctx, find_filter_unsafe, nil)
-	distinctNamesInLondon, err := coll.Distinct(ctx, fieldName, filter)
+	distinctNamesInLondon, err := coll.Distinct(ctx, fieldName, filter) // $ Alert
 	coll.FindOne(ctx, find_filter_unsafe, nil).Decode(&result)
 	cursor, err := coll.Find(ctx, find_filter_unsafe, nil)
 	if err = cursor.All(context.TODO(), &result); err != nil {
