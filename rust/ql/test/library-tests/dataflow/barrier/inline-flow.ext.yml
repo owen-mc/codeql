@@ -1,0 +1,6 @@
+extensions:
+  - addsTo:
+      pack: codeql/rust-all
+      extensible: barrierModel
+    data:
+      - ["main::sanitize", "ReturnValue", "test", "manual"]

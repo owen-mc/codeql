@@ -368,6 +368,19 @@ module Make<
       abstract predicate isSink(string input, string kind, Provenance provenance, string model);
     }
 
+    /** A barrier element. */
+    abstract class BarrierElement extends SourceBaseFinal {
+      bindingset[this]
+      BarrierElement() { any() }
+
+      /**
+       * Holds if this element is a flow barrier of kind `kind`, where data
+       * flows out as described by `output`.
+       */
+      pragma[nomagic]
+      abstract predicate isBarrier(string output, string kind, Provenance provenance, string model);
+    }
+
     private signature predicate hasKindSig(string kind);
 
     signature class NeutralCallableSig extends SummarizedCallableBaseFinal {
