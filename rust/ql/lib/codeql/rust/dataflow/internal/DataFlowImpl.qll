@@ -1159,7 +1159,15 @@ private module Cached {
 
   /** Holds if `n` is a flow barrier of kind `kind`. */
   cached
-  predicate barrierNode(Node n, string kind) { n.(FlowSummaryNode).isBarrier(kind, _) }
+  predicate barrierNode(Node n, string kind) {
+    exists(string model |
+      n.(FlowSummaryNode)
+          .getSummaryNode()
+          .(FlowSummaryImpl::Private::SourceOutputNode)
+          .isEntry(kind, model)
+      // getSourceElement().(FlowBarrier).isBarrier(_, kind, _, _)
+    )
+  }
 
   /**
    * A step in a flow summary defined using `OptionalStep[name]`. An `OptionalStep` is "opt-in", which means
