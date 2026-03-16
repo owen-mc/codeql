@@ -736,7 +736,19 @@ module Make<
       )
     }
 
-    private predicate summarySpec(string spec) {
+    private predicate isRelevantBarrier(
+      BarrierElement e, string output, string kind, Provenance provenance, string model
+    ) {
+      e.isBarrier(output, kind, provenance, model) and
+      (
+        provenance.isManual()
+        or
+        provenance.isGenerated() and
+        not exists(Provenance p | p.isManual() and e.isBarrier(_, kind, p, _))
+      )
+    }
+
+    private predicate flowSpec(string spec) {
       exists(SummarizedCallable c |
         c.propagatesFlow(spec, _, _, _, _, _)
         or
@@ -745,10 +757,12 @@ module Make<
       or
       isRelevantSource(_, spec, _, _, _)
       or
+      isRelevantBarrier(_, spec, _, _, _)
+      or
       isRelevantSink(_, spec, _, _, _)
     }
 
-    import AccessPathSyntax::AccessPath<summarySpec/1>
+    import AccessPathSyntax::AccessPath<flowSpec/1>
 
     /** Holds if specification component `token` parses as parameter `pos`. */
     predicate parseParam(AccessPathToken token, ArgumentPosition pos) {
@@ -1525,6 +1539,18 @@ module Make<
         summary(c, inputContents, outputContents, _, _) and
         inputContents.bottom() = pragma[only_bind_into](TArgumentSummaryComponent(ppos)) and
         outputContents.bottom() = pragma[only_bind_into](TArgumentSummaryComponent(ppos))
+      )
+    }
+
+    /**
+     * Holds if `barrier` is a relevant barrier element with output specification `outSpec`.
+     */
+    predicate barrierSpec(
+      BarrierElement barrier, SummaryComponentStack outSpec, string kind, string model
+    ) {
+      exists(string output |
+        isRelevantBarrier(barrier, output, kind, _, model) and
+        External::interpretSpec(output, outSpec)
       )
     }
 

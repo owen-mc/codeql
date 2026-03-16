@@ -1160,12 +1160,19 @@ private module Cached {
   /** Holds if `n` is a flow barrier of kind `kind`. */
   cached
   predicate barrierNode(Node n, string kind) {
-    exists(string model |
-      n.(FlowSummaryNode)
-          .getSummaryNode()
-          .(FlowSummaryImpl::Private::SourceOutputNode)
-          .isEntry(kind, model)
-      // getSourceElement().(FlowBarrier).isBarrier(_, kind, _, _)
+    exists(
+      FlowSummaryImpl::Public::BarrierElement b,
+      FlowSummaryImpl::Private::SummaryComponentStack stack
+    |
+      FlowSummaryImpl::Private::barrierSpec(b, stack, kind, _)
+    |
+      n = FlowSummaryImpl::StepsInput::getSourceNode(b, stack, false)
+      or
+      // For barriers like `Argument[0]` we want to target the pre-update node
+      n =
+        FlowSummaryImpl::StepsInput::getSourceNode(b, stack, true)
+            .(PostUpdateNode)
+            .getPreUpdateNode()
     )
   }
 
