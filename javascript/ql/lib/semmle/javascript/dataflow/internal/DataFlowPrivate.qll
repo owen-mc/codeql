@@ -1270,11 +1270,30 @@ Node getNodeFromSsa2(Ssa2::Node node) {
   )
 }
 
+private predicate isRefinedSharedRead(Ssa2::Node shared, ControlFlowNode use) {
+  exists(Ssa2::ExprNode read, SsaVariable legacy, SsaRefinementNode refinement |
+    shared = read and
+    read.getExpr() = use and
+    use = legacy.getAUse() and
+    legacy.getDefinition() = refinement
+  )
+}
+
+private Node getNodeFromSsa2ForGlobalFlow(Ssa2::Node shared) {
+  exists(ControlFlowNode use |
+    isRefinedSharedRead(shared, use) and
+    result = TSsaUseNode(use)
+  )
+  or
+  not exists(ControlFlowNode use | isRefinedSharedRead(shared, use)) and
+  result = getNodeFromSsa2(shared)
+}
+
 private predicate sharedSsaFlow(Node node1, Node node2) {
   exists(Ssa2::Node ssa1, Ssa2::Node ssa2 |
     Ssa2::localFlowStep(_, ssa1, ssa2, _) and
-    node1 = getNodeFromSsa2(ssa1) and
-    node2 = getNodeFromSsa2(ssa2) and
+    node1 = getNodeFromSsa2ForGlobalFlow(ssa1) and
+    node2 = getNodeFromSsa2ForGlobalFlow(ssa2) and
     not node1.getTopLevel().isExterns()
   )
 }

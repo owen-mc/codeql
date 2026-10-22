@@ -46,7 +46,7 @@ private module Cached {
     TCapturedSsaInitNode(LocalVariable variable) { variable.isCaptured() } or
     /** A JavaScript-specific capture definition. */
     TCapturedSsaCaptureNode(SsaVariableCapture capture) or
-    /** Use of a variable or 'this', with flow from a post-update node (from an earlier use) */
+    /** An internal use of a variable or `this` that carries SSA flow between public use nodes. */
     TSsaUseNode(ControlFlowNode use) { use = any(Ssa2::SsaConfig::SourceVariable v).getAUse() } or
     /** A synthesized variable read from the shared SSA library. */
     TSsaSynthReadNode(Ssa2::SsaSynthReadNode read) or

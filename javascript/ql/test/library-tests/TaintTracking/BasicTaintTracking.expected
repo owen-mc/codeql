@@ -51,9 +51,7 @@ legacyDataFlowDifference
 | typed-arrays.js:2:13:2:20 | source() | typed-arrays.js:52:10:52:13 | str2 | only flow with NEW data flow library |
 | use-use-after-implicit-read.js:7:17:7:24 | source() | use-use-after-implicit-read.js:15:10:15:10 | x | only flow with NEW data flow library |
 consistencyIssue
-| booleanOps.js:19 | expected consistency issue, but found no such issue (OK [INCONSISTENCY]) | OK [INCONSISTENCY] | Consistency |
 | nested-props.js:20 | expected an alert, but found none | NOT OK - but not found | Consistency |
-| sanitizer-guards.js:64 | expected consistency issue, but found no such issue (OK [INCONSISTENCY] - dataflow2 cannot block the phi edge) | OK [INCONSISTENCY] - dataflow2 cannot block the phi edge | Consistency |
 | stringification-read-steps.js:17 | expected an alert, but found none | NOT OK | Consistency |
 | stringification-read-steps.js:25 | expected an alert, but found none | NOT OK | Consistency |
 | typed-arrays.js:23 | expected an alert, but found none | NOT OK -- Should be flagged but it is not. | Consistency |
