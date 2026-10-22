@@ -23,11 +23,14 @@ module InlineTest implements TestSig {
   string getARelevantTag() { result = ["source", "flow"] }
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
+    tag = ["source", "flow"] and
     element = "" and
     value = "compatibility-phi" and
-    exists(DataFlow::Node source, DataFlow::InvokeNode sink |
+    exists(DataFlow::Node source, DataFlow::InvokeNode sink, VarRef sinkArgument |
       TestConfig::isSource(source) and
       sink.getCalleeName() = "SINK" and
+      sink.getArgument(0) = DataFlow::valueNode(sinkArgument) and
+      sinkArgument.getVariable().getName() = "compatibilityPhiSource" and
       location = sink.getLocation() and
       (
         tag = "source"

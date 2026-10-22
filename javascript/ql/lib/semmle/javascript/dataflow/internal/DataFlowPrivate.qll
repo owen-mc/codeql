@@ -1143,6 +1143,16 @@ private predicate legacyBarrier(DataFlow::Node node) {
 /**
  * Holds if `node` should be removed from the local data flow graph, for compatibility with legacy code.
  */
+private predicate isLegacyRefinementOverlayDefinition(SsaDefinition def) {
+  def instanceof SsaRefinementNode
+  or
+  exists(SsaPhiNode phi, SsaVariable input |
+    def = phi and
+    input = phi.getAnInput() and
+    isLegacyRefinementOverlayDefinition(input.getDefinition())
+  )
+}
+
 overlay[global]
 pragma[nomagic]
 private predicate isBlockedLegacyNode(Node node) {
@@ -1153,12 +1163,26 @@ private predicate isBlockedLegacyNode(Node node) {
     variable = any(VariableCaptureConfig::CapturedVariable v).asLocalVariable()
   )
   or
+  legacyBarrier(node)
+}
+
+private predicate isBlockedLegacyPredecessor(Node node) {
+  isBlockedLegacyNode(node)
+  or
   exists(SsaPhiNode phi |
     node = TLegacySsaPhiNode(phi) and
-    phi.getSourceVariable().isCaptured()
+    (
+      phi.getSourceVariable().isCaptured()
+      or
+      isLegacyRefinementOverlayDefinition(phi)
+    )
   )
+}
+
+private predicate isBlockedLegacySuccessor(Node node) {
+  isBlockedLegacyNode(node)
   or
-  legacyBarrier(node)
+  exists(SsaPhiNode phi | node = TLegacySsaPhiNode(phi))
 }
 
 /**
@@ -1207,8 +1231,8 @@ private predicate imprecisePostUpdateStep(DataFlow::PostUpdateNode postUpdate, D
 overlay[global]
 private predicate valuePreservingStep(Node node1, Node node2) {
   node1.getASuccessor() = node2 and
-  not isBlockedLegacyNode(node1) and
-  not isBlockedLegacyNode(node2) and
+  not isBlockedLegacyPredecessor(node1) and
+  not isBlockedLegacySuccessor(node2) and
   not isThisNodeTrackedByVariableCapture(node1)
   or
   imprecisePostUpdateStep(node1, node2)
