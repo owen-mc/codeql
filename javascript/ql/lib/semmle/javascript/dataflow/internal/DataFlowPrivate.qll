@@ -1153,7 +1153,10 @@ private predicate isBlockedLegacyNode(Node node) {
     variable = any(VariableCaptureConfig::CapturedVariable v).asLocalVariable()
   )
   or
-  exists(SsaPhiNode phi | node = TLegacySsaPhiNode(phi))
+  exists(SsaPhiNode phi |
+    node = TLegacySsaPhiNode(phi) and
+    phi.getSourceVariable().isCaptured()
+  )
   or
   legacyBarrier(node)
 }
