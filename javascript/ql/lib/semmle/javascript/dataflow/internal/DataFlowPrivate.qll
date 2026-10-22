@@ -1140,19 +1140,6 @@ private predicate legacyBarrier(DataFlow::Node node) {
   node = MakeBarrierGuard<BarrierGuardAdapter>::getABarrierNode()
 }
 
-/**
- * Holds if `node` should be removed from the local data flow graph, for compatibility with legacy code.
- */
-private predicate isLegacyRefinementOverlayDefinition(SsaDefinition def) {
-  def instanceof SsaRefinementNode
-  or
-  exists(SsaPhiNode phi, SsaVariable input |
-    def = phi and
-    input = phi.getAnInput() and
-    isLegacyRefinementOverlayDefinition(input.getDefinition())
-  )
-}
-
 overlay[global]
 pragma[nomagic]
 private predicate isBlockedLegacyNode(Node node) {
@@ -1171,11 +1158,7 @@ private predicate isBlockedLegacyPredecessor(Node node) {
   or
   exists(SsaPhiNode phi |
     node = TLegacySsaPhiNode(phi) and
-    (
-      phi.getSourceVariable().isCaptured()
-      or
-      isLegacyRefinementOverlayDefinition(phi)
-    )
+    phi.getSourceVariable().isCaptured()
   )
 }
 
@@ -1230,7 +1213,7 @@ private predicate imprecisePostUpdateStep(DataFlow::PostUpdateNode postUpdate, D
  */
 overlay[global]
 private predicate valuePreservingStep(Node node1, Node node2) {
-  node1.getASuccessor() = node2 and
+  DataFlow::localFlowStepForGlobal(node1, node2) and
   not isBlockedLegacyPredecessor(node1) and
   not isBlockedLegacySuccessor(node2) and
   not isThisNodeTrackedByVariableCapture(node1)
@@ -1252,7 +1235,17 @@ predicate knownSinkModel(Node sink, string model) { none() }
 
 cached
 Node getNodeFromSsa2(Ssa2::Node node) {
-  result = TValueNode(node.(Ssa2::ExprNode).getExpr())
+  exists(Ssa2::ExprNode read |
+    node = read and
+    not read.getExpr() instanceof ImplicitThisUse and
+    result = TValueNode(read.getExpr())
+  )
+  or
+  exists(Ssa2::ExprNode read, ImplicitThisUse use |
+    node = read and
+    read.getExpr() = use and
+    result = TImplicitThisUse(use, false)
+  )
   or
   result = TExprPostUpdateNode(node.(Ssa2::ExprPostUpdateNode).getExpr())
   or
@@ -1268,14 +1261,39 @@ Node getNodeFromSsa2(Ssa2::Node node) {
     def.definesAt(var, bb, i) and
     result = TSharedSsaDefNode(var, bb, i)
   )
+  or
+  exists(Ssa2::Definition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb |
+    node.(Ssa2::SsaDefinitionNode).getDefinition() = def and
+    def.definesAt(var, bb, -1) and
+    result = TThisNode(var.asThisContainer())
+  )
+}
+
+private predicate isVarAccessRefinementOverlayDefinition(SsaDefinition def) {
+  exists(SsaRefinementNode refinement, ConditionGuardNode guard |
+    def = refinement and
+    refinement.getGuard() = guard and
+    guard.getTest() instanceof VarAccess and
+    guard.getOutcome() = false
+  )
+  or
+  exists(SsaPhiNode phi, SsaVariable input |
+    def = phi and
+    input = phi.getAnInput() and
+    isVarAccessRefinementOverlayDefinition(input.getDefinition())
+  )
 }
 
 private predicate isRefinedSharedRead(Ssa2::Node shared, ControlFlowNode use) {
-  exists(Ssa2::ExprNode read, SsaVariable legacy, SsaRefinementNode refinement |
+  exists(Ssa2::ExprNode read, SsaVariable legacy |
     shared = read and
     read.getExpr() = use and
     use = legacy.getAUse() and
-    legacy.getDefinition() = refinement
+    (
+      legacy.getDefinition() instanceof SsaRefinementNode
+      or
+      isVarAccessRefinementOverlayDefinition(legacy.getDefinition())
+    )
   )
 }
 

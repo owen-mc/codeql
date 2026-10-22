@@ -13,10 +13,23 @@ module RefinementConfig implements DataFlow::ConfigSig {
     )
   }
 
-  predicate isBarrier(DataFlow::Node node) { node instanceof DataFlow::VarAccessBarrier }
+  predicate isBarrier(DataFlow::Node node) {
+    node instanceof DataFlow::VarAccessBarrier
+    or
+    node = DataFlow::MakeBarrierGuard<SimpleBarrierGuard>::getABarrierNode()
+  }
 }
 
 module RefinementFlow = DataFlow::Global<RefinementConfig>;
+
+class SimpleBarrierGuard extends DataFlow::InvokeNode {
+  SimpleBarrierGuard() { this.getCalleeName() = "BARRIER" }
+
+  predicate blocksExpr(boolean outcome, Expr expr) {
+    outcome = true and
+    expr = this.getArgument(0).asExpr()
+  }
+}
 
 module InlineTest implements TestSig {
   string getARelevantTag() { result = ["barrier", "refinementFlow"] }

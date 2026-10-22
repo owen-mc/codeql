@@ -28,6 +28,7 @@ legacyDataFlowDifference
 | nested-props.js:14:15:14:22 | source() | nested-props.js:15:10:15:16 | obj.x.y | only flow with NEW data flow library |
 | nested-props.js:27:18:27:25 | source() | nested-props.js:28:10:28:14 | obj.x | only flow with NEW data flow library |
 | nested-props.js:51:22:51:29 | source() | nested-props.js:52:10:52:16 | obj.x.y | only flow with NEW data flow library |
+| sanitizer-guards.js:57:11:57:18 | source() | sanitizer-guards.js:64:8:64:8 | x | only flow with OLD data flow library |
 | spread.js:4:15:4:22 | source() | spread.js:18:8:18:8 | y | only flow with NEW data flow library |
 | spread.js:4:15:4:22 | source() | spread.js:24:8:24:8 | y | only flow with NEW data flow library |
 | tst.js:2:13:2:20 | source() | tst.js:35:14:35:16 | ary | only flow with NEW data flow library |

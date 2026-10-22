@@ -4,8 +4,8 @@ legacyDataFlowDifference
 | arrays-init.js:2:16:2:23 | source() | arrays-init.js:35:8:35:13 | arr[2] | only flow with OLD data flow library |
 | arrays-init.js:2:16:2:23 | source() | arrays-init.js:36:8:36:13 | arr[3] | only flow with OLD data flow library |
 | arrays-init.js:2:16:2:23 | source() | arrays-init.js:37:8:37:13 | arr[4] | only flow with OLD data flow library |
-| booleanOps.js:2:11:2:18 | source() | booleanOps.js:13:10:13:10 | x | only flow with NEW data flow library |
-| booleanOps.js:2:11:2:18 | source() | booleanOps.js:22:10:22:10 | x | only flow with NEW data flow library |
+| booleanOps.js:2:11:2:18 | source() | booleanOps.js:10:10:10:10 | x | only flow with OLD data flow library |
+| booleanOps.js:2:11:2:18 | source() | booleanOps.js:19:10:19:10 | x | only flow with OLD data flow library |
 | bound-function.js:27:8:27:15 | source() | bound-function.js:30:10:30:10 | y | only flow with OLD data flow library |
 | call-apply.js:27:14:27:21 | source() | call-apply.js:24:8:24:11 | arg1 | only flow with NEW data flow library |
 | call-apply.js:27:14:27:21 | source() | call-apply.js:32:6:32:35 | foo1.ap ... e, ""]) | only flow with NEW data flow library |
@@ -38,6 +38,7 @@ legacyDataFlowDifference
 | object-bypass-sanitizer.js:35:29:35:36 | source() | object-bypass-sanitizer.js:23:14:23:20 | obj.foo | only flow with OLD data flow library |
 | object-bypass-sanitizer.js:35:29:35:36 | source() | object-bypass-sanitizer.js:28:10:28:30 | sanitiz ... bj).foo | only flow with OLD data flow library |
 | promise.js:12:20:12:27 | source() | promise.js:13:8:13:23 | resolver.promise | only flow with OLD data flow library |
+| sanitizer-guards.js:57:11:57:18 | source() | sanitizer-guards.js:64:8:64:8 | x | only flow with OLD data flow library |
 | spread.js:4:15:4:22 | source() | spread.js:18:8:18:8 | y | only flow with NEW data flow library |
 | spread.js:4:15:4:22 | source() | spread.js:24:8:24:8 | y | only flow with NEW data flow library |
 | tst.js:2:13:2:20 | source() | tst.js:17:10:17:10 | a | only flow with OLD data flow library |
