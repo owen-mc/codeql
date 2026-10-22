@@ -1,15 +1,15 @@
 import "dummy";
 
-let capturedWrite = 0; // $ capturedWrite=capturedWrite
+let capturedWrite = 0; // $ capturedWrite=capturedWrite ssaDefinition=capturedWrite
 
 function readCaptured() {
   return capturedWrite; // $ noCapturedWrite=capturedWrite
 }
 
 function writeCaptured() {
-  capturedWrite = 1; // $ capturedWrite=capturedWrite
-  ++capturedWrite; // $ capturedWrite=capturedWrite
-  capturedWrite += 1; // $ capturedWrite=capturedWrite
+  capturedWrite = 1; // $ capturedWrite=capturedWrite ssaDefinition=capturedWrite
+  ++capturedWrite; // $ capturedWrite=capturedWrite ssaDefinition=capturedWrite
+  capturedWrite += 1; // $ capturedWrite=capturedWrite ssaDefinition=capturedWrite
 }
 
 function uncapturedWrites() {
@@ -20,7 +20,55 @@ function uncapturedWrites() {
 globalWrite = 1; // $ noCapturedWrite=globalWrite
 use(globalWrite); // $ noCapturedWrite=globalWrite
 
-const { capturedPattern } = input; // $ capturedWrite=capturedPattern
+const { capturedPattern } = input; // $ capturedWrite=capturedPattern ssaDefinition=capturedPattern
 function readCapturedPattern() {
   return capturedPattern; // $ noCapturedWrite=capturedPattern
 }
+
+function destructuredDeclaration() {
+  const { declaredObject, safeObject } = { // $ ssaDefinition=declaredObject ssaDefinition=safeObject
+    declaredObject: SOURCE("object-declaration"),
+    safeObject: "safe"
+  };
+  SINK(declaredObject); // $ localCapturedFlow=declaredObject capturedFlow=object-declaration legacyCapturedFlow=object-declaration
+  SINK(safeObject); // $ localCapturedFlow=safeObject
+  return () => {
+    SINK(declaredObject); // $ capturedFlow=object-declaration legacyCapturedFlow=object-declaration
+    SINK(safeObject);
+  };
+}
+destructuredDeclaration()();
+
+function destructuredAssignment() {
+  let assignedObject;
+  ({ assignedObject } = { assignedObject: SOURCE("object-assignment") }); // $ ssaDefinition=assignedObject
+  SINK(assignedObject); // $ localCapturedFlow=assignedObject capturedFlow=object-assignment legacyCapturedFlow=object-assignment
+  return () => SINK(assignedObject); // $ capturedFlow=object-assignment legacyCapturedFlow=object-assignment
+}
+destructuredAssignment()();
+
+function destructuredParameter({ parameterObject }) { // $ ssaDefinition=parameterObject
+  SINK(parameterObject); // $ localCapturedFlow=parameterObject capturedFlow=object-parameter legacyCapturedFlow=object-parameter
+  return () => SINK(parameterObject); // $ capturedFlow=object-parameter legacyCapturedFlow=object-parameter
+}
+destructuredParameter({ parameterObject: SOURCE("object-parameter") })();
+
+function destructuredLoop() {
+  for (const { loopObject } of [{ loopObject: SOURCE("object-loop") }]) { // $ ssaDefinition=loopObject
+    SINK(loopObject); // $ localCapturedFlow=loopObject capturedFlow=object-loop legacyCapturedFlow=object-loop
+    (() => SINK(loopObject))(); // $ capturedFlow=object-loop legacyCapturedFlow=object-loop
+  }
+}
+destructuredLoop();
+
+function destructuredArray([arrayElement]) { // $ ssaDefinition=arrayElement
+  SINK(arrayElement); // $ localCapturedFlow=arrayElement capturedFlow=array-element legacyCapturedFlow=array-element
+  return () => SINK(arrayElement); // $ capturedFlow=array-element legacyCapturedFlow=array-element
+}
+destructuredArray([SOURCE("array-element")])();
+
+const { topLevelObject } = { topLevelObject: SOURCE("top-level-object") }; // $ ssaDefinition=topLevelObject
+function readTopLevelObject() {
+  SINK(topLevelObject); // $ capturedFlow=top-level-object legacyCapturedFlow=top-level-object
+}
+readTopLevelObject();

@@ -312,7 +312,7 @@ module DataFlow {
       or
       exists(VarRef write |
         this = TCapturedVariableWriteNode(write) and
-        ssa.(SsaExplicitDefinition).getDef().getTarget() = write
+        ssa.(SsaExplicitDefinition).getLhs() = write
       )
       or
       this = TLegacySsaPhiNode(ssa) and
@@ -1539,7 +1539,7 @@ module DataFlow {
     )
     or
     exists(VarRef write |
-      ssa.(SsaExplicitDefinition).getDef().getTarget() = write and
+      ssa.(SsaExplicitDefinition).getLhs() = write and
       write.getVariable().isCaptured() and
       result = TCapturedVariableWriteNode(write)
     )
@@ -2251,7 +2251,7 @@ module DataFlow {
 
   private EarlyStageNode capturedSsaNode(SsaDefinition ssa) {
     exists(VarRef write |
-      ssa.(SsaExplicitDefinition).getDef().getTarget() = write and
+      ssa.(SsaExplicitDefinition).getLhs() = write and
       write.getVariable().isCaptured() and
       result = TCapturedVariableWriteNode(write)
     )
