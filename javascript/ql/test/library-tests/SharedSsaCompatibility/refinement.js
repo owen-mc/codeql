@@ -1,7 +1,7 @@
 function refinementBarrier() {
   const refinementBarrierSource = SOURCE("refinement-barrier");
   if (!refinementBarrierSource) {
-    SINK(refinementBarrierSource); // $ barrier=refinement-barrier
+    SINK(refinementBarrierSource); // $ barrier=refinement-barrier noRefinementFlow=refinement-barrier
   }
 }
 
@@ -13,7 +13,7 @@ function phiReadInsideRefinement(condition) {
     } else {
       if (!BARRIER(phiReadSource)) return;
     }
-    SINK(phiReadSource);
+    SINK(phiReadSource); // $ noRefinementFlow=refined-phi-read
   }
 }
 
@@ -23,6 +23,6 @@ function refinementFollowedByPhi(condition) {
     if (condition) {
       refinementPhiSource = "safe";
     }
-    SINK(refinementPhiSource);
+    SINK(refinementPhiSource); // $ noRefinementFlow=refinement-phi
   }
 }

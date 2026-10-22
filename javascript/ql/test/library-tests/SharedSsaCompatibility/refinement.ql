@@ -32,26 +32,26 @@ class SimpleBarrierGuard extends DataFlow::InvokeNode {
 }
 
 module InlineTest implements TestSig {
-  string getARelevantTag() { result = ["barrier", "refinementFlow"] }
+  string getARelevantTag() { result = ["barrier", "refinementFlow", "noRefinementFlow"] }
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
     element = "" and
-    value = "refinement-barrier" and
+    location.getFile().getBaseName() = "refinement.js" and
     exists(DataFlow::InvokeNode source, DataFlow::InvokeNode sink, VarRef sinkArgument |
       source.getCalleeName() = "SOURCE" and
-      source.getArgument(0).getStringValue() = value and
+      value = source.getArgument(0).getStringValue() and
       sink.getCalleeName() = "SINK" and
+      source.getContainer() = sink.getContainer() and
       sink.getArgument(0) = DataFlow::valueNode(sinkArgument) and
-      sinkArgument.getVariable().getName() = "refinementBarrierSource" and
       location = sink.getLocation() and
       (
         tag = "refinementFlow" and RefinementFlow::flow(source, sink.getArgument(0))
         or
+        tag = "noRefinementFlow" and not RefinementFlow::flow(source, sink.getArgument(0))
+        or
         tag = "barrier" and
-        exists(SsaRefinementNode refinement |
-          refinement.getSourceVariable().getName() = "refinementBarrierSource" and
-          DataFlow::ssaDefinitionNode(refinement) instanceof DataFlow::VarAccessBarrier
-        )
+        DataFlow::ssaDefinitionNode(sinkArgument.(VarUse).getSsaVariable().getDefinition())
+          instanceof DataFlow::VarAccessBarrier
       )
     )
   }

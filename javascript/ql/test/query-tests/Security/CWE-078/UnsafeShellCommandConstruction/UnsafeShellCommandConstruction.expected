@@ -581,5 +581,3 @@ nodes
 subpaths
 | lib/lib.js:340:25:340:25 | n | lib/lib.js:329:13:329:13 | x | lib/lib.js:330:9:330:9 | x | lib/lib.js:340:22:340:26 | id(n) |
 | lib/lib.js:428:28:428:57 | (name ? ... ) + '-' | lib/lib.js:431:23:431:26 | last | lib/lib.js:437:9:437:11 | arr [ArrayElement] | lib/lib.js:428:14:428:58 | build(" ...  + '-') |
-testFailures
-| lib/lib.js:253:32:253:142 | // $ SP ... i node. | Fixed spurious result: Alert |

@@ -18,20 +18,24 @@ module InlineTest implements TestSig {
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
     element = "" and
+    location.getFile().getBaseName() = "local.js" and
     (
       tag = "localFlow" and
       exists(DataFlow::InvokeNode source, DataFlow::InvokeNode sink |
         source.getCalleeName() = "SOURCE" and
         value = source.getArgument(0).getStringValue() and
         sink.getCalleeName() = "SINK" and
+        source.getContainer() = sink.getContainer() and
         source.flowsTo(sink.getArgument(0)) and
         location = sink.getLocation()
       )
       or
       tag = "postUpdateFlow" and
-      exists(DataFlow::InvokeNode sink |
+      exists(DataFlow::InvokeNode sink, DataFlow::PostUpdateNode update |
         sink.getCalleeName() = "SINK" and
-        postUpdateForSource(value).getASuccessor+() = sink.getArgument(0) and
+        update = postUpdateForSource(value) and
+        update.getContainer() = sink.getContainer() and
+        update.getASuccessor+() = sink.getArgument(0) and
         location = sink.getLocation()
       )
       or
@@ -39,6 +43,7 @@ module InlineTest implements TestSig {
       exists(DataFlow::InvokeNode sink, DataFlow::PostUpdateNode update |
         sink.getCalleeName() = "SINK" and
         update = postUpdateForSource(value) and
+        update.getContainer() = sink.getContainer() and
         not update.getASuccessor+() = sink.getArgument(0) and
         location = sink.getLocation()
       )
