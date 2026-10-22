@@ -23,21 +23,6 @@ private class Node = DataFlow::Node;
 
 class PostUpdateNode = DataFlow::PostUpdateNode;
 
-class SsaUseNode extends DataFlow::Node, TSsaUseNode {
-  private ControlFlowNode expr;
-
-  SsaUseNode() { this = TSsaUseNode(expr) }
-
-  cached
-  override string toString() { result = "[ssa-use] " + expr.toString() }
-
-  cached
-  override StmtContainer getContainer() { result = expr.getContainer() }
-
-  cached
-  override Location getLocation() { result = expr.getLocation() }
-}
-
 class SsaSynthReadNode extends DataFlow::Node, TSsaSynthReadNode {
   private Ssa2::SsaSynthReadNode read;
 
@@ -680,8 +665,6 @@ predicate nodeIsHidden(Node node) {
   or
   node instanceof RestParameterStoreNode
   or
-  node instanceof SsaUseNode
-  or
   node instanceof SsaSynthReadNode
 }
 
@@ -1269,51 +1252,9 @@ Node getNodeFromSsa2(Ssa2::Node node) {
   )
 }
 
-private predicate isVarAccessRefinementOverlayDefinition(SsaDefinition def) {
-  exists(SsaRefinementNode refinement, ConditionGuardNode guard |
-    def = refinement and
-    refinement.getGuard() = guard and
-    guard.getTest() instanceof VarAccess and
-    guard.getOutcome() = false
-  )
-  or
-  exists(SsaPhiNode phi, SsaVariable input |
-    def = phi and
-    input = phi.getAnInput() and
-    isVarAccessRefinementOverlayDefinition(input.getDefinition())
-  )
-}
-
-private predicate isRefinedSharedRead(Ssa2::Node shared, ControlFlowNode use) {
-  exists(Ssa2::ExprNode read, SsaVariable legacy |
-    shared = read and
-    read.getExpr() = use and
-    use = legacy.getAUse() and
-    (
-      legacy.getDefinition() instanceof SsaRefinementNode
-      or
-      isVarAccessRefinementOverlayDefinition(legacy.getDefinition())
-    )
-  )
-}
-
-private Node getNodeFromSsa2ForGlobalFlow(Ssa2::Node shared) {
-  exists(ControlFlowNode use |
-    isRefinedSharedRead(shared, use) and
-    result = TSsaUseNode(use)
-  )
-  or
-  not exists(ControlFlowNode use | isRefinedSharedRead(shared, use)) and
-  result = getNodeFromSsa2(shared)
-}
-
 private predicate sharedSsaFlow(Node node1, Node node2) {
-  exists(Ssa2::Node ssa1, Ssa2::Node ssa2 |
-    Ssa2::localFlowStep(_, ssa1, ssa2, _) and
-    node1 = getNodeFromSsa2ForGlobalFlow(ssa1) and
-    node2 = getNodeFromSsa2ForGlobalFlow(ssa2) and
-    not node1.getTopLevel().isExterns()
-  )
+  DataFlow::sharedSsaFlowStepForGlobal(node1, node2) and
+  not node1.getTopLevel().isExterns()
 }
 
 overlay[global]

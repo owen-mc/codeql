@@ -30,22 +30,6 @@ private module Cached {
    * The raw data type underlying `DataFlow::Node`.
    */
   cached
-  private predicate isVarAccessRefinementOverlayDefinition(SsaDefinition def) {
-    exists(SsaRefinementNode refinement, ConditionGuardNode guard |
-      def = refinement and
-      refinement.getGuard() = guard and
-      guard.getTest() instanceof VarAccess and
-      guard.getOutcome() = false
-    )
-    or
-    exists(SsaPhiNode phi, SsaVariable input |
-      def = phi and
-      input = phi.getAnInput() and
-      isVarAccessRefinementOverlayDefinition(input.getDefinition())
-    )
-  }
-
-  cached
   newtype TNode =
     TValueNode(AST::ValueNode nd) or
     /** An SSA definition from the shared SSA library */
@@ -66,17 +50,6 @@ private module Cached {
     TCapturedSsaInitNode(LocalVariable variable) { variable.isCaptured() } or
     /** A JavaScript-specific capture definition. */
     TCapturedSsaCaptureNode(SsaVariableCapture capture) or
-    /** An internal shared-SSA use that prevents global flow from bypassing a refinement. */
-    TSsaUseNode(ControlFlowNode use) {
-      exists(SsaVariable legacy |
-        use = legacy.getAUse() and
-        (
-          legacy.getDefinition() instanceof SsaRefinementNode
-          or
-          isVarAccessRefinementOverlayDefinition(legacy.getDefinition())
-        )
-      )
-    } or
     /** A synthesized variable read from the shared SSA library. */
     TSsaSynthReadNode(Ssa2::SsaSynthReadNode read) or
     TCapturedVariableNode(LocalVariable v) { v.isCaptured() } or

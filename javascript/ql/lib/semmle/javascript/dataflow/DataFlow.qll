@@ -1942,11 +1942,6 @@ module DataFlow {
     )
   }
 
-  private predicate refinementOrdinaryFlowStep(EarlyStageNode pred, EarlyStageNode succ) {
-    ordinaryFlowStepShared(pred, succ) and
-    pred instanceof TRefinementNode
-  }
-
   pragma[inline]
   private predicate sharedSsaImmediateFlowStep(EarlyStageNode pred, EarlyStageNode succ) {
     exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
@@ -2053,8 +2048,6 @@ module DataFlow {
     or
     lvalueDefaultFlowStep(pred, succ)
     or
-    refinementOrdinaryFlowStep(pred, succ)
-    or
     nonSsaImmediateFlowStep(pred, succ)
     or
     refinementFlowStep(pred, succ, false)
@@ -2124,6 +2117,33 @@ module DataFlow {
    */
   predicate localFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
     localFlowStepWithoutSharedOrdinary(pred, succ)
+  }
+
+  /**
+   * INTERNAL: Shared SSA steps for global flow, with JavaScript refinements inserted.
+   * Shared phi reads and inputs carry flow through joins instead of compatibility phis.
+   */
+  predicate sharedSsaFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
+    exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
+      sharedOrdinaryFlowStep(ssaPred, ssaSucc) and
+      (
+        exists(SsaRefinementNode refinement |
+          refinement = getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc) and
+          (
+            pred = getNodeFromSharedSsa(ssaPred) and
+            succ = TRefinementNode(refinement)
+            or
+            pred = TRefinementNode(refinement) and
+            succ = getNodeFromSharedSsa(ssaSucc)
+          )
+        )
+        or
+        not getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc) instanceof SsaRefinementNode and
+        pred = getNodeFromSharedSsa(ssaPred) and
+        succ = getNodeFromSharedSsa(ssaSucc)
+      ) and
+      pred != succ
+    )
   }
 
   overlay[global]

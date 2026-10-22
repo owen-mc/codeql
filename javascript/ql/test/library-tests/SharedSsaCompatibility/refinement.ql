@@ -22,6 +22,8 @@ module RefinementConfig implements DataFlow::ConfigSig {
 
 module RefinementFlow = DataFlow::Global<RefinementConfig>;
 
+module RefinementTaint = TaintTracking::Global<RefinementConfig>;
+
 class SimpleBarrierGuard extends DataFlow::InvokeNode {
   SimpleBarrierGuard() { this.getCalleeName() = "BARRIER" }
 
@@ -40,7 +42,10 @@ private predicate localStepWithoutRefinement(DataFlow::Node pred, DataFlow::Node
 module InlineTest implements TestSig {
   string getARelevantTag() {
     result =
-      ["barrier", "refinementFlow", "noRefinementFlow", "localRefinementFlow", "noRefinementBypass"]
+      [
+        "barrier", "refinementFlow", "noRefinementFlow", "refinementTaint", "noRefinementTaint",
+        "localRefinementFlow", "noRefinementBypass"
+      ]
   }
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
@@ -57,6 +62,10 @@ module InlineTest implements TestSig {
         tag = "refinementFlow" and RefinementFlow::flow(source, sink.getArgument(0))
         or
         tag = "noRefinementFlow" and not RefinementFlow::flow(source, sink.getArgument(0))
+        or
+        tag = "refinementTaint" and RefinementTaint::flow(source, sink.getArgument(0))
+        or
+        tag = "noRefinementTaint" and not RefinementTaint::flow(source, sink.getArgument(0))
         or
         tag = "localRefinementFlow" and source.flowsTo(sink.getArgument(0))
         or
