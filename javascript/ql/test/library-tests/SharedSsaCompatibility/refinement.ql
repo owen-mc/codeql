@@ -31,8 +31,17 @@ class SimpleBarrierGuard extends DataFlow::InvokeNode {
   }
 }
 
+private predicate localStepWithoutRefinement(DataFlow::Node pred, DataFlow::Node succ) {
+  DataFlow::localFlowStep(pred, succ) and
+  not succ.(DataFlow::SsaDefinitionNode).getSsaVariable().getDefinition() instanceof
+    SsaRefinementNode
+}
+
 module InlineTest implements TestSig {
-  string getARelevantTag() { result = ["barrier", "refinementFlow", "noRefinementFlow"] }
+  string getARelevantTag() {
+    result =
+      ["barrier", "refinementFlow", "noRefinementFlow", "localRefinementFlow", "noRefinementBypass"]
+  }
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
     element = "" and
@@ -48,6 +57,11 @@ module InlineTest implements TestSig {
         tag = "refinementFlow" and RefinementFlow::flow(source, sink.getArgument(0))
         or
         tag = "noRefinementFlow" and not RefinementFlow::flow(source, sink.getArgument(0))
+        or
+        tag = "localRefinementFlow" and source.flowsTo(sink.getArgument(0))
+        or
+        tag = "noRefinementBypass" and
+        not localStepWithoutRefinement*(source, sink.getArgument(0))
         or
         tag = "barrier" and
         DataFlow::ssaDefinitionNode(sinkArgument.(VarUse).getSsaVariable().getDefinition())
