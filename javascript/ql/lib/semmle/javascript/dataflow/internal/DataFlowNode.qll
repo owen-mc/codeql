@@ -56,7 +56,10 @@ private module Cached {
     /** A JavaScript-specific type-refinement definition. */
     TRefinementNode(SsaRefinementNode refinement) or
     /** A write to a captured variable. */
-    TCapturedVariableWriteNode(VarRef write) { write.getVariable().isCaptured() } or
+    TCapturedVariableWriteNode(VarRef write) {
+      write instanceof LValue and
+      write.getVariable().(LocalVariable).isCaptured()
+    } or
     /** A JavaScript-specific SSA phi definition. */
     TLegacySsaPhiNode(SsaPhiNode phi) or
     /** The implicit initialization of a captured variable. */
