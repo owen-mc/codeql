@@ -32,8 +32,28 @@ private import semmle.javascript.dataflow.internal.VariableOrThis
 private import semmle.javascript.internal.NameResolution
 private import semmle.javascript.internal.UnderlyingTypes
 private import semmle.javascript.internal.TypeResolution
+private import semmle.javascript.dataflow.internal.sharedlib.Ssa as Ssa2
 
 module DataFlow {
+  private predicate sameSsaDefinition(
+    SsaDefinition legacy, Ssa2::SsaConfig::SourceVariable sharedVar, BasicBlock bb, int sharedIndex
+  ) {
+    exists(LocalVariable local |
+      sharedVar.asLocalVariable() = local and
+      (
+        legacy.definesAt(bb, sharedIndex, local)
+        or
+        sharedIndex = -1 and
+        legacy.(SsaExplicitDefinition).getDef() = any(SimpleParameter p | p.getVariable() = local)
+        or
+        sharedIndex = -1 and
+        legacy instanceof SsaImplicitInit and
+        not local.isParameter() and
+        legacy.definesAt(bb, 0, local)
+      )
+    )
+  }
+
   /**
    * A node in the data flow graph.
    */
@@ -279,10 +299,36 @@ module DataFlow {
   /**
    * A node in the data flow graph which corresponds to an SSA variable definition.
    */
-  class SsaDefinitionNode extends Node, TSsaDefNode {
+  class SsaDefinitionNode extends Node {
     SsaDefinition ssa;
 
-    SsaDefinitionNode() { this = TSsaDefNode(ssa) }
+    SsaDefinitionNode() {
+      exists(Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index |
+        this = TSharedSsaDefNode(var, bb, index) and
+        sameSsaDefinition(ssa, var, bb, index)
+      )
+      or
+      this = TRefinementNode(ssa)
+      or
+      exists(VarRef write |
+        this = TCapturedVariableWriteNode(write) and
+        ssa.(SsaExplicitDefinition).getDef().getTarget() = write
+      )
+      or
+      this = TLegacySsaPhiNode(ssa) and
+      (
+        refinementOverlayDefinition(ssa)
+        or
+        not exists(sharedSsaNode(ssa))
+      )
+      or
+      exists(LocalVariable variable |
+        this = TCapturedSsaInitNode(variable) and
+        ssa.(SsaImplicitInit).getSourceVariable() = variable
+      )
+      or
+      this = TCapturedSsaCaptureNode(ssa)
+    }
 
     /** Gets the SSA variable defined at this data flow node. */
     SsaVariable getSsaVariable() { result = ssa.getVariable() }
@@ -294,6 +340,47 @@ module DataFlow {
     override string toString() { result = ssa.getSourceVariable().getName() }
 
     override File getFile() { result = ssa.getBasicBlock().getFile() }
+
+    override AstNode getAstNode() { none() }
+  }
+
+  /** A data-flow node representing a write to a captured variable. */
+  private class CapturedVariableWriteNode extends Node, TCapturedVariableWriteNode {
+    VarRef write;
+
+    CapturedVariableWriteNode() { this = TCapturedVariableWriteNode(write) }
+
+    override BasicBlock getBasicBlock() { result = write.getBasicBlock() }
+
+    override Location getLocation() { result = write.getLocation() }
+
+    override string toString() { result = write.toString() }
+
+    override File getFile() { result = write.getFile() }
+
+    override AstNode getAstNode() { result = write }
+  }
+
+  /** A shared SSA definition for `this`. */
+  private class SharedThisSsaDefinitionNode extends Node, TSharedSsaDefNode {
+    Ssa2::SsaConfig::SourceVariable var;
+    BasicBlock bb;
+    int index;
+
+    SharedThisSsaDefinitionNode() {
+      this = TSharedSsaDefNode(var, bb, index) and
+      exists(var.asThisContainer())
+    }
+
+    override BasicBlock getBasicBlock() { result = bb }
+
+    override Location getLocation() {
+      if index = -1 then result = bb.getLocation() else result = bb.getNode(index).getLocation()
+    }
+
+    override string toString() { result = var.toString() }
+
+    override File getFile() { result = bb.getFile() }
 
     override AstNode getAstNode() { none() }
   }
@@ -1441,7 +1528,40 @@ module DataFlow {
   ExprNode exprNode(Expr e) { result = valueNode(e) }
 
   /** Gets the data flow node corresponding to `ssa`. */
-  SsaDefinitionNode ssaDefinitionNode(SsaDefinition ssa) { result = TSsaDefNode(ssa) }
+  SsaDefinitionNode ssaDefinitionNode(SsaDefinition ssa) {
+    ssa instanceof SsaRefinementNode and
+    result = TRefinementNode(ssa)
+    or
+    exists(BasicBlock bb, int i, Ssa2::SsaConfig::SourceVariable var |
+      sameSsaDefinition(ssa, var, bb, i) and
+      exists(Ssa2::SsaDefinitionNode shared | shared.getDefinition().definesAt(var, bb, i)) and
+      result = TSharedSsaDefNode(var, bb, i)
+    )
+    or
+    exists(VarRef write |
+      ssa.(SsaExplicitDefinition).getDef().getTarget() = write and
+      write.getVariable().isCaptured() and
+      result = TCapturedVariableWriteNode(write)
+    )
+    or
+    ssa.(SsaImplicitInit).getSourceVariable().isCaptured() and
+    result = TCapturedSsaInitNode(ssa.getSourceVariable())
+    or
+    ssa instanceof SsaVariableCapture and
+    result = TCapturedSsaCaptureNode(ssa)
+    or
+    ssa instanceof SsaPhiNode and
+    ssa.getSourceVariable().isCaptured() and
+    result = TLegacySsaPhiNode(ssa)
+    or
+    refinementOverlayDefinition(ssa) and
+    ssa instanceof SsaPhiNode and
+    result = TLegacySsaPhiNode(ssa)
+    or
+    ssa instanceof SsaPhiNode and
+    not exists(sharedSsaNode(ssa)) and
+    result = TLegacySsaPhiNode(ssa)
+  }
 
   /** Gets the node corresponding to the initialization of parameter `p`. */
   ParameterNode parameterNode(Parameter p) { result.getParameter() = p }
@@ -1525,9 +1645,17 @@ module DataFlow {
    * before all data flow nodes have been materialised.
    */
   EarlyStageNode lvalueNodeInternal(BindingPattern lvalue) {
-    exists(SsaExplicitDefinition ssa |
-      ssa.defines(lvalue.(LValue).getDefNode(), lvalue.(VarRef).getVariable()) and
-      result = TSsaDefNode(ssa)
+    exists(Ssa2::Definition ssa, BasicBlock bb, int i, Ssa2::SsaConfig::SourceVariable var |
+      ssa.definesAt(var, bb, i) and
+      var.asLocalVariable() = lvalue.(VarRef).getVariable() and
+      bb.defAt(i, var.asLocalVariable(), lvalue.(LValue).getDefNode()) and
+      result = TSharedSsaDefNode(var, bb, i)
+    )
+    or
+    exists(LocalVariable captured |
+      captured = lvalue.(VarRef).getVariable() and
+      captured.isCaptured() and
+      result = TCapturedVariableWriteNode(lvalue)
     )
     or
     result = TValueNode(lvalue.(DestructuringPattern))
@@ -1579,8 +1707,8 @@ module DataFlow {
     )
     or
     exists(SimpleParameter param |
-      pred = TValueNode(param) and // The value node represents the incoming argument
-      succ = lvalueNodeInternal(param) // The SSA node represents the parameters's local variable
+      pred = TValueNode(param) and
+      succ = lvalueNodeInternal(param)
     )
     or
     exists(Expr arg, Parameter param |
@@ -1631,12 +1759,72 @@ module DataFlow {
    *
    * Inlining is forced because the two relations are indexed differently.
    */
+  private predicate sharedOrdinaryFlowStep(Ssa2::Node pred, Ssa2::Node succ) {
+    exists(boolean isUseStep |
+      Ssa2::localFlowStep(_, pred, succ, isUseStep) and
+      (
+        isUseStep = false
+        or
+        isUseStep = true and
+        not sharedReadInsideWith(pred)
+      )
+    )
+    or
+    exists(Ssa2::Node dynamicRead |
+      sharedReadInsideWith(dynamicRead) and
+      Ssa2::localFlowStep(_, dynamicRead, succ, true) and
+      sharedOrdinaryFlowStep(pred, dynamicRead)
+    )
+  }
+
+  private predicate sharedReadInsideWith(Ssa2::Node node) {
+    exists(Ssa2::ExprNode read, WithStmt with |
+      node = read and
+      read.getExpr().(AstNode).getParent+() = with.getBody()
+    )
+  }
+
+  private predicate sharedImmediateFlowStep(Ssa2::Node pred, Ssa2::Node succ) {
+    Ssa2::localMustFlowStep(_, pred, succ)
+    or
+    pred instanceof Ssa2::ExprPostUpdateNode and
+    Ssa2::localFlowStep(_, pred, succ, true)
+  }
+
+  private predicate sharedPhiImmediateFlowStep(EarlyStageNode pred, EarlyStageNode succ) {
+    exists(
+      Ssa2::SsaDefinitionNode sharedNode, Ssa2::PhiNode sharedPhi,
+      Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index, SsaPhiNode legacyPhi,
+      LocalVariable local
+    |
+      sharedNode.getDefinition() = sharedPhi and
+      sharedPhi.definesAt(var, bb, index) and
+      var.asLocalVariable() = local and
+      legacyPhi.definesAt(bb, _, local) and
+      succ = TSharedSsaDefNode(var, bb, index) and
+      (
+        refinementOverlayDefinition(legacyPhi.getRephinedVariable().getDefinition()) and
+        pred = refinementOverlayNode(legacyPhi.getRephinedVariable().getDefinition())
+        or
+        not refinementOverlayDefinition(legacyPhi.getRephinedVariable().getDefinition()) and
+        pred = sharedSsaNode(legacyPhi.getRephinedVariable().getDefinition())
+      )
+    )
+  }
+
   pragma[inline]
   private predicate immediateFlowStepShared(EarlyStageNode pred, EarlyStageNode succ) {
-    exists(SsaVariable v |
-      pred = TSsaDefNode(v.getDefinition()) and
-      succ = TValueNode(v.getAUse())
+    exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
+      sharedImmediateFlowStep(ssaPred, ssaSucc) and
+      pred = getNodeFromSharedSsa(ssaPred) and
+      succ = getNodeFromSharedSsa(ssaSucc) and
+      not exists(SsaVariable legacy |
+        succ = TValueNode(legacy.getAUse()) and
+        refinementOverlayDefinition(legacy.getDefinition())
+      )
     )
+    or
+    sharedPhiImmediateFlowStep(pred, succ)
     or
     exists(Expr predExpr, Expr succExpr |
       pred = TValueNode(predExpr) and succ = TValueNode(succExpr)
@@ -1683,6 +1871,12 @@ module DataFlow {
       pred = TThisNode(use.getBindingContainer()) and
       succ = TImplicitThisUse(use, false)
     )
+    or
+    exists(SsaVariable captured |
+      captured.getSourceVariable().isCaptured() and
+      pred = capturedSsaNode(captured.getDefinition()) and
+      succ = TValueNode(captured.getAUse())
+    )
   }
 
   pragma[nomagic]
@@ -1692,15 +1886,14 @@ module DataFlow {
     or
     immediateFlowStepShared(pred, succ)
     or
-    // Refinement of variable -> original definition of variable
-    exists(SsaRefinementNode refinement |
-      succ = TSsaDefNode(refinement) and
-      pred = TSsaDefNode(refinement.getAnInput())
-    )
+    refinementFlowStep(pred, succ, true)
+    or
+    legacyPhiCompatibilityFlowStep(pred, succ, true)
     or
     exists(SsaPhiNode phi |
-      succ = TSsaDefNode(phi) and
-      pred = TSsaDefNode(phi.getRephinedVariable())
+      phi.getSourceVariable().isCaptured() and
+      succ = capturedSsaNode(phi) and
+      pred = capturedSsaNode(phi.getRephinedVariable())
     )
     or
     // IIFE call -> return value of IIFE
@@ -1725,25 +1918,28 @@ module DataFlow {
     or
     immediateFlowStepShared(pred, succ)
     or
-    // From an assignment or implicit initialization of a captured variable to its flow-insensitive node.
+    refinementFlowStep(pred, succ, false)
+    or
+    legacyPhiCompatibilityFlowStep(pred, succ, false)
+    or
     exists(SsaDefinition predDef |
-      pred = TSsaDefNode(predDef) and
+      predDef.getSourceVariable().isCaptured() and
+      pred = capturedSsaNode(predDef) and
       succ = TCapturedVariableNode(predDef.getSourceVariable())
     |
       predDef instanceof SsaExplicitDefinition or
       predDef instanceof SsaImplicitInit
     )
     or
-    // From a captured variable node to its flow-sensitive capture nodes
-    exists(SsaVariableCapture ssaCapture |
-      pred = TCapturedVariableNode(ssaCapture.getSourceVariable()) and
-      succ = TSsaDefNode(ssaCapture)
+    exists(SsaVariableCapture capture |
+      pred = TCapturedVariableNode(capture.getSourceVariable()) and
+      succ = capturedSsaNode(capture)
     )
     or
-    // Flow through implicit SSA nodes
-    exists(SsaImplicitDefinition ssa | succ = TSsaDefNode(ssa) |
-      // from the inputs of phi and pi nodes into the node itself
-      pred = TSsaDefNode(ssa.(SsaPseudoDefinition).getAnInput().getDefinition())
+    exists(SsaImplicitDefinition ssa |
+      ssa.getSourceVariable().isCaptured() and
+      succ = capturedSsaNode(ssa) and
+      pred = capturedSsaNode(ssa.(SsaPseudoDefinition).getAnInput().getDefinition())
     )
     or
     exists(Expr predExpr, Expr succExpr |
@@ -1823,6 +2019,175 @@ module DataFlow {
     result = def.getDestructuringSource()
   }
 
+  private predicate refinementFlowStep(EarlyStageNode pred, EarlyStageNode succ, boolean immediate) {
+    immediate = [true, false] and
+    (
+      exists(SsaRefinementNode refinement, Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
+        (
+          immediate = true and sharedImmediateFlowStep(ssaPred, ssaSucc)
+          or
+          immediate = false and sharedOrdinaryFlowStep(ssaPred, ssaSucc)
+        ) and
+        pred = getNodeFromSharedSsa(ssaPred) and
+        getNodeFromSharedSsa(ssaSucc) = TValueNode(refinement.getVariable().getAUse()) and
+        not refinementOverlayDefinition(refinement.getAnInput().getDefinition()) and
+        succ = TRefinementNode(refinement)
+      )
+      or
+      exists(SsaRefinementNode refinement |
+        refinementOverlayDefinition(refinement.getAnInput().getDefinition()) and
+        pred = refinementOverlayNode(refinement.getAnInput().getDefinition()) and
+        succ = TRefinementNode(refinement)
+      )
+      or
+      exists(SsaPhiNode phi, SsaVariable input |
+        refinementOverlayDefinition(phi) and
+        (
+          immediate = true and input = phi.getRephinedVariable()
+          or
+          immediate = false and input = phi.getAnInput()
+        ) and
+        succ = TLegacySsaPhiNode(phi)
+      |
+        refinementOverlayDefinition(input.getDefinition()) and
+        pred = refinementOverlayNode(input.getDefinition())
+        or
+        not refinementOverlayDefinition(input.getDefinition()) and
+        pred = sharedSsaNode(input.getDefinition())
+      )
+      or
+      exists(SsaVariable variable |
+        refinementOverlayDefinition(variable.getDefinition()) and
+        pred = refinementOverlayNode(variable.getDefinition()) and
+        succ = TValueNode(variable.getAUse())
+      )
+    )
+  }
+
+  private predicate legacyPhiCompatibilityFlowStep(
+    EarlyStageNode pred, EarlyStageNode succ, boolean immediate
+  ) {
+    immediate = [true, false] and
+    exists(SsaPhiNode phi | not exists(sharedSsaNode(phi)) |
+      exists(SsaVariable input |
+        (
+          immediate = true and input = phi.getRephinedVariable()
+          or
+          immediate = false and input = phi.getAnInput()
+        ) and
+        pred = compatibilitySsaNode(input.getDefinition()) and
+        succ = TLegacySsaPhiNode(phi)
+      )
+      or
+      exists(SsaVariable variable |
+        variable.getDefinition() = phi and
+        pred = TLegacySsaPhiNode(phi) and
+        succ = TValueNode(variable.getAUse())
+      )
+    )
+  }
+
+  cached
+  private predicate refinementOverlayDefinition(SsaDefinition def) {
+    def instanceof SsaRefinementNode
+    or
+    exists(SsaPhiNode phi, SsaVariable input |
+      def = phi and
+      input = phi.getAnInput() and
+      refinementOverlayDefinition(input.getDefinition())
+    )
+  }
+
+  private EarlyStageNode refinementOverlayNode(SsaDefinition ssa) {
+    result = TRefinementNode(ssa)
+    or
+    ssa instanceof SsaPhiNode and
+    refinementOverlayDefinition(ssa) and
+    result = TLegacySsaPhiNode(ssa)
+  }
+
+  private EarlyStageNode sharedSsaNode(SsaDefinition legacy) {
+    exists(Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index |
+      sameSsaDefinition(legacy, var, bb, index) and
+      exists(Ssa2::SsaDefinitionNode shared | shared.getDefinition().definesAt(var, bb, index)) and
+      result = TSharedSsaDefNode(var, bb, index)
+    )
+  }
+
+  private EarlyStageNode compatibilitySsaNode(SsaDefinition legacy) {
+    result = refinementOverlayNode(legacy)
+    or
+    legacy instanceof SsaPhiNode and
+    not exists(sharedSsaNode(legacy)) and
+    result = TLegacySsaPhiNode(legacy)
+    or
+    result = sharedSsaNode(legacy)
+  }
+
+  private EarlyStageNode capturedSsaNode(SsaDefinition ssa) {
+    exists(VarRef write |
+      ssa.(SsaExplicitDefinition).getDef().getTarget() = write and
+      write.getVariable().isCaptured() and
+      result = TCapturedVariableWriteNode(write)
+    )
+    or
+    ssa.(SsaImplicitInit).getSourceVariable().isCaptured() and
+    result = TCapturedSsaInitNode(ssa.getSourceVariable())
+    or
+    ssa instanceof SsaVariableCapture and
+    result = TCapturedSsaCaptureNode(ssa)
+    or
+    ssa instanceof SsaPhiNode and
+    ssa.getSourceVariable().isCaptured() and
+    result = TLegacySsaPhiNode(ssa)
+  }
+
+  private EarlyStageNode getNodeFromSharedSsa(Ssa2::Node node) {
+    result = TValueNode(node.(Ssa2::ExprNode).getExpr())
+    or
+    result = TExprPostUpdateNode(node.(Ssa2::ExprPostUpdateNode).getExpr())
+    or
+    exists(ImplicitThisUse use |
+      node.(Ssa2::ExprPostUpdateNode).getExpr() = use and
+      result = TImplicitThisUse(use, true)
+    )
+    or
+    result = TSsaSynthReadNode(node)
+    or
+    exists(Ssa2::Definition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int i |
+      node.(Ssa2::SsaDefinitionNode).getDefinition() = def and
+      def.definesAt(var, bb, i) and
+      result = TSharedSsaDefNode(var, bb, i)
+    )
+    or
+    exists(
+      Ssa2::WriteDefinition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int i,
+      VarDef write
+    |
+      node.(Ssa2::WriteDefSourceNode).getDefinition() = def and
+      def.definesAt(var, bb, i) and
+      bb.defAt(i, var.asLocalVariable(), write) and
+      write.getTarget() instanceof VarRef and
+      result = TValueNode(defSourceNode(write))
+    )
+    or
+    exists(
+      Ssa2::WriteDefinition def, Ssa2::SsaConfig::SourceVariable var, EntryBasicBlock bb,
+      SimpleParameter parameter
+    |
+      node.(Ssa2::WriteDefSourceNode).getDefinition() = def and
+      def.definesAt(var, bb, -1) and
+      var.asLocalVariable() = parameter.getVariable() and
+      result = TValueNode(parameter)
+    )
+    or
+    exists(Ssa2::WriteDefinition def, Ssa2::SsaConfig::SourceVariable var, EntryBasicBlock bb |
+      node.(Ssa2::WriteDefSourceNode).getDefinition() = def and
+      def.definesAt(var, bb, -1) and
+      result = TThisNode(var.asThisContainer())
+    )
+  }
+
   /**
    * Holds if the flow information for the node `nd`.
    *
@@ -1837,7 +2202,7 @@ module DataFlow {
    */
   overlay[global]
   predicate isIncomplete(Node nd, Incompleteness cause) {
-    exists(SsaVariable ssa | nd = TSsaDefNode(ssa.getDefinition()) |
+    exists(SsaVariable ssa | nd = ssaDefinitionNode(ssa.getDefinition()) |
       defIsIncomplete(ssa.(SsaExplicitDefinition).getDef(), cause)
       or
       exists(Variable v | v = ssa.getSourceVariable() |

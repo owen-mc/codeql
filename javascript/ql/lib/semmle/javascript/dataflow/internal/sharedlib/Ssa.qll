@@ -1,8 +1,4 @@
-/**
- * Instantiates the shared SSA library for JavaScript, but only to establish use-use flow.
- *
- * JavaScript's old SSA library is still responsible for the ordinary SSA flow.
- */
+/** Instantiates the shared SSA library for JavaScript data flow. */
 overlay[local?]
 module;
 
@@ -52,8 +48,19 @@ module SsaDataflowInput implements DataFlowIntegrationInputSig {
   }
 
   predicate ssaDefHasSource(WriteDefinition def) {
-    // This library only handles use-use flow after a post-update, there are no definitions, only uses.
-    none()
+    exists(SsaConfig::SourceVariable v, js::Cfg::BasicBlock bb, int i |
+      def.definesAt(v, bb, i) and
+      (
+        exists(js::VarDef write |
+          bb.defAt(i, v.asLocalVariable(), write) and
+          write.getTarget() instanceof js::VarRef
+        )
+        or
+        i = -1 and v.asLocalVariable() = any(js::SimpleParameter p).getVariable()
+        or
+        i = -1 and exists(v.asThisContainer())
+      )
+    )
   }
 
   cached

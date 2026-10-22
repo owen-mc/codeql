@@ -32,11 +32,23 @@ private module Cached {
   cached
   newtype TNode =
     TValueNode(AST::ValueNode nd) or
-    /** An SSA node from the legacy SSA library */
-    TSsaDefNode(SsaDefinition d) or
+    /** An SSA definition from the shared SSA library */
+    TSharedSsaDefNode(Ssa2::SsaConfig::SourceVariable v, BasicBlock bb, int i) {
+      exists(Ssa2::SsaDefinitionNode node | node.getDefinition().definesAt(v, bb, i))
+    } or
+    /** A JavaScript-specific type-refinement definition. */
+    TRefinementNode(SsaRefinementNode refinement) or
+    /** A write to a captured variable. */
+    TCapturedVariableWriteNode(VarRef write) { write.getVariable().isCaptured() } or
+    /** A JavaScript-specific SSA phi definition. */
+    TLegacySsaPhiNode(SsaPhiNode phi) or
+    /** The implicit initialization of a captured variable. */
+    TCapturedSsaInitNode(LocalVariable variable) { variable.isCaptured() } or
+    /** A JavaScript-specific capture definition. */
+    TCapturedSsaCaptureNode(SsaVariableCapture capture) or
     /** Use of a variable or 'this', with flow from a post-update node (from an earlier use) */
     TSsaUseNode(ControlFlowNode use) { use = any(Ssa2::SsaConfig::SourceVariable v).getAUse() } or
-    /** A synthesized variable read (new SSA library). Definitions are represented by TSsaDefNode. */
+    /** A synthesized variable read from the shared SSA library. */
     TSsaSynthReadNode(Ssa2::SsaSynthReadNode read) or
     TCapturedVariableNode(LocalVariable v) { v.isCaptured() } or
     TPropNode(@property p) or
@@ -130,14 +142,15 @@ private module Cached {
 import Cached
 
 private class TEarlyStageNode =
-  TValueNode or TSsaDefNode or TCapturedVariableNode or TPropNode or TRestPatternNode or
-      TElementPatternNode or TElementNode or TReflectiveCallNode or TThisNode or
-      TFunctionSelfReferenceNode or TDestructuredModuleImportNode or THtmlAttributeNode or
-      TFunctionReturnNode or TExceptionalFunctionReturnNode or TExceptionalInvocationReturnNode or
-      TGlobalAccessPathRoot or TTemplatePlaceholderTag or TReflectiveParametersNode or
-      TExprPostUpdateNode or TNewCallThisArgument or TStaticArgumentArrayNode or
-      TDynamicArgumentArrayNode or TStaticParameterArrayNode or TDynamicParameterArrayNode or
-      TImplicitThisUse;
+  TValueNode or TSharedSsaDefNode or TRefinementNode or TCapturedVariableWriteNode or
+      TLegacySsaPhiNode or TCapturedSsaInitNode or TCapturedSsaCaptureNode or TSsaSynthReadNode or
+      TCapturedVariableNode or TPropNode or TRestPatternNode or TElementPatternNode or
+      TElementNode or TReflectiveCallNode or TThisNode or TFunctionSelfReferenceNode or
+      TDestructuredModuleImportNode or THtmlAttributeNode or TFunctionReturnNode or
+      TExceptionalFunctionReturnNode or TExceptionalInvocationReturnNode or TGlobalAccessPathRoot or
+      TTemplatePlaceholderTag or TReflectiveParametersNode or TExprPostUpdateNode or
+      TNewCallThisArgument or TStaticArgumentArrayNode or TDynamicArgumentArrayNode or
+      TStaticParameterArrayNode or TDynamicParameterArrayNode or TImplicitThisUse;
 
 /**
  * A data-flow node that is not a flow summary node.

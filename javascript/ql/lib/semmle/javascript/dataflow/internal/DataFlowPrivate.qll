@@ -1153,6 +1153,8 @@ private predicate isBlockedLegacyNode(Node node) {
     variable = any(VariableCaptureConfig::CapturedVariable v).asLocalVariable()
   )
   or
+  exists(SsaPhiNode phi | node = TLegacySsaPhiNode(phi))
+  or
   legacyBarrier(node)
 }
 
@@ -1221,16 +1223,9 @@ predicate knownSourceModel(Node sink, string model) { none() }
 
 predicate knownSinkModel(Node sink, string model) { none() }
 
-private predicate samePhi(SsaPhiNode legacyPhi, Ssa2::PhiNode newPhi) {
-  exists(BasicBlock bb, LocalVariableOrThis v |
-    newPhi.definesAt(v, bb, _) and
-    legacyPhi.definesAt(bb, _, v.asLocalVariable())
-  )
-}
-
 cached
 Node getNodeFromSsa2(Ssa2::Node node) {
-  result = TSsaUseNode(node.(Ssa2::ExprNode).getExpr())
+  result = TValueNode(node.(Ssa2::ExprNode).getExpr())
   or
   result = TExprPostUpdateNode(node.(Ssa2::ExprPostUpdateNode).getExpr())
   or
@@ -1241,29 +1236,19 @@ Node getNodeFromSsa2(Ssa2::Node node) {
   or
   result = TSsaSynthReadNode(node)
   or
-  exists(SsaPhiNode legacyPhi, Ssa2::PhiNode ssaPhi |
-    node.(Ssa2::SsaDefinitionNode).getDefinition() = ssaPhi and
-    samePhi(legacyPhi, ssaPhi) and
-    result = TSsaDefNode(legacyPhi)
+  exists(Ssa2::Definition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int i |
+    node.(Ssa2::SsaDefinitionNode).getDefinition() = def and
+    def.definesAt(var, bb, i) and
+    result = TSharedSsaDefNode(var, bb, i)
   )
 }
 
-private predicate useUseFlow(Node node1, Node node2) {
+private predicate sharedSsaFlow(Node node1, Node node2) {
   exists(Ssa2::Node ssa1, Ssa2::Node ssa2 |
     Ssa2::localFlowStep(_, ssa1, ssa2, _) and
     node1 = getNodeFromSsa2(ssa1) and
     node2 = getNodeFromSsa2(ssa2) and
     not node1.getTopLevel().isExterns()
-  )
-  or
-  exists(Expr use |
-    node1 = TSsaUseNode(use) and
-    node2 = TValueNode(use)
-  )
-  or
-  exists(ImplicitThisUse use |
-    node1 = TSsaUseNode(use) and
-    node2 = TImplicitThisUse(use, false)
   )
 }
 
@@ -1278,7 +1263,7 @@ predicate simpleLocalFlowStep(Node node1, Node node2) {
   nodeGetEnclosingCallable(pragma[only_bind_out](node1)) =
     nodeGetEnclosingCallable(pragma[only_bind_out](node2))
   or
-  useUseFlow(node1, node2)
+  sharedSsaFlow(node1, node2)
   or
   exists(FlowSummaryImpl::Private::SummaryNode input, FlowSummaryImpl::Private::SummaryNode output |
     FlowSummaryPrivate::Steps::summaryStoreStep(input, MkAwaited(), output) and
