@@ -193,7 +193,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
   function readOccurrenceSourceDoesNotContaminateVariable() {
     const value = "safe";
     READ_SOURCE(value, "read-occurrence-source");
-    SINK(value); // $ MISSING: noRefinementFlow=read-occurrence-source noRefinementTaint=read-occurrence-source SPURIOUS: localRefinementFlow=read-occurrence-source refinementFlow=read-occurrence-source refinementTaint=read-occurrence-source
+    SINK(value); // $ noRefinementFlow=read-occurrence-source noRefinementTaint=read-occurrence-source
   }
 
   function indirectBarrierGuardWithReadBeforeJoin() {
@@ -204,7 +204,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
     } else {
       value = "safe";
     }
-    SINK(value); // $ localRefinementFlow=indirect-barrier-read-join MISSING: noRefinementFlow=indirect-barrier-read-join noRefinementTaint=indirect-barrier-read-join SPURIOUS: refinementFlow=indirect-barrier-read-join refinementTaint=indirect-barrier-read-join
+    SINK(value); // $ localRefinementFlow=indirect-barrier-read-join noRefinementFlow=indirect-barrier-read-join noRefinementTaint=indirect-barrier-read-join
   }
 
   function indirectBarrierGuardEmptyBranchBeforeJoin() {
@@ -214,7 +214,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
     } else {
       value = "safe";
     }
-    SINK(value); // $ localRefinementFlow=indirect-barrier-empty-join MISSING: noRefinementFlow=indirect-barrier-empty-join noRefinementTaint=indirect-barrier-empty-join SPURIOUS: refinementFlow=indirect-barrier-empty-join refinementTaint=indirect-barrier-empty-join
+    SINK(value); // $ localRefinementFlow=indirect-barrier-empty-join noRefinementFlow=indirect-barrier-empty-join noRefinementTaint=indirect-barrier-empty-join
   }
 
   function indirectBarrierGuardAfterRefinementBeforeJoin() {
@@ -225,7 +225,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
       } else {
         value = "safe";
       }
-      SINK(value); // $ localRefinementFlow=indirect-barrier-after-refinement-join noRefinementBypass=indirect-barrier-after-refinement-join MISSING: noRefinementFlow=indirect-barrier-after-refinement-join noRefinementTaint=indirect-barrier-after-refinement-join SPURIOUS: refinementFlow=indirect-barrier-after-refinement-join refinementTaint=indirect-barrier-after-refinement-join
+      SINK(value); // $ localRefinementFlow=indirect-barrier-after-refinement-join noRefinementBypass=indirect-barrier-after-refinement-join noRefinementFlow=indirect-barrier-after-refinement-join noRefinementTaint=indirect-barrier-after-refinement-join
     }
   }
 
@@ -238,6 +238,6 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
         value = "safe";
       }
     }
-    SINK(value); // $ localRefinementFlow=barrier-in-with MISSING: noRefinementFlow=barrier-in-with noRefinementTaint=barrier-in-with SPURIOUS: refinementFlow=barrier-in-with refinementTaint=barrier-in-with
+    SINK(value); // $ localRefinementFlow=barrier-in-with noRefinementFlow=barrier-in-with noRefinementTaint=barrier-in-with
   }
 }

@@ -41,6 +41,27 @@ class SsaSynthReadNode extends DataFlow::Node, TSsaSynthReadNode {
   override File getFile() { result = read.getBasicBlock().getFile() }
 }
 
+/** A variable value at a read that can flow past a barrier on just one expression occurrence. */
+class SharedSsaReadNode extends DataFlow::Node, TSharedSsaReadNode {
+  private VarUse read;
+
+  SharedSsaReadNode() {
+    this = TSharedSsaReadNode(any(Ssa2::ExprNode node | node.getExpr() = read))
+  }
+
+  cached
+  override string toString() { result = "[ssa-read] " + read.toString() }
+
+  cached
+  override StmtContainer getContainer() { result = read.getBasicBlock().getContainer() }
+
+  cached
+  override Location getLocation() { result = read.getLocation() }
+
+  cached
+  override File getFile() { result = read.getFile() }
+}
+
 class FlowSummaryNode extends DataFlow::Node, TFlowSummaryNode {
   FlowSummaryImpl::Private::SummaryNode getSummaryNode() { this = TFlowSummaryNode(result) }
 
@@ -1227,9 +1248,28 @@ Node getNodeFromSsa2(Ssa2::Node node) {
   result = TSharedSsaReadNode(node)
 }
 
+private Node getSharedSsaFlowNode(Ssa2::Node node) {
+  result = TSharedSsaReadNode(node)
+  or
+  not node.(Ssa2::ExprNode).getExpr() instanceof VarUse and
+  result = DataFlow::getNodeFromSharedSsa(node)
+}
+
 private predicate sharedSsaFlow(Node node1, Node node2) {
-  DataFlow::sharedSsaFlowStepForGlobal(node1, node2) and
-  not node1.getTopLevel().isExterns()
+  exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
+    Ssa2::localFlowStep(_, ssaPred, ssaSucc, _) and
+    node1 = getSharedSsaFlowNode(ssaPred) and
+    node2 = getSharedSsaFlowNode(ssaSucc) and
+    node1 != node2 and
+    not node1.getTopLevel().isExterns()
+  )
+  or
+  // A barrier on one use must not sanitize the variable at subsequent uses.
+  exists(Ssa2::ExprNode read |
+    node1 = TSharedSsaReadNode(read) and
+    node2 = DataFlow::getNodeFromSharedSsa(read) and
+    not node1.getTopLevel().isExterns()
+  )
 }
 
 overlay[global]

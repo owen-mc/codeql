@@ -1549,9 +1549,20 @@ module Make<
       )
     }
 
+    private Definition getAValuePreservingInputDef(Definition def) {
+      result = def
+      or
+      exists(Definition inp |
+        DfInput::allowFlowIntoUncertainDef(def) and
+        not DfInput::ssaDefHasSource(def) and
+        uncertainWriteDefinitionInput(def, inp) and
+        result = getAValuePreservingInputDef(inp)
+      )
+    }
+
     pragma[nomagic]
     private predicate phiInputHasRead(SsaPhiExt phi, BasicBlock input) {
-      exists(DfInput::getARead(getAPhiInputDef(phi, input)))
+      exists(DfInput::getARead(getAValuePreservingInputDef(getAPhiInputDef(phi, input))))
     }
 
     /** Holds if `bb` is the target end of a branch edge of a guard and the guard controls `bb`. */
@@ -2129,7 +2140,7 @@ module Make<
       private predicate guardChecksSsaDef(
         DfInput::Guard g, Definition def, DfInput::GuardValue val, State state
       ) {
-        guardChecks(g, DfInput::getARead(def), val, state)
+        guardChecks(g, DfInput::getARead(getAValuePreservingInputDef(def)), val, state)
       }
 
       private module Barrier = BarrierGuardDefWithState<State, guardChecksSsaDef/4>;

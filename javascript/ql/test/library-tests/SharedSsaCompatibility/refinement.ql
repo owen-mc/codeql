@@ -81,9 +81,12 @@ module InlineTest implements TestSig {
         or
         tag = "noRefinementTaint" and not RefinementTaint::flow(source, sink.getArgument(0))
         or
-        tag = "localRefinementFlow" and source.getASuccessor*() = sink.getArgument(0)
+        tag = "localRefinementFlow" and
+        sourceCall.getCalleeName() = "SOURCE" and
+        source.getASuccessor*() = sink.getArgument(0)
         or
         tag = "noRefinementBypass" and
+        sourceCall.getCalleeName() = "SOURCE" and
         source.getASuccessor*() = sink.getArgument(0) and
         not localStepWithoutRefinement*(source, sink.getArgument(0))
         or

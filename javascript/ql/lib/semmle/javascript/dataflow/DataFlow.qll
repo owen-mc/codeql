@@ -335,25 +335,6 @@ module DataFlow {
     override AstNode getAstNode() { none() }
   }
 
-  /** A variable value that can flow past a barrier on just one expression occurrence. */
-  private class SharedSsaReadNode extends Node, TSharedSsaReadNode {
-    VarUse read;
-
-    SharedSsaReadNode() {
-      this = TSharedSsaReadNode(any(Ssa2::ExprNode node | node.getExpr() = read))
-    }
-
-    override BasicBlock getBasicBlock() { result = read.getBasicBlock() }
-
-    override Location getLocation() { result = read.getLocation() }
-
-    override string toString() { result = "[ssa-read] " + read.toString() }
-
-    override File getFile() { result = read.getFile() }
-
-    override AstNode getAstNode() { none() }
-  }
-
   /**
    * A node in the data flow graph which corresponds to a `@property`.
    */
@@ -1756,24 +1737,10 @@ module DataFlow {
   private predicate ordinaryFlowStepShared(EarlyStageNode pred, EarlyStageNode succ) {
     exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
       sharedOrdinaryFlowStep(ssaPred, ssaSucc) and
-      pred = getSharedSsaFlowNode(ssaPred) and
-      succ = getSharedSsaFlowNode(ssaSucc) and
+      pred = getNodeFromSharedSsa(ssaPred) and
+      succ = getNodeFromSharedSsa(ssaSucc) and
       pred != succ
     )
-    or
-    // A barrier on one use must not sanitize the variable at subsequent uses.
-    exists(Ssa2::ExprNode read |
-      pred = TSharedSsaReadNode(read) and succ = getNodeFromSharedSsa(read)
-      or
-      pred = getNodeFromSharedSsa(read) and succ = TSharedSsaReadNode(read)
-    )
-  }
-
-  private EarlyStageNode getSharedSsaFlowNode(Ssa2::Node node) {
-    result = TSharedSsaReadNode(node)
-    or
-    not node.(Ssa2::ExprNode).getExpr() instanceof VarUse and
-    result = getNodeFromSharedSsa(node)
   }
 
   pragma[inline]
@@ -1781,11 +1748,7 @@ module DataFlow {
     exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
       sharedImmediateFlowStep(ssaPred, ssaSucc) and
       pred = getNodeFromSharedSsa(ssaPred) and
-      (
-        succ = getNodeFromSharedSsa(ssaSucc)
-        or
-        succ = TSharedSsaReadNode(ssaSucc)
-      ) and
+      succ = getNodeFromSharedSsa(ssaSucc) and
       pred != succ
     )
     or
@@ -1954,14 +1917,6 @@ module DataFlow {
    */
   predicate localFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
     localFlowStepWithoutSharedOrdinary(pred, succ)
-  }
-
-  /**
-   * INTERNAL: Shared SSA steps for global flow, including JavaScript refinements.
-   * These are the same SSA steps used by local flow.
-   */
-  predicate sharedSsaFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
-    ordinaryFlowStepShared(pred, succ)
   }
 
   overlay[global]

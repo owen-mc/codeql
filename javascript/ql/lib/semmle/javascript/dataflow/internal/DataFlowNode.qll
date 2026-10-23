@@ -154,14 +154,13 @@ import Cached
 private class TEarlyStageNode =
   TValueNode or TSharedSsaDefNode or TRefinementNode or TCapturedVariableWriteNode or
       TLegacySsaPhiNode or TCapturedSsaInitNode or TCapturedSsaCaptureNode or TSsaSynthReadNode or
-      TSharedSsaReadNode or TCapturedVariableNode or TPropNode or TRestPatternNode or
-      TElementPatternNode or TElementNode or TReflectiveCallNode or TThisNode or
-      TFunctionSelfReferenceNode or TDestructuredModuleImportNode or THtmlAttributeNode or
-      TFunctionReturnNode or TExceptionalFunctionReturnNode or TExceptionalInvocationReturnNode or
-      TGlobalAccessPathRoot or TTemplatePlaceholderTag or TReflectiveParametersNode or
-      TExprPostUpdateNode or TNewCallThisArgument or TStaticArgumentArrayNode or
-      TDynamicArgumentArrayNode or TStaticParameterArrayNode or TDynamicParameterArrayNode or
-      TImplicitThisUse;
+      TCapturedVariableNode or TPropNode or TRestPatternNode or TElementPatternNode or
+      TElementNode or TReflectiveCallNode or TThisNode or TFunctionSelfReferenceNode or
+      TDestructuredModuleImportNode or THtmlAttributeNode or TFunctionReturnNode or
+      TExceptionalFunctionReturnNode or TExceptionalInvocationReturnNode or TGlobalAccessPathRoot or
+      TTemplatePlaceholderTag or TReflectiveParametersNode or TExprPostUpdateNode or
+      TNewCallThisArgument or TStaticArgumentArrayNode or TDynamicArgumentArrayNode or
+      TStaticParameterArrayNode or TDynamicParameterArrayNode or TImplicitThisUse;
 
 /**
  * A data-flow node that is not a flow summary node.

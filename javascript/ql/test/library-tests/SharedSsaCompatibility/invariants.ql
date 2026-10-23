@@ -27,7 +27,7 @@ query predicate missingSsaNodeMetadata(DataFlow::Node node) {
   ) and
   not (
     exists(node.toString()) and
-    exists(node.getBasicBlock()) and
+    (exists(node.getBasicBlock()) or node instanceof TSharedSsaReadNode) and
     exists(node.getContainer()) and
     exists(node.getLocation()) and
     exists(node.getFile())
