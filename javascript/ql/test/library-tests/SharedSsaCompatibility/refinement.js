@@ -240,4 +240,22 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
     }
     SINK(value); // $ localRefinementFlow=barrier-in-with noRefinementFlow=barrier-in-with noRefinementTaint=barrier-in-with
   }
+
+  class SharedSsaThisTests {
+    guardedThisMethod(condition) {
+      if (condition) {
+        if (!BARRIER(this)) return;
+      } else {
+        if (!BARRIER(this)) return;
+      }
+      SINK(this); // $ localRefinementFlow=this-guard MISSING: noRefinementFlow=this-guard noRefinementTaint=this-guard SPURIOUS: refinementFlow=this-guard refinementTaint=this-guard
+    }
+
+    occurrenceBarrierThisMethod() {
+      this.property = SOURCE("this-occurrence-barrier");
+      BLOCKED_SINK(this.property); // $ noRefinementFlow=this-occurrence-barrier noRefinementTaint=this-occurrence-barrier
+      BLOCKED_SINK(this); // $ noRefinementFlow=this-occurrence-barrier noRefinementTaint=this-occurrence-barrier
+      SINK(this.property); // $ MISSING: refinementFlow=this-occurrence-barrier refinementTaint=this-occurrence-barrier SPURIOUS: noRefinementFlow=this-occurrence-barrier noRefinementTaint=this-occurrence-barrier
+    }
+  }
 }

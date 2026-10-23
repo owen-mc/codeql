@@ -6,6 +6,11 @@ module RefinementConfig implements DataFlow::ConfigSig {
     source.(DataFlow::InvokeNode).getCalleeName() = "SOURCE"
     or
     source = any(DataFlow::InvokeNode call | call.getCalleeName() = "READ_SOURCE").getArgument(0)
+    or
+    exists(Function method |
+      method = any(MethodDeclaration decl | decl.getName() = "guardedThisMethod").getBody() and
+      source = DataFlow::thisNode(method)
+    )
   }
 
   predicate isSink(DataFlow::Node sink) {
@@ -55,22 +60,35 @@ module InlineTest implements TestSig {
   predicate hasActualResult(Location location, string element, string tag, string value) {
     element = "" and
     location.getFile().getBaseName() = ["refinement.js", "namespace.ts"] and
-    exists(
-      DataFlow::InvokeNode sourceCall, DataFlow::Node source, DataFlow::InvokeNode sink,
-      VarRef sinkArgument
-    |
+    exists(DataFlow::Node source, DataFlow::InvokeNode sink, Expr sinkArgument, boolean allowLocal |
       (
-        sourceCall.getCalleeName() = "SOURCE" and
-        source = sourceCall and
-        value = sourceCall.getArgument(0).getStringValue()
+        exists(DataFlow::InvokeNode sourceCall |
+          sourceCall.getCalleeName() = "SOURCE" and
+          source = sourceCall and
+          value = sourceCall.getArgument(0).getStringValue() and
+          allowLocal = true
+          or
+          sourceCall.getCalleeName() = "READ_SOURCE" and
+          source = sourceCall.getArgument(0) and
+          value = sourceCall.getArgument(1).getStringValue() and
+          allowLocal = false
+        )
         or
-        sourceCall.getCalleeName() = "READ_SOURCE" and
-        source = sourceCall.getArgument(0) and
-        value = sourceCall.getArgument(1).getStringValue()
+        exists(MethodDeclaration decl |
+          source = DataFlow::thisNode(decl.getBody()) and
+          allowLocal = true and
+          decl.getName() = "guardedThisMethod" and
+          value = "this-guard"
+        )
       ) and
       sink.getCalleeName() = ["SINK", "BLOCKED_SINK"] and
       source.getContainer() = sink.getContainer() and
       sink.getArgument(0) = DataFlow::valueNode(sinkArgument) and
+      (
+        sinkArgument instanceof VarRef or
+        sinkArgument instanceof ThisExpr or
+        sinkArgument instanceof PropAccess
+      ) and
       location = sink.getLocation() and
       (
         tag = "refinementFlow" and RefinementFlow::flow(source, sink.getArgument(0))
@@ -82,11 +100,11 @@ module InlineTest implements TestSig {
         tag = "noRefinementTaint" and not RefinementTaint::flow(source, sink.getArgument(0))
         or
         tag = "localRefinementFlow" and
-        sourceCall.getCalleeName() = "SOURCE" and
+        allowLocal = true and
         source.getASuccessor*() = sink.getArgument(0)
         or
         tag = "noRefinementBypass" and
-        sourceCall.getCalleeName() = "SOURCE" and
+        allowLocal = true and
         source.getASuccessor*() = sink.getArgument(0) and
         not localStepWithoutRefinement*(source, sink.getArgument(0))
         or

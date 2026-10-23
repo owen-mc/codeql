@@ -77,3 +77,15 @@ function readTopLevelObject() {
   SINK(topLevelObject); // $ capturedFlow=top-level-object legacyCapturedFlow=top-level-object
 }
 readTopLevelObject();
+
+let topLevelPhi;
+if (unknownCondition()) {
+  topLevelPhi = SOURCE("top-level-phi"); // $ ssaDefinition=topLevelPhi
+} else {
+  topLevelPhi = "safe"; // $ ssaDefinition=topLevelPhi
+}
+SINK(topLevelPhi); // $ legacyCapturedFlow=top-level-phi MISSING: capturedFlow=top-level-phi
+function readTopLevelPhi() {
+  SINK(topLevelPhi); // $ capturedFlow=top-level-phi legacyCapturedFlow=top-level-phi
+}
+readTopLevelPhi();

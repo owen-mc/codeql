@@ -41,3 +41,21 @@ function nestedPhiNodes(firstCondition, secondCondition, thirdCondition) {
     use(value);
   }
 }
+
+function capturedPhiNodes(condition, otherCondition) {
+  let value;
+  if (condition) {
+    value = "first";
+  } else {
+    value = "second";
+  }
+  function capture() {
+    return value;
+  }
+  capture();
+  if (otherCondition) {
+    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata phiReachesCheck MISSING: globalPhiReachesCheck
+  } else {
+    use(value);
+  }
+}
