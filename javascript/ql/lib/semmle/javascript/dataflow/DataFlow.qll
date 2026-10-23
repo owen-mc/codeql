@@ -1692,12 +1692,7 @@ module DataFlow {
     )
   }
 
-  /**
-   * Flow steps shared between `immediateFlowStep` and `localFlowStep`.
-   *
-   * Inlining is forced because the two relations are indexed differently.
-   */
-  private predicate sharedOrdinaryFlowStep(Ssa2::Node pred, Ssa2::Node succ) {
+  private predicate sharedTypeInferenceFlowStep(Ssa2::Node pred, Ssa2::Node succ) {
     exists(boolean isUseStep |
       Ssa2::localFlowStep(_, pred, succ, isUseStep) and
       (
@@ -1711,7 +1706,7 @@ module DataFlow {
     exists(Ssa2::Node dynamicRead |
       sharedReadInsideWith(dynamicRead) and
       Ssa2::localFlowStep(_, dynamicRead, succ, true) and
-      sharedOrdinaryFlowStep(pred, dynamicRead)
+      sharedTypeInferenceFlowStep(pred, dynamicRead)
     )
   }
 
@@ -1736,7 +1731,7 @@ module DataFlow {
 
   private predicate ordinaryFlowStepShared(EarlyStageNode pred, EarlyStageNode succ) {
     exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
-      sharedOrdinaryFlowStep(ssaPred, ssaSucc) and
+      Ssa2::localFlowStep(_, ssaPred, ssaSucc, _) and
       pred = getNodeFromSharedSsa(ssaPred) and
       succ = getNodeFromSharedSsa(ssaSucc) and
       pred != succ
@@ -1925,6 +1920,22 @@ module DataFlow {
    */
   predicate localFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
     localFlowStepWithoutSharedOrdinary(pred, succ)
+  }
+
+  /**
+   * INTERNAL: Local steps for value inference. Skip intermediate reads in `with`
+   * statements so their reflective uncertainty does not propagate to later reads.
+   * Security flow must instead visit those reads so their barriers remain effective.
+   */
+  predicate localFlowStepForTypeInference(EarlyStageNode pred, EarlyStageNode succ) {
+    localFlowStepWithoutSharedOrdinary(pred, succ)
+    or
+    exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
+      sharedTypeInferenceFlowStep(ssaPred, ssaSucc) and
+      pred = getNodeFromSharedSsa(ssaPred) and
+      succ = getNodeFromSharedSsa(ssaSucc) and
+      pred != succ
+    )
   }
 
   overlay[global]

@@ -110,5 +110,5 @@ function legacyGuardedWithReads(condition) {
       value = "safe";
     }
   }
-  SINK(value); // $ SPURIOUS: legacyCapturedFlow=legacy-with-guard
+  SINK(value);
 }
