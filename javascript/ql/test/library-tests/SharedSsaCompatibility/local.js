@@ -95,13 +95,13 @@ function unreachableLocalSsaCode() {
 class SharedSsaBase {}
 
 class SharedSsaDerived extends SharedSsaBase {
-  field = this.condition ? 1 : 2; // $ SPURIOUS: fieldReadContainerMismatch
+  field = this.condition ? 1 : 2;
 
   constructor(condition) {
     if (condition) {
-      super(); // $ noSuperFlow noThisSelfFlow SPURIOUS: superPostUpdateToThisFlow
+      super(); // $ noSuperFlow noThisSelfFlow
     } else {
-      super(); // $ noSuperFlow noThisSelfFlow SPURIOUS: superPostUpdateToThisFlow
+      super(); // $ noSuperFlow noThisSelfFlow
     }
     use(this);
   }

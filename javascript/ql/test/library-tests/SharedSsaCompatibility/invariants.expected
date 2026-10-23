@@ -15,5 +15,7 @@ missingSsaNodeMetadata
 orphanSsaDefinitionNode
 ssaDefinitionHasAstNode
 unmappedWriteDefSourceNode
+nonUniqueSharedSsaNodeMapping
+sharedReadContainerMismatch
 postUpdateMustFlow
 localFlowIsLocal

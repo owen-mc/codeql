@@ -58,6 +58,16 @@ query predicate unmappedWriteDefSourceNode(Ssa2::WriteDefSourceNode node, int ma
   mapped != 1
 }
 
+query predicate nonUniqueSharedSsaNodeMapping(Ssa2::Node node, int mapped) {
+  mapped = count(DataFlow::getNodeFromSharedSsa(node)) and
+  mapped > 1
+}
+
+query predicate sharedReadContainerMismatch(Ssa2::ExprNode read) {
+  TSharedSsaReadNode(read).(DataFlow::Node).getContainer() !=
+    DataFlow::getNodeFromSharedSsa(read).(DataFlow::Node).getContainer()
+}
+
 query predicate postUpdateMustFlow(DataFlow::PostUpdateNode update, DataFlow::Node node) {
   node.getImmediatePredecessor() = update
 }

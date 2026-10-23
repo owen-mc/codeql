@@ -53,7 +53,12 @@ class SharedSsaReadNode extends DataFlow::Node, TSharedSsaReadNode {
   override string toString() { result = "[ssa-read] " + read.toString() }
 
   cached
-  override StmtContainer getContainer() { result = read.getBasicBlock().getContainer() }
+  override StmtContainer getContainer() {
+    result = read.(ImplicitThisUse).getUseContainer()
+    or
+    not read instanceof ImplicitThisUse and
+    result = read.getBasicBlock().getContainer()
+  }
 
   cached
   override Location getLocation() { result = read.getLocation() }

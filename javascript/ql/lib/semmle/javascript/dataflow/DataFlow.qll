@@ -2023,7 +2023,11 @@ module DataFlow {
       result = TImplicitThisUse(use, false)
     )
     or
-    result = TExprPostUpdateNode(node.(Ssa2::ExprPostUpdateNode).getExpr())
+    exists(Ssa2::ExprPostUpdateNode post |
+      node = post and
+      not post.getExpr() instanceof ImplicitThisUse and
+      result = TExprPostUpdateNode(post.getExpr())
+    )
     or
     exists(ImplicitThisUse use |
       node.(Ssa2::ExprPostUpdateNode).getExpr() = use and
