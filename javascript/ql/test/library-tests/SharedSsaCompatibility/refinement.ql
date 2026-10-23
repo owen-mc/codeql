@@ -8,7 +8,7 @@ module RefinementConfig implements DataFlow::ConfigSig {
 
   predicate isSink(DataFlow::Node sink) {
     exists(DataFlow::InvokeNode call |
-      call.getCalleeName() = "SINK" and
+      call.getCalleeName() = ["SINK", "BLOCKED_SINK"] and
       sink = call.getArgument(0)
     )
   }
@@ -17,6 +17,8 @@ module RefinementConfig implements DataFlow::ConfigSig {
     node instanceof DataFlow::VarAccessBarrier
     or
     node = DataFlow::MakeBarrierGuard<SimpleBarrierGuard>::getABarrierNode()
+    or
+    node = any(DataFlow::InvokeNode call | call.getCalleeName() = "BLOCKED_SINK").getArgument(0)
   }
 }
 
@@ -54,7 +56,7 @@ module InlineTest implements TestSig {
     exists(DataFlow::InvokeNode source, DataFlow::InvokeNode sink, VarRef sinkArgument |
       source.getCalleeName() = "SOURCE" and
       value = source.getArgument(0).getStringValue() and
-      sink.getCalleeName() = "SINK" and
+      sink.getCalleeName() = ["SINK", "BLOCKED_SINK"] and
       source.getContainer() = sink.getContainer() and
       sink.getArgument(0) = DataFlow::valueNode(sinkArgument) and
       location = sink.getLocation() and

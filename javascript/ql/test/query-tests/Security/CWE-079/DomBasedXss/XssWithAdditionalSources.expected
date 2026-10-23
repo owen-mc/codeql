@@ -131,12 +131,16 @@ nodes
 | classnames.js:17:53:17:63 | window.name | semmle.label | window.name |
 | clipboard.ts:8:11:8:14 | html | semmle.label | html |
 | clipboard.ts:8:18:8:51 | clipboa ... /html') | semmle.label | clipboa ... /html') |
+| clipboard.ts:9:19:9:22 | html | semmle.label | html |
+| clipboard.ts:14:9:14:12 | html | semmle.label | html |
 | clipboard.ts:15:25:15:28 | html | semmle.label | html |
 | clipboard.ts:24:23:24:58 | e.clipb ... /html') | semmle.label | e.clipb ... /html') |
 | clipboard.ts:29:19:29:54 | e.clipb ... /html') | semmle.label | e.clipb ... /html') |
 | clipboard.ts:33:19:33:68 | e.origi ... /html') | semmle.label | e.origi ... /html') |
 | clipboard.ts:43:15:43:18 | html | semmle.label | html |
 | clipboard.ts:43:22:43:55 | clipboa ... /html') | semmle.label | clipboa ... /html') |
+| clipboard.ts:44:23:44:26 | html | semmle.label | html |
+| clipboard.ts:49:13:49:16 | html | semmle.label | html |
 | clipboard.ts:50:29:50:32 | html | semmle.label | html |
 | clipboard.ts:71:13:71:23 | droppedHtml | semmle.label | droppedHtml |
 | clipboard.ts:71:27:71:62 | e.clipb ... /html') | semmle.label | e.clipb ... /html') |
@@ -163,9 +167,12 @@ nodes
 | dates.js:13:31:13:72 | `Time i ... time)}` | semmle.label | `Time i ... time)}` |
 | dates.js:13:42:13:70 | dateFns ... )(time) | semmle.label | dateFns ... )(time) |
 | dates.js:13:59:13:63 | taint | semmle.label | taint |
+| dates.js:14:57:14:61 | taint | semmle.label | taint |
+| dates.js:15:65:15:69 | taint | semmle.label | taint |
 | dates.js:16:31:16:69 | `Time i ... aint)}` | semmle.label | `Time i ... aint)}` |
 | dates.js:16:42:16:67 | moment( ... (taint) | semmle.label | moment( ... (taint) |
 | dates.js:16:62:16:66 | taint | semmle.label | taint |
+| dates.js:17:49:17:53 | taint | semmle.label | taint |
 | dates.js:18:31:18:66 | `Time i ... aint)}` | semmle.label | `Time i ... aint)}` |
 | dates.js:18:42:18:64 | datefor ...  taint) | semmle.label | datefor ...  taint) |
 | dates.js:18:59:18:63 | taint | semmle.label | taint |
@@ -217,12 +224,16 @@ nodes
 | dom.js:4:20:4:30 | window.name | semmle.label | window.name |
 | dragAndDrop.ts:8:11:8:14 | html | semmle.label | html |
 | dragAndDrop.ts:8:18:8:50 | dataTra ... /html') | semmle.label | dataTra ... /html') |
+| dragAndDrop.ts:9:19:9:22 | html | semmle.label | html |
+| dragAndDrop.ts:14:9:14:12 | html | semmle.label | html |
 | dragAndDrop.ts:15:25:15:28 | html | semmle.label | html |
 | dragAndDrop.ts:24:23:24:57 | e.dataT ... /html') | semmle.label | e.dataT ... /html') |
 | dragAndDrop.ts:29:19:29:53 | e.dataT ... /html') | semmle.label | e.dataT ... /html') |
 | dragAndDrop.ts:33:19:33:67 | e.origi ... /html') | semmle.label | e.origi ... /html') |
 | dragAndDrop.ts:43:15:43:18 | html | semmle.label | html |
 | dragAndDrop.ts:43:22:43:54 | dataTra ... /html') | semmle.label | dataTra ... /html') |
+| dragAndDrop.ts:44:23:44:26 | html | semmle.label | html |
+| dragAndDrop.ts:49:13:49:16 | html | semmle.label | html |
 | dragAndDrop.ts:50:29:50:32 | html | semmle.label | html |
 | dragAndDrop.ts:71:13:71:23 | droppedHtml | semmle.label | droppedHtml |
 | dragAndDrop.ts:71:27:71:61 | e.dataT ... /html') | semmle.label | e.dataT ... /html') |
@@ -281,6 +292,7 @@ nodes
 | jquery.js:16:38:16:63 | window. ... tring() | semmle.label | window. ... tring() |
 | jquery.js:18:7:18:10 | hash | semmle.label | hash |
 | jquery.js:18:14:18:33 | window.location.hash | semmle.label | window.location.hash |
+| jquery.js:19:5:19:8 | hash | semmle.label | hash |
 | jquery.js:21:5:21:8 | hash | semmle.label | hash |
 | jquery.js:21:5:21:21 | hash.substring(1) | semmle.label | hash.substring(1) |
 | jquery.js:22:5:22:8 | hash | semmle.label | hash |
@@ -289,10 +301,15 @@ nodes
 | jquery.js:23:5:23:18 | hash.substr(1) | semmle.label | hash.substr(1) |
 | jquery.js:24:5:24:8 | hash | semmle.label | hash |
 | jquery.js:24:5:24:17 | hash.slice(1) | semmle.label | hash.slice(1) |
+| jquery.js:25:5:25:8 | hash | semmle.label | hash |
 | jquery.js:27:5:27:8 | hash | semmle.label | hash |
 | jquery.js:27:5:27:25 | hash.re ... #', '') | semmle.label | hash.re ... #', '') |
 | jquery.js:28:5:28:26 | window. ... .search | semmle.label | window. ... .search |
 | jquery.js:28:5:28:43 | window. ... ?', '') | semmle.label | window. ... ?', '') |
+| jquery.js:29:5:29:8 | hash | semmle.label | hash |
+| jquery.js:30:5:30:8 | hash | semmle.label | hash |
+| jquery.js:32:5:32:8 | hash | semmle.label | hash |
+| jquery.js:33:14:33:17 | hash | semmle.label | hash |
 | jquery.js:34:5:34:25 | '<b>' + ...  '</b>' | semmle.label | '<b>' + ...  '</b>' |
 | jquery.js:34:13:34:16 | hash | semmle.label | hash |
 | jquery.js:36:25:36:31 | tainted | semmle.label | tainted |
@@ -320,6 +337,8 @@ nodes
 | nodemailer.js:13:50:13:66 | req.query.message | semmle.label | req.query.message |
 | optionalSanitizer.js:2:7:2:12 | target | semmle.label | target |
 | optionalSanitizer.js:2:16:2:39 | documen ... .search | semmle.label | documen ... .search |
+| optionalSanitizer.js:4:48:4:53 | target | semmle.label | target |
+| optionalSanitizer.js:4:58:4:63 | target | semmle.label | target |
 | optionalSanitizer.js:6:18:6:23 | target | semmle.label | target |
 | optionalSanitizer.js:8:7:8:13 | tainted | semmle.label | tainted |
 | optionalSanitizer.js:8:17:8:22 | target | semmle.label | target |
@@ -356,6 +375,7 @@ nodes
 | pages/[id].jsx:5:18:5:29 | router.query | semmle.label | router.query |
 | pages/[id].jsx:10:44:10:45 | id | semmle.label | id |
 | pages/[id].jsx:13:44:13:49 | params [id] | semmle.label | params [id] |
+| pages/[id].jsx:13:44:13:49 | params [q] | semmle.label | params [q] |
 | pages/[id].jsx:13:44:13:52 | params.id | semmle.label | params.id |
 | pages/[id].jsx:16:44:16:49 | params [q] | semmle.label | params [q] |
 | pages/[id].jsx:16:44:16:51 | params.q | semmle.label | params.q |
@@ -395,14 +415,26 @@ nodes
 | react-use-state.js:25:20:25:30 | window.name | semmle.label | window.name |
 | sanitiser.js:16:7:16:13 | tainted | semmle.label | tainted |
 | sanitiser.js:16:17:16:27 | window.name | semmle.label | window.name |
+| sanitiser.js:18:45:18:51 | tainted | semmle.label | tainted |
+| sanitiser.js:18:75:18:81 | tainted | semmle.label | tainted |
+| sanitiser.js:19:40:19:46 | tainted | semmle.label | tainted |
+| sanitiser.js:22:18:22:24 | tainted | semmle.label | tainted |
 | sanitiser.js:23:21:23:44 | '<b>' + ...  '</b>' | semmle.label | '<b>' + ...  '</b>' |
 | sanitiser.js:23:29:23:35 | tainted | semmle.label | tainted |
+| sanitiser.js:27:19:27:25 | tainted | semmle.label | tainted |
+| sanitiser.js:27:19:27:25 | tainted | semmle.label | tainted |
 | sanitiser.js:30:21:30:44 | '<b>' + ...  '</b>' | semmle.label | '<b>' + ...  '</b>' |
 | sanitiser.js:30:29:30:35 | tainted | semmle.label | tainted |
+| sanitiser.js:32:18:32:24 | tainted | semmle.label | tainted |
+| sanitiser.js:32:18:32:24 | tainted | semmle.label | tainted |
 | sanitiser.js:33:21:33:44 | '<b>' + ...  '</b>' | semmle.label | '<b>' + ...  '</b>' |
 | sanitiser.js:33:29:33:35 | tainted | semmle.label | tainted |
+| sanitiser.js:37:18:37:24 | tainted | semmle.label | tainted |
+| sanitiser.js:37:18:37:24 | tainted | semmle.label | tainted |
 | sanitiser.js:38:21:38:44 | '<b>' + ...  '</b>' | semmle.label | '<b>' + ...  '</b>' |
 | sanitiser.js:38:29:38:35 | tainted | semmle.label | tainted |
+| sanitiser.js:42:18:42:24 | tainted | semmle.label | tainted |
+| sanitiser.js:42:18:42:24 | tainted | semmle.label | tainted |
 | sanitiser.js:45:21:45:44 | '<b>' + ...  '</b>' | semmle.label | '<b>' + ...  '</b>' |
 | sanitiser.js:45:29:45:35 | tainted | semmle.label | tainted |
 | sanitiser.js:48:19:48:25 | tainted | semmle.label | tainted |
@@ -436,6 +468,8 @@ nodes
 | tainted-url-suffix-arguments.js:12:17:12:19 | url | semmle.label | url |
 | tooltip.jsx:6:11:6:16 | source | semmle.label | source |
 | tooltip.jsx:6:20:6:30 | window.name | semmle.label | window.name |
+| tooltip.jsx:8:25:8:30 | source | semmle.label | source |
+| tooltip.jsx:9:25:9:30 | source | semmle.label | source |
 | tooltip.jsx:10:25:10:30 | source | semmle.label | source |
 | tooltip.jsx:11:25:11:30 | source | semmle.label | source |
 | tooltip.jsx:17:11:17:17 | provide [source] | semmle.label | provide [source] |
@@ -487,6 +521,8 @@ nodes
 | tst.js:6:37:6:114 | documen ... t=")+8) | semmle.label | documen ... t=")+8) |
 | tst.js:9:5:9:42 | '<div s ...  'px">' | semmle.label | '<div s ...  'px">' |
 | tst.js:9:28:9:33 | target | semmle.label | target |
+| tst.js:11:29:11:34 | target | semmle.label | target |
+| tst.js:12:37:12:42 | target | semmle.label | target |
 | tst.js:14:7:14:12 | params | semmle.label | params |
 | tst.js:14:7:14:12 | params [MapValue] | semmle.label | params [MapValue] |
 | tst.js:14:16:14:43 | (new UR ... ation)) [searchParams, MapValue] | semmle.label | (new UR ... ation)) [searchParams, MapValue] |
@@ -527,6 +563,7 @@ nodes
 | tst.js:39:16:39:45 | wrap(do ... search) | semmle.label | wrap(do ... search) |
 | tst.js:39:21:39:44 | documen ... .search | semmle.label | documen ... .search |
 | tst.js:41:15:41:15 | s | semmle.label | s |
+| tst.js:42:7:42:7 | s | semmle.label | s |
 | tst.js:43:12:43:12 | s | semmle.label | s |
 | tst.js:43:12:43:22 | s.substr(1) | semmle.label | s.substr(1) |
 | tst.js:43:12:43:22 | s.substr(1) | semmle.label | s.substr(1) |
@@ -547,6 +584,7 @@ nodes
 | tst.js:58:1:58:27 | [,docum ... search] [1] | semmle.label | [,docum ... search] [1] |
 | tst.js:58:3:58:26 | documen ... .search | semmle.label | documen ... .search |
 | tst.js:58:46:58:46 | x | semmle.label | x |
+| tst.js:59:7:59:7 | x | semmle.label | x |
 | tst.js:60:20:60:20 | x | semmle.label | x |
 | tst.js:63:49:63:72 | documen ... .search | semmle.label | documen ... .search |
 | tst.js:67:26:67:49 | documen ... .search | semmle.label | documen ... .search |
@@ -557,9 +595,23 @@ nodes
 | tst.js:82:30:82:53 | documen ... .search | semmle.label | documen ... .search |
 | tst.js:88:25:88:48 | documen ... .search | semmle.label | documen ... .search |
 | tst.js:93:7:93:7 | v | semmle.label | v |
+| tst.js:93:7:93:7 | v | semmle.label | v |
+| tst.js:93:7:93:7 | v | semmle.label | v |
 | tst.js:93:11:93:34 | documen ... .search | semmle.label | documen ... .search |
 | tst.js:93:11:93:44 | documen ... bstr(1) | semmle.label | documen ... bstr(1) |
+| tst.js:93:11:93:44 | documen ... bstr(1) | semmle.label | documen ... bstr(1) |
+| tst.js:93:11:93:44 | documen ... bstr(1) | semmle.label | documen ... bstr(1) |
 | tst.js:95:18:95:18 | v | semmle.label | v |
+| tst.js:95:18:95:18 | v | semmle.label | v |
+| tst.js:95:18:95:18 | v | semmle.label | v |
+| tst.js:95:18:95:18 | v | semmle.label | v |
+| tst.js:95:18:95:18 | v | semmle.label | v |
+| tst.js:95:18:95:18 | v | semmle.label | v |
+| tst.js:97:20:97:20 | v | semmle.label | v |
+| tst.js:102:25:102:25 | v | semmle.label | v |
+| tst.js:107:7:107:7 | v | semmle.label | v |
+| tst.js:112:7:112:7 | v | semmle.label | v |
+| tst.js:117:20:117:20 | v | semmle.label | v |
 | tst.js:120:18:120:18 | v | semmle.label | v |
 | tst.js:132:29:132:50 | window. ... .search | semmle.label | window. ... .search |
 | tst.js:135:29:135:29 | v | semmle.label | v |
@@ -648,15 +700,26 @@ nodes
 | tst.js:367:18:367:23 | target | semmle.label | target |
 | tst.js:369:18:369:23 | target | semmle.label | target |
 | tst.js:369:18:369:29 | target.taint | semmle.label | target.taint |
+| tst.js:371:3:371:8 | target | semmle.label | target |
+| tst.js:372:18:372:23 | target | semmle.label | target |
 | tst.js:374:3:374:8 | [post update] target [taint3] | semmle.label | [post update] target [taint3] |
+| tst.js:374:3:374:8 | target | semmle.label | target |
 | tst.js:374:19:374:42 | documen ... .search | semmle.label | documen ... .search |
+| tst.js:375:18:375:23 | target | semmle.label | target |
 | tst.js:375:18:375:23 | target [taint3] | semmle.label | target [taint3] |
 | tst.js:375:18:375:30 | target.taint3 | semmle.label | target.taint3 |
+| tst.js:377:3:377:8 | target | semmle.label | target |
+| tst.js:378:18:378:23 | target | semmle.label | target |
 | tst.js:380:18:380:23 | target | semmle.label | target |
 | tst.js:380:18:380:30 | target.taint5 | semmle.label | target.taint5 |
+| tst.js:381:3:381:8 | target | semmle.label | target |
+| tst.js:383:3:383:8 | target | semmle.label | target |
+| tst.js:385:18:385:23 | target | semmle.label | target |
+| tst.js:388:18:388:23 | target | semmle.label | target |
 | tst.js:389:18:389:23 | target | semmle.label | target |
 | tst.js:389:18:389:30 | target.taint7 | semmle.label | target.taint7 |
 | tst.js:391:3:391:8 | [post update] target [taint8] | semmle.label | [post update] target [taint8] |
+| tst.js:391:3:391:8 | target | semmle.label | target |
 | tst.js:391:19:391:24 | target | semmle.label | target |
 | tst.js:391:19:391:24 | target [taint8] | semmle.label | target [taint8] |
 | tst.js:391:19:391:31 | target.taint8 | semmle.label | target.taint8 |
@@ -669,6 +732,7 @@ nodes
 | tst.js:402:7:402:11 | match | semmle.label | match |
 | tst.js:402:15:402:34 | window.location.hash | semmle.label | window.location.hash |
 | tst.js:402:15:402:55 | window. ... (\\w+)/) | semmle.label | window. ... (\\w+)/) |
+| tst.js:403:7:403:11 | match | semmle.label | match |
 | tst.js:404:20:404:24 | match | semmle.label | match |
 | tst.js:404:20:404:27 | match[1] | semmle.label | match[1] |
 | tst.js:407:18:407:37 | window.location.hash | semmle.label | window.location.hash |
@@ -680,6 +744,7 @@ nodes
 | tst.js:413:18:413:89 | target. ... data>') | semmle.label | target. ... data>') |
 | tst.js:419:6:419:11 | source | semmle.label | source |
 | tst.js:419:15:419:38 | documen ... .search | semmle.label | documen ... .search |
+| tst.js:422:28:422:33 | source | semmle.label | source |
 | tst.js:423:28:423:33 | source | semmle.label | source |
 | tst.js:424:33:424:38 | source | semmle.label | source |
 | tst.js:425:34:425:39 | source | semmle.label | source |
@@ -703,6 +768,8 @@ nodes
 | tst.js:457:26:457:28 | url | semmle.label | url |
 | tst.js:458:25:458:27 | url | semmle.label | url |
 | tst.js:459:20:459:22 | url | semmle.label | url |
+| tst.js:464:42:464:44 | url | semmle.label | url |
+| tst.js:466:7:466:9 | url | semmle.label | url |
 | tst.js:469:22:469:24 | url | semmle.label | url |
 | tst.js:474:23:474:35 | location.hash | semmle.label | location.hash |
 | tst.js:474:23:474:45 | locatio ... bstr(1) | semmle.label | locatio ... bstr(1) |
@@ -768,8 +835,17 @@ nodes
 | various-concat-obfuscations.js:21:17:21:40 | documen ... .search | semmle.label | documen ... .search |
 | various-concat-obfuscations.js:21:17:21:46 | documen ... h.attrs | semmle.label | documen ... h.attrs |
 | winjs.js:2:7:2:13 | tainted | semmle.label | tainted |
+| winjs.js:2:7:2:13 | tainted | semmle.label | tainted |
+| winjs.js:2:7:2:13 | tainted | semmle.label | tainted |
 | winjs.js:2:17:2:40 | documen ... .search | semmle.label | documen ... .search |
 | winjs.js:2:17:2:53 | documen ... ring(1) | semmle.label | documen ... ring(1) |
+| winjs.js:2:17:2:53 | documen ... ring(1) | semmle.label | documen ... ring(1) |
+| winjs.js:2:17:2:53 | documen ... ring(1) | semmle.label | documen ... ring(1) |
+| winjs.js:3:43:3:49 | tainted | semmle.label | tainted |
+| winjs.js:3:43:3:49 | tainted | semmle.label | tainted |
+| winjs.js:3:43:3:49 | tainted | semmle.label | tainted |
+| winjs.js:3:43:3:49 | tainted | semmle.label | tainted |
+| winjs.js:3:43:3:49 | tainted | semmle.label | tainted |
 | winjs.js:3:43:3:49 | tainted | semmle.label | tainted |
 | winjs.js:4:43:4:49 | tainted | semmle.label | tainted |
 | xmlRequest.js:8:13:8:16 | json | semmle.label | json |
@@ -852,10 +928,20 @@ edges
 | classnames.js:15:52:15:62 | window.name | classnames.js:15:47:15:63 | clsx(window.name) | provenance |  |
 | classnames.js:17:48:17:64 | clsx(window.name) | classnames.js:17:32:17:79 | `<span  ... <span>` | provenance |  |
 | classnames.js:17:53:17:63 | window.name | classnames.js:17:48:17:64 | clsx(window.name) | provenance |  |
+| clipboard.ts:8:11:8:14 | html | clipboard.ts:9:19:9:22 | html | provenance |  |
+| clipboard.ts:8:11:8:14 | html | clipboard.ts:14:9:14:12 | html | provenance |  |
 | clipboard.ts:8:11:8:14 | html | clipboard.ts:15:25:15:28 | html | provenance |  |
 | clipboard.ts:8:18:8:51 | clipboa ... /html') | clipboard.ts:8:11:8:14 | html | provenance |  |
+| clipboard.ts:9:19:9:22 | html | clipboard.ts:14:9:14:12 | html | provenance |  |
+| clipboard.ts:9:19:9:22 | html | clipboard.ts:15:25:15:28 | html | provenance |  |
+| clipboard.ts:14:9:14:12 | html | clipboard.ts:15:25:15:28 | html | provenance |  |
+| clipboard.ts:43:15:43:18 | html | clipboard.ts:44:23:44:26 | html | provenance |  |
+| clipboard.ts:43:15:43:18 | html | clipboard.ts:49:13:49:16 | html | provenance |  |
 | clipboard.ts:43:15:43:18 | html | clipboard.ts:50:29:50:32 | html | provenance |  |
 | clipboard.ts:43:22:43:55 | clipboa ... /html') | clipboard.ts:43:15:43:18 | html | provenance |  |
+| clipboard.ts:44:23:44:26 | html | clipboard.ts:49:13:49:16 | html | provenance |  |
+| clipboard.ts:44:23:44:26 | html | clipboard.ts:50:29:50:32 | html | provenance |  |
+| clipboard.ts:49:13:49:16 | html | clipboard.ts:50:29:50:32 | html | provenance |  |
 | clipboard.ts:71:13:71:23 | droppedHtml | clipboard.ts:73:29:73:39 | droppedHtml | provenance |  |
 | clipboard.ts:71:27:71:62 | e.clipb ... /html') | clipboard.ts:71:13:71:23 | droppedHtml | provenance |  |
 | clipboard.ts:98:15:98:18 | html | clipboard.ts:99:23:99:26 | html | provenance |  |
@@ -867,7 +953,10 @@ edges
 | dates.js:9:9:9:13 | taint | dates.js:11:63:11:67 | taint | provenance |  |
 | dates.js:9:9:9:13 | taint | dates.js:12:66:12:70 | taint | provenance |  |
 | dates.js:9:9:9:13 | taint | dates.js:13:59:13:63 | taint | provenance |  |
+| dates.js:9:9:9:13 | taint | dates.js:14:57:14:61 | taint | provenance |  |
+| dates.js:9:9:9:13 | taint | dates.js:15:65:15:69 | taint | provenance |  |
 | dates.js:9:9:9:13 | taint | dates.js:16:62:16:66 | taint | provenance |  |
+| dates.js:9:9:9:13 | taint | dates.js:17:49:17:53 | taint | provenance |  |
 | dates.js:9:9:9:13 | taint | dates.js:18:59:18:63 | taint | provenance |  |
 | dates.js:9:9:9:13 | taint | dates.js:21:61:21:65 | taint | provenance |  |
 | dates.js:9:17:9:69 | decodeU ... ing(1)) | dates.js:9:9:9:13 | taint | provenance |  |
@@ -876,14 +965,50 @@ edges
 | dates.js:9:36:9:68 | window. ... ring(1) | dates.js:9:17:9:69 | decodeU ... ing(1)) | provenance |  |
 | dates.js:11:42:11:68 | dateFns ...  taint) | dates.js:11:31:11:70 | `Time i ... aint)}` | provenance |  |
 | dates.js:11:63:11:67 | taint | dates.js:11:42:11:68 | dateFns ...  taint) | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:12:66:12:70 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:13:59:13:63 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:14:57:14:61 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:15:65:15:69 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:16:62:16:66 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:17:49:17:53 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:11:63:11:67 | taint | dates.js:21:61:21:65 | taint | provenance |  |
 | dates.js:12:42:12:71 | dateFns ...  taint) | dates.js:12:31:12:73 | `Time i ... aint)}` | provenance |  |
 | dates.js:12:66:12:70 | taint | dates.js:12:42:12:71 | dateFns ...  taint) | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:13:59:13:63 | taint | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:14:57:14:61 | taint | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:15:65:15:69 | taint | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:16:62:16:66 | taint | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:17:49:17:53 | taint | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:12:66:12:70 | taint | dates.js:21:61:21:65 | taint | provenance |  |
 | dates.js:13:42:13:70 | dateFns ... )(time) | dates.js:13:31:13:72 | `Time i ... time)}` | provenance |  |
 | dates.js:13:59:13:63 | taint | dates.js:13:42:13:70 | dateFns ... )(time) | provenance |  |
+| dates.js:13:59:13:63 | taint | dates.js:14:57:14:61 | taint | provenance |  |
+| dates.js:13:59:13:63 | taint | dates.js:15:65:15:69 | taint | provenance |  |
+| dates.js:13:59:13:63 | taint | dates.js:16:62:16:66 | taint | provenance |  |
+| dates.js:13:59:13:63 | taint | dates.js:17:49:17:53 | taint | provenance |  |
+| dates.js:13:59:13:63 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:13:59:13:63 | taint | dates.js:21:61:21:65 | taint | provenance |  |
+| dates.js:14:57:14:61 | taint | dates.js:15:65:15:69 | taint | provenance |  |
+| dates.js:14:57:14:61 | taint | dates.js:16:62:16:66 | taint | provenance |  |
+| dates.js:14:57:14:61 | taint | dates.js:17:49:17:53 | taint | provenance |  |
+| dates.js:14:57:14:61 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:14:57:14:61 | taint | dates.js:21:61:21:65 | taint | provenance |  |
+| dates.js:15:65:15:69 | taint | dates.js:16:62:16:66 | taint | provenance |  |
+| dates.js:15:65:15:69 | taint | dates.js:17:49:17:53 | taint | provenance |  |
+| dates.js:15:65:15:69 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:15:65:15:69 | taint | dates.js:21:61:21:65 | taint | provenance |  |
 | dates.js:16:42:16:67 | moment( ... (taint) | dates.js:16:31:16:69 | `Time i ... aint)}` | provenance |  |
 | dates.js:16:62:16:66 | taint | dates.js:16:42:16:67 | moment( ... (taint) | provenance |  |
+| dates.js:16:62:16:66 | taint | dates.js:17:49:17:53 | taint | provenance |  |
+| dates.js:16:62:16:66 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:16:62:16:66 | taint | dates.js:21:61:21:65 | taint | provenance |  |
+| dates.js:17:49:17:53 | taint | dates.js:18:59:18:63 | taint | provenance |  |
+| dates.js:17:49:17:53 | taint | dates.js:21:61:21:65 | taint | provenance |  |
 | dates.js:18:42:18:64 | datefor ...  taint) | dates.js:18:31:18:66 | `Time i ... aint)}` | provenance |  |
 | dates.js:18:59:18:63 | taint | dates.js:18:42:18:64 | datefor ...  taint) | provenance |  |
+| dates.js:18:59:18:63 | taint | dates.js:21:61:21:65 | taint | provenance |  |
 | dates.js:21:42:21:66 | dayjs(t ... (taint) | dates.js:21:31:21:68 | `Time i ... aint)}` | provenance |  |
 | dates.js:21:61:21:65 | taint | dates.js:21:42:21:66 | dayjs(t ... (taint) | provenance |  |
 | dates.js:30:9:30:13 | taint | dates.js:37:77:37:81 | taint | provenance |  |
@@ -896,10 +1021,16 @@ edges
 | dates.js:30:36:30:68 | window. ... ring(1) | dates.js:30:17:30:69 | decodeU ... ing(1)) | provenance |  |
 | dates.js:37:42:37:82 | dateFns ...  taint) | dates.js:37:31:37:84 | `Time i ... aint)}` | provenance |  |
 | dates.js:37:77:37:81 | taint | dates.js:37:42:37:82 | dateFns ...  taint) | provenance |  |
+| dates.js:37:77:37:81 | taint | dates.js:38:77:38:81 | taint | provenance |  |
+| dates.js:37:77:37:81 | taint | dates.js:39:79:39:83 | taint | provenance |  |
+| dates.js:37:77:37:81 | taint | dates.js:40:77:40:81 | taint | provenance |  |
 | dates.js:38:42:38:82 | luxon.f ...  taint) | dates.js:38:31:38:84 | `Time i ... aint)}` | provenance |  |
 | dates.js:38:77:38:81 | taint | dates.js:38:42:38:82 | luxon.f ...  taint) | provenance |  |
+| dates.js:38:77:38:81 | taint | dates.js:39:79:39:83 | taint | provenance |  |
+| dates.js:38:77:38:81 | taint | dates.js:40:77:40:81 | taint | provenance |  |
 | dates.js:39:42:39:84 | moment. ...  taint) | dates.js:39:31:39:86 | `Time i ... aint)}` | provenance |  |
 | dates.js:39:79:39:83 | taint | dates.js:39:42:39:84 | moment. ...  taint) | provenance |  |
+| dates.js:39:79:39:83 | taint | dates.js:40:77:40:81 | taint | provenance |  |
 | dates.js:40:42:40:82 | dayjs.f ...  taint) | dates.js:40:31:40:84 | `Time i ... aint)}` | provenance |  |
 | dates.js:40:77:40:81 | taint | dates.js:40:42:40:82 | dayjs.f ...  taint) | provenance |  |
 | dates.js:46:9:46:13 | taint | dates.js:48:83:48:87 | taint | provenance |  |
@@ -911,8 +1042,11 @@ edges
 | dates.js:46:36:46:68 | window. ... ring(1) | dates.js:46:17:46:69 | decodeU ... ing(1)) | provenance |  |
 | dates.js:48:42:48:88 | DateTim ... (taint) | dates.js:48:31:48:90 | `Time i ... aint)}` | provenance |  |
 | dates.js:48:83:48:87 | taint | dates.js:48:42:48:88 | DateTim ... (taint) | provenance |  |
+| dates.js:48:83:48:87 | taint | dates.js:49:82:49:86 | taint | provenance |  |
+| dates.js:48:83:48:87 | taint | dates.js:50:97:50:101 | taint | provenance |  |
 | dates.js:49:42:49:87 | new Dat ... (taint) | dates.js:49:31:49:89 | `Time i ... aint)}` | provenance |  |
 | dates.js:49:82:49:86 | taint | dates.js:49:42:49:87 | new Dat ... (taint) | provenance |  |
+| dates.js:49:82:49:86 | taint | dates.js:50:97:50:101 | taint | provenance |  |
 | dates.js:50:42:50:102 | DateTim ... (taint) | dates.js:50:31:50:104 | `Time i ... aint)}` | provenance |  |
 | dates.js:50:97:50:101 | taint | dates.js:50:42:50:102 | DateTim ... (taint) | provenance |  |
 | dates.js:54:9:54:13 | taint | dates.js:57:94:57:98 | taint | provenance |  |
@@ -924,14 +1058,27 @@ edges
 | dates.js:54:36:54:68 | window. ... ring(1) | dates.js:54:17:54:69 | decodeU ... ing(1)) | provenance |  |
 | dates.js:57:42:57:99 | moment. ... (taint) | dates.js:57:31:57:101 | `Time i ... aint)}` | provenance |  |
 | dates.js:57:94:57:98 | taint | dates.js:57:42:57:99 | moment. ... (taint) | provenance |  |
+| dates.js:57:94:57:98 | taint | dates.js:59:80:59:84 | taint | provenance |  |
+| dates.js:57:94:57:98 | taint | dates.js:61:81:61:85 | taint | provenance |  |
 | dates.js:59:42:59:85 | luxon.e ... (taint) | dates.js:59:31:59:87 | `Time i ... aint)}` | provenance |  |
 | dates.js:59:80:59:84 | taint | dates.js:59:42:59:85 | luxon.e ... (taint) | provenance |  |
+| dates.js:59:80:59:84 | taint | dates.js:61:81:61:85 | taint | provenance |  |
 | dates.js:61:42:61:86 | dayjs.s ... (taint) | dates.js:61:31:61:88 | `Time i ... aint)}` | provenance |  |
 | dates.js:61:81:61:85 | taint | dates.js:61:42:61:86 | dayjs.s ... (taint) | provenance |  |
+| dragAndDrop.ts:8:11:8:14 | html | dragAndDrop.ts:9:19:9:22 | html | provenance |  |
+| dragAndDrop.ts:8:11:8:14 | html | dragAndDrop.ts:14:9:14:12 | html | provenance |  |
 | dragAndDrop.ts:8:11:8:14 | html | dragAndDrop.ts:15:25:15:28 | html | provenance |  |
 | dragAndDrop.ts:8:18:8:50 | dataTra ... /html') | dragAndDrop.ts:8:11:8:14 | html | provenance |  |
+| dragAndDrop.ts:9:19:9:22 | html | dragAndDrop.ts:14:9:14:12 | html | provenance |  |
+| dragAndDrop.ts:9:19:9:22 | html | dragAndDrop.ts:15:25:15:28 | html | provenance |  |
+| dragAndDrop.ts:14:9:14:12 | html | dragAndDrop.ts:15:25:15:28 | html | provenance |  |
+| dragAndDrop.ts:43:15:43:18 | html | dragAndDrop.ts:44:23:44:26 | html | provenance |  |
+| dragAndDrop.ts:43:15:43:18 | html | dragAndDrop.ts:49:13:49:16 | html | provenance |  |
 | dragAndDrop.ts:43:15:43:18 | html | dragAndDrop.ts:50:29:50:32 | html | provenance |  |
 | dragAndDrop.ts:43:22:43:54 | dataTra ... /html') | dragAndDrop.ts:43:15:43:18 | html | provenance |  |
+| dragAndDrop.ts:44:23:44:26 | html | dragAndDrop.ts:49:13:49:16 | html | provenance |  |
+| dragAndDrop.ts:44:23:44:26 | html | dragAndDrop.ts:50:29:50:32 | html | provenance |  |
+| dragAndDrop.ts:49:13:49:16 | html | dragAndDrop.ts:50:29:50:32 | html | provenance |  |
 | dragAndDrop.ts:71:13:71:23 | droppedHtml | dragAndDrop.ts:73:29:73:39 | droppedHtml | provenance |  |
 | dragAndDrop.ts:71:27:71:61 | e.dataT ... /html') | dragAndDrop.ts:71:13:71:23 | droppedHtml | provenance |  |
 | event-handler-receiver.js:2:49:2:61 | location.href | event-handler-receiver.js:2:31:2:83 | '<h2><a ... ></h2>' | provenance |  |
@@ -970,19 +1117,91 @@ edges
 | jquery.js:15:38:15:59 | window. ... .search | jquery.js:15:19:15:60 | decodeU ... search) | provenance |  |
 | jquery.js:16:38:16:52 | window.location | jquery.js:16:38:16:63 | window. ... tring() | provenance |  |
 | jquery.js:16:38:16:63 | window. ... tring() | jquery.js:16:19:16:64 | decodeU ... ring()) | provenance |  |
+| jquery.js:18:7:18:10 | hash | jquery.js:19:5:19:8 | hash | provenance |  |
 | jquery.js:18:7:18:10 | hash | jquery.js:21:5:21:8 | hash | provenance |  |
 | jquery.js:18:7:18:10 | hash | jquery.js:22:5:22:8 | hash | provenance |  |
 | jquery.js:18:7:18:10 | hash | jquery.js:23:5:23:8 | hash | provenance |  |
 | jquery.js:18:7:18:10 | hash | jquery.js:24:5:24:8 | hash | provenance |  |
+| jquery.js:18:7:18:10 | hash | jquery.js:25:5:25:8 | hash | provenance |  |
 | jquery.js:18:7:18:10 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:18:7:18:10 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:18:7:18:10 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:18:7:18:10 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:18:7:18:10 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
 | jquery.js:18:7:18:10 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:18:14:18:33 | window.location.hash | jquery.js:18:7:18:10 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:21:5:21:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:22:5:22:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:23:5:23:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:24:5:24:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:25:5:25:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:19:5:19:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:21:5:21:8 | hash | jquery.js:21:5:21:21 | hash.substring(1) | provenance | Config |
+| jquery.js:21:5:21:8 | hash | jquery.js:22:5:22:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:23:5:23:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:24:5:24:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:25:5:25:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:21:5:21:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:22:5:22:8 | hash | jquery.js:22:5:22:25 | hash.su ... (1, 10) | provenance | Config |
+| jquery.js:22:5:22:8 | hash | jquery.js:23:5:23:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:24:5:24:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:25:5:25:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:22:5:22:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:23:5:23:8 | hash | jquery.js:23:5:23:18 | hash.substr(1) | provenance | Config |
+| jquery.js:23:5:23:8 | hash | jquery.js:24:5:24:8 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:25:5:25:8 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:23:5:23:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:24:5:24:8 | hash | jquery.js:24:5:24:17 | hash.slice(1) | provenance | Config |
+| jquery.js:24:5:24:8 | hash | jquery.js:25:5:25:8 | hash | provenance |  |
+| jquery.js:24:5:24:8 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:24:5:24:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:24:5:24:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:24:5:24:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:24:5:24:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:24:5:24:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
+| jquery.js:25:5:25:8 | hash | jquery.js:27:5:27:8 | hash | provenance |  |
+| jquery.js:25:5:25:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:25:5:25:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:25:5:25:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:25:5:25:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:25:5:25:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:27:5:27:8 | hash | jquery.js:27:5:27:25 | hash.re ... #', '') | provenance | Config |
+| jquery.js:27:5:27:8 | hash | jquery.js:29:5:29:8 | hash | provenance |  |
+| jquery.js:27:5:27:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:27:5:27:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:27:5:27:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:27:5:27:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:28:5:28:26 | window. ... .search | jquery.js:28:5:28:43 | window. ... ?', '') | provenance | Config |
+| jquery.js:29:5:29:8 | hash | jquery.js:30:5:30:8 | hash | provenance |  |
+| jquery.js:29:5:29:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:29:5:29:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:29:5:29:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
+| jquery.js:30:5:30:8 | hash | jquery.js:32:5:32:8 | hash | provenance |  |
+| jquery.js:30:5:30:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:30:5:30:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
+| jquery.js:32:5:32:8 | hash | jquery.js:33:14:33:17 | hash | provenance |  |
+| jquery.js:32:5:32:8 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
+| jquery.js:33:14:33:17 | hash | jquery.js:34:13:34:16 | hash | provenance |  |
 | jquery.js:34:13:34:16 | hash | jquery.js:34:5:34:25 | '<b>' + ...  '</b>' | provenance | Config |
 | jquery.js:36:25:36:31 | tainted | jquery.js:37:31:37:37 | tainted | provenance |  |
 | jquery.js:37:31:37:37 | tainted | jquery.js:37:25:37:37 | () => tainted | provenance | Config |
@@ -990,7 +1209,10 @@ edges
 | json-stringify.jsx:5:9:5:14 | locale | json-stringify.jsx:19:56:19:61 | locale | provenance |  |
 | json-stringify.jsx:5:9:5:14 | locale | json-stringify.jsx:31:55:31:60 | locale | provenance |  |
 | json-stringify.jsx:5:18:5:36 | req.param("locale") | json-stringify.jsx:5:9:5:14 | locale | provenance |  |
+| json-stringify.jsx:11:51:11:56 | locale | json-stringify.jsx:19:56:19:61 | locale | provenance |  |
+| json-stringify.jsx:11:51:11:56 | locale | json-stringify.jsx:31:55:31:60 | locale | provenance |  |
 | json-stringify.jsx:11:51:11:56 | locale | json-stringify.jsx:35:40:35:61 | JSON.st ... jsonLD) | provenance |  |
+| json-stringify.jsx:19:56:19:61 | locale | json-stringify.jsx:31:55:31:60 | locale | provenance |  |
 | json-stringify.jsx:19:56:19:61 | locale | json-stringify.jsx:35:40:35:61 | JSON.st ... jsonLD) | provenance |  |
 | json-stringify.jsx:31:55:31:60 | locale | json-stringify.jsx:31:40:31:61 | JSON.st ... locale) | provenance |  |
 | jwt-server.js:7:9:7:13 | taint | jwt-server.js:9:16:9:20 | taint | provenance |  |
@@ -1003,12 +1225,23 @@ edges
 | jwt.js:5:19:5:34 | jwt_decode(data) | jwt.js:5:9:5:15 | decoded | provenance |  |
 | jwt.js:5:30:5:33 | data | jwt.js:5:19:5:34 | jwt_decode(data) | provenance |  |
 | nodemailer.js:13:50:13:66 | req.query.message | nodemailer.js:13:11:13:69 | `Hi, yo ... sage}.` | provenance |  |
+| optionalSanitizer.js:2:7:2:12 | target | optionalSanitizer.js:4:48:4:53 | target | provenance |  |
+| optionalSanitizer.js:2:7:2:12 | target | optionalSanitizer.js:4:58:4:63 | target | provenance |  |
 | optionalSanitizer.js:2:7:2:12 | target | optionalSanitizer.js:6:18:6:23 | target | provenance |  |
 | optionalSanitizer.js:2:7:2:12 | target | optionalSanitizer.js:8:17:8:22 | target | provenance |  |
 | optionalSanitizer.js:2:7:2:12 | target | optionalSanitizer.js:15:9:15:14 | target | provenance |  |
 | optionalSanitizer.js:2:16:2:39 | documen ... .search | optionalSanitizer.js:2:7:2:12 | target | provenance |  |
+| optionalSanitizer.js:4:48:4:53 | target | optionalSanitizer.js:6:18:6:23 | target | provenance |  |
+| optionalSanitizer.js:4:48:4:53 | target | optionalSanitizer.js:8:17:8:22 | target | provenance |  |
+| optionalSanitizer.js:4:48:4:53 | target | optionalSanitizer.js:15:9:15:14 | target | provenance |  |
+| optionalSanitizer.js:4:58:4:63 | target | optionalSanitizer.js:6:18:6:23 | target | provenance |  |
+| optionalSanitizer.js:4:58:4:63 | target | optionalSanitizer.js:8:17:8:22 | target | provenance |  |
+| optionalSanitizer.js:4:58:4:63 | target | optionalSanitizer.js:15:9:15:14 | target | provenance |  |
+| optionalSanitizer.js:6:18:6:23 | target | optionalSanitizer.js:8:17:8:22 | target | provenance |  |
+| optionalSanitizer.js:6:18:6:23 | target | optionalSanitizer.js:15:9:15:14 | target | provenance |  |
 | optionalSanitizer.js:8:7:8:13 | tainted | optionalSanitizer.js:9:18:9:24 | tainted | provenance |  |
 | optionalSanitizer.js:8:17:8:22 | target | optionalSanitizer.js:8:7:8:13 | tainted | provenance |  |
+| optionalSanitizer.js:8:17:8:22 | target | optionalSanitizer.js:15:9:15:14 | target | provenance |  |
 | optionalSanitizer.js:15:9:15:14 | target | optionalSanitizer.js:16:18:16:18 | x | provenance |  |
 | optionalSanitizer.js:16:18:16:18 | x | optionalSanitizer.js:17:20:17:20 | x | provenance |  |
 | optionalSanitizer.js:26:7:26:12 | target | optionalSanitizer.js:31:18:31:23 | target | provenance |  |
@@ -1021,6 +1254,11 @@ edges
 | optionalSanitizer.js:31:7:31:14 | tainted2 | optionalSanitizer.js:34:28:34:35 | tainted2 | provenance |  |
 | optionalSanitizer.js:31:7:31:14 | tainted2 | optionalSanitizer.js:36:18:36:25 | tainted2 | provenance |  |
 | optionalSanitizer.js:31:18:31:23 | target | optionalSanitizer.js:31:7:31:14 | tainted2 | provenance |  |
+| optionalSanitizer.js:31:18:31:23 | target | optionalSanitizer.js:38:18:38:23 | target | provenance |  |
+| optionalSanitizer.js:31:18:31:23 | target | optionalSanitizer.js:45:41:45:46 | target | provenance |  |
+| optionalSanitizer.js:31:18:31:23 | target | optionalSanitizer.js:45:51:45:56 | target | provenance |  |
+| optionalSanitizer.js:32:18:32:25 | tainted2 | optionalSanitizer.js:34:28:34:35 | tainted2 | provenance |  |
+| optionalSanitizer.js:32:18:32:25 | tainted2 | optionalSanitizer.js:36:18:36:25 | tainted2 | provenance |  |
 | optionalSanitizer.js:34:5:34:12 | tainted2 | optionalSanitizer.js:36:18:36:25 | tainted2 | provenance |  |
 | optionalSanitizer.js:34:16:34:36 | sanitiz ... inted2) | optionalSanitizer.js:34:5:34:12 | tainted2 | provenance |  |
 | optionalSanitizer.js:34:28:34:35 | tainted2 | optionalSanitizer.js:28:24:28:24 | x | provenance |  |
@@ -1029,6 +1267,10 @@ edges
 | optionalSanitizer.js:38:7:38:14 | tainted3 | optionalSanitizer.js:41:28:41:35 | tainted3 | provenance |  |
 | optionalSanitizer.js:38:7:38:14 | tainted3 | optionalSanitizer.js:43:18:43:25 | tainted3 | provenance |  |
 | optionalSanitizer.js:38:18:38:23 | target | optionalSanitizer.js:38:7:38:14 | tainted3 | provenance |  |
+| optionalSanitizer.js:38:18:38:23 | target | optionalSanitizer.js:45:41:45:46 | target | provenance |  |
+| optionalSanitizer.js:38:18:38:23 | target | optionalSanitizer.js:45:51:45:56 | target | provenance |  |
+| optionalSanitizer.js:39:18:39:25 | tainted3 | optionalSanitizer.js:41:28:41:35 | tainted3 | provenance |  |
+| optionalSanitizer.js:39:18:39:25 | tainted3 | optionalSanitizer.js:43:18:43:25 | tainted3 | provenance |  |
 | optionalSanitizer.js:41:5:41:12 | tainted3 | optionalSanitizer.js:43:18:43:25 | tainted3 | provenance |  |
 | optionalSanitizer.js:41:16:41:36 | sanitiz ... inted3) | optionalSanitizer.js:41:5:41:12 | tainted3 | provenance |  |
 | optionalSanitizer.js:41:28:41:35 | tainted3 | optionalSanitizer.js:28:24:28:24 | x | provenance |  |
@@ -1038,11 +1280,13 @@ edges
 | optionalSanitizer.js:45:41:45:46 | target | optionalSanitizer.js:45:29:45:47 | sanitizeBad(target) | provenance |  |
 | optionalSanitizer.js:45:51:45:56 | target | optionalSanitizer.js:45:18:45:56 | sanitiz ...  target | provenance |  |
 | pages/[id].jsx:3:30:3:35 | params [id] | pages/[id].jsx:13:44:13:49 | params [id] | provenance |  |
+| pages/[id].jsx:3:30:3:35 | params [q] | pages/[id].jsx:13:44:13:49 | params [q] | provenance |  |
 | pages/[id].jsx:3:30:3:35 | params [q] | pages/[id].jsx:16:44:16:49 | params [q] | provenance |  |
 | pages/[id].jsx:5:9:5:14 | { id } | pages/[id].jsx:5:11:5:12 | id | provenance |  |
 | pages/[id].jsx:5:11:5:12 | id | pages/[id].jsx:10:44:10:45 | id | provenance |  |
 | pages/[id].jsx:5:18:5:29 | router.query | pages/[id].jsx:5:9:5:14 | { id } | provenance |  |
 | pages/[id].jsx:13:44:13:49 | params [id] | pages/[id].jsx:13:44:13:52 | params.id | provenance |  |
+| pages/[id].jsx:13:44:13:49 | params [q] | pages/[id].jsx:16:44:16:49 | params [q] | provenance |  |
 | pages/[id].jsx:16:44:16:49 | params [q] | pages/[id].jsx:16:44:16:51 | params.q | provenance |  |
 | pages/[id].jsx:24:12:27:5 | {\\n      ... e\\n    } [id] | pages/[id].jsx:3:30:3:35 | params [id] | provenance |  |
 | pages/[id].jsx:24:12:27:5 | {\\n      ... e\\n    } [q] | pages/[id].jsx:3:30:3:35 | params [q] | provenance |  |
@@ -1053,6 +1297,7 @@ edges
 | react-native.js:7:7:7:13 | tainted | react-native.js:8:18:8:24 | tainted | provenance |  |
 | react-native.js:7:7:7:13 | tainted | react-native.js:9:27:9:33 | tainted | provenance |  |
 | react-native.js:7:17:7:33 | req.param("code") | react-native.js:7:7:7:13 | tainted | provenance |  |
+| react-native.js:8:18:8:24 | tainted | react-native.js:9:27:9:33 | tainted | provenance |  |
 | react-use-router.js:8:21:8:32 | router.query | react-use-router.js:8:21:8:39 | router.query.foobar | provenance |  |
 | react-use-router.js:11:24:11:35 | router.query | react-use-router.js:11:24:11:42 | router.query.foobar | provenance |  |
 | react-use-router.js:23:43:23:54 | router.query | react-use-router.js:23:43:23:61 | router.query.foobar | provenance |  |
@@ -1067,18 +1312,147 @@ edges
 | react-use-state.js:21:10:21:14 | state | react-use-state.js:22:14:22:17 | prev | provenance |  |
 | react-use-state.js:22:14:22:17 | prev | react-use-state.js:23:35:23:38 | prev | provenance |  |
 | react-use-state.js:25:20:25:30 | window.name | react-use-state.js:21:10:21:14 | state | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:18:45:18:51 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:18:75:18:81 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:19:40:19:46 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:22:18:22:24 | tainted | provenance |  |
 | sanitiser.js:16:7:16:13 | tainted | sanitiser.js:23:29:23:35 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
 | sanitiser.js:16:7:16:13 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
 | sanitiser.js:16:7:16:13 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
 | sanitiser.js:16:7:16:13 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:16:7:16:13 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
 | sanitiser.js:16:7:16:13 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
 | sanitiser.js:16:7:16:13 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:16:17:16:27 | window.name | sanitiser.js:16:7:16:13 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:18:75:18:81 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:19:40:19:46 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:22:18:22:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:23:29:23:35 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:18:45:18:51 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:19:40:19:46 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:22:18:22:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:23:29:23:35 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:18:75:18:81 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:22:18:22:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:23:29:23:35 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:19:40:19:46 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:23:29:23:35 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:22:18:22:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:23:29:23:35 | tainted | sanitiser.js:23:21:23:44 | '<b>' + ...  '</b>' | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:27:19:27:25 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:23:29:23:35 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:30:29:30:35 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:27:19:27:25 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:30:29:30:35 | tainted | sanitiser.js:30:21:30:44 | '<b>' + ...  '</b>' | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:32:18:32:24 | tainted | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:30:29:30:35 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:33:29:33:35 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:32:18:32:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:33:29:33:35 | tainted | sanitiser.js:33:21:33:44 | '<b>' + ...  '</b>' | provenance |  |
+| sanitiser.js:33:29:33:35 | tainted | sanitiser.js:37:18:37:24 | tainted | provenance |  |
+| sanitiser.js:33:29:33:35 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:33:29:33:35 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:33:29:33:35 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:33:29:33:35 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:37:18:37:24 | tainted | sanitiser.js:38:29:38:35 | tainted | provenance |  |
+| sanitiser.js:37:18:37:24 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:37:18:37:24 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:37:18:37:24 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:37:18:37:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:37:18:37:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:38:29:38:35 | tainted | sanitiser.js:38:21:38:44 | '<b>' + ...  '</b>' | provenance |  |
+| sanitiser.js:38:29:38:35 | tainted | sanitiser.js:42:18:42:24 | tainted | provenance |  |
+| sanitiser.js:38:29:38:35 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:38:29:38:35 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:42:18:42:24 | tainted | sanitiser.js:45:29:45:35 | tainted | provenance |  |
+| sanitiser.js:42:18:42:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
+| sanitiser.js:42:18:42:24 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:45:29:45:35 | tainted | sanitiser.js:45:21:45:44 | '<b>' + ...  '</b>' | provenance |  |
+| sanitiser.js:45:29:45:35 | tainted | sanitiser.js:48:19:48:25 | tainted | provenance |  |
 | sanitiser.js:48:19:48:25 | tainted | sanitiser.js:48:19:48:46 | tainted ... /g, '') | provenance |  |
 | stored-xss.js:2:39:2:62 | documen ... .search | stored-xss.js:5:20:5:52 | session ... ssion') | provenance |  |
 | stored-xss.js:3:35:3:58 | documen ... .search | stored-xss.js:8:20:8:48 | localSt ... local') | provenance |  |
@@ -1097,9 +1471,17 @@ edges
 | tainted-url-suffix-arguments.js:11:11:11:13 | url | tainted-url-suffix-arguments.js:12:17:12:19 | url | provenance |  |
 | tainted-url-suffix-arguments.js:11:17:11:36 | window.location.href | tainted-url-suffix-arguments.js:11:11:11:13 | url | provenance |  |
 | tainted-url-suffix-arguments.js:12:17:12:19 | url | tainted-url-suffix-arguments.js:3:17:3:17 | y | provenance |  |
+| tooltip.jsx:6:11:6:16 | source | tooltip.jsx:8:25:8:30 | source | provenance |  |
+| tooltip.jsx:6:11:6:16 | source | tooltip.jsx:9:25:9:30 | source | provenance |  |
 | tooltip.jsx:6:11:6:16 | source | tooltip.jsx:10:25:10:30 | source | provenance |  |
 | tooltip.jsx:6:11:6:16 | source | tooltip.jsx:11:25:11:30 | source | provenance |  |
 | tooltip.jsx:6:20:6:30 | window.name | tooltip.jsx:6:11:6:16 | source | provenance |  |
+| tooltip.jsx:8:25:8:30 | source | tooltip.jsx:9:25:9:30 | source | provenance |  |
+| tooltip.jsx:8:25:8:30 | source | tooltip.jsx:10:25:10:30 | source | provenance |  |
+| tooltip.jsx:8:25:8:30 | source | tooltip.jsx:11:25:11:30 | source | provenance |  |
+| tooltip.jsx:9:25:9:30 | source | tooltip.jsx:10:25:10:30 | source | provenance |  |
+| tooltip.jsx:9:25:9:30 | source | tooltip.jsx:11:25:11:30 | source | provenance |  |
+| tooltip.jsx:10:25:10:30 | source | tooltip.jsx:11:25:11:30 | source | provenance |  |
 | tooltip.jsx:17:11:17:17 | provide [source] | tooltip.jsx:18:51:18:57 | provide [source] | provenance |  |
 | tooltip.jsx:17:21:17:33 | props.provide [source] | tooltip.jsx:17:11:17:17 | provide [source] | provenance |  |
 | tooltip.jsx:18:51:18:57 | provide [source] | tooltip.jsx:18:51:18:59 | provide() | provenance |  |
@@ -1140,14 +1522,26 @@ edges
 | tst3.js:10:38:10:41 | data | tst3.js:10:38:10:43 | data.p | provenance |  |
 | tst.js:2:7:2:12 | target | tst.js:4:18:4:23 | target | provenance |  |
 | tst.js:2:7:2:12 | target | tst.js:9:28:9:33 | target | provenance |  |
+| tst.js:2:7:2:12 | target | tst.js:11:29:11:34 | target | provenance |  |
+| tst.js:2:7:2:12 | target | tst.js:12:37:12:42 | target | provenance |  |
 | tst.js:2:7:2:12 | target | tst.js:17:42:17:47 | target | provenance |  |
 | tst.js:2:16:2:39 | documen ... .search | tst.js:2:7:2:12 | target | provenance |  |
+| tst.js:4:18:4:23 | target | tst.js:9:28:9:33 | target | provenance |  |
+| tst.js:4:18:4:23 | target | tst.js:11:29:11:34 | target | provenance |  |
+| tst.js:4:18:4:23 | target | tst.js:12:37:12:42 | target | provenance |  |
+| tst.js:4:18:4:23 | target | tst.js:17:42:17:47 | target | provenance |  |
 | tst.js:6:37:6:58 | documen ... on.href | tst.js:6:37:6:114 | documen ... t=")+8) | provenance |  |
 | tst.js:6:37:6:58 | documen ... on.href | tst.js:6:37:6:114 | documen ... t=")+8) | provenance | Config |
 | tst.js:6:37:6:114 | documen ... t=")+8) | tst.js:6:18:6:126 | "<OPTIO ... PTION>" | provenance |  |
 | tst.js:6:37:6:114 | documen ... t=")+8) | tst.js:6:18:6:126 | "<OPTIO ... PTION>" | provenance |  |
 | tst.js:6:37:6:114 | documen ... t=")+8) | tst.js:6:18:6:126 | "<OPTIO ... PTION>" | provenance | Config |
 | tst.js:9:28:9:33 | target | tst.js:9:5:9:42 | '<div s ...  'px">' | provenance | Config |
+| tst.js:9:28:9:33 | target | tst.js:11:29:11:34 | target | provenance |  |
+| tst.js:9:28:9:33 | target | tst.js:12:37:12:42 | target | provenance |  |
+| tst.js:9:28:9:33 | target | tst.js:17:42:17:47 | target | provenance |  |
+| tst.js:11:29:11:34 | target | tst.js:12:37:12:42 | target | provenance |  |
+| tst.js:11:29:11:34 | target | tst.js:17:42:17:47 | target | provenance |  |
+| tst.js:12:37:12:42 | target | tst.js:17:42:17:47 | target | provenance |  |
 | tst.js:14:7:14:12 | params | tst.js:15:18:15:23 | params | provenance |  |
 | tst.js:14:7:14:12 | params [MapValue] | tst.js:15:18:15:23 | params [MapValue] | provenance |  |
 | tst.js:14:16:14:43 | (new UR ... ation)) [searchParams, MapValue] | tst.js:14:16:14:56 | (new UR ... hParams [MapValue] | provenance |  |
@@ -1189,7 +1583,9 @@ edges
 | tst.js:39:21:39:44 | documen ... .search | tst.js:36:15:36:15 | s | provenance |  |
 | tst.js:39:21:39:44 | documen ... .search | tst.js:39:16:39:45 | wrap(do ... search) | provenance |  |
 | tst.js:39:21:39:44 | documen ... .search | tst.js:39:16:39:45 | wrap(do ... search) | provenance | Config |
+| tst.js:41:15:41:15 | s | tst.js:42:7:42:7 | s | provenance |  |
 | tst.js:41:15:41:15 | s | tst.js:43:12:43:12 | s | provenance |  |
+| tst.js:42:7:42:7 | s | tst.js:43:12:43:12 | s | provenance |  |
 | tst.js:43:12:43:12 | s | tst.js:43:12:43:22 | s.substr(1) | provenance |  |
 | tst.js:43:12:43:12 | s | tst.js:43:12:43:22 | s.substr(1) | provenance | Config |
 | tst.js:43:12:43:12 | s | tst.js:43:12:43:22 | s.substr(1) | provenance | Config |
@@ -1212,12 +1608,72 @@ edges
 | tst.js:54:25:54:48 | documen ... .search | tst.js:50:34:50:34 | s | provenance |  |
 | tst.js:58:1:58:27 | [,docum ... search] [1] | tst.js:58:46:58:46 | x | provenance |  |
 | tst.js:58:3:58:26 | documen ... .search | tst.js:58:1:58:27 | [,docum ... search] [1] | provenance |  |
+| tst.js:58:46:58:46 | x | tst.js:59:7:59:7 | x | provenance |  |
 | tst.js:58:46:58:46 | x | tst.js:60:20:60:20 | x | provenance |  |
+| tst.js:59:7:59:7 | x | tst.js:60:20:60:20 | x | provenance |  |
 | tst.js:93:7:93:7 | v | tst.js:95:18:95:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:95:18:95:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:95:18:95:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:95:18:95:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:95:18:95:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:95:18:95:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:97:20:97:20 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:97:20:97:20 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:97:20:97:20 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:93:7:93:7 | v | tst.js:120:18:120:18 | v | provenance |  |
 | tst.js:93:7:93:7 | v | tst.js:120:18:120:18 | v | provenance |  |
 | tst.js:93:11:93:34 | documen ... .search | tst.js:93:11:93:44 | documen ... bstr(1) | provenance |  |
 | tst.js:93:11:93:34 | documen ... .search | tst.js:93:11:93:44 | documen ... bstr(1) | provenance | Config |
+| tst.js:93:11:93:34 | documen ... .search | tst.js:93:11:93:44 | documen ... bstr(1) | provenance | Config |
 | tst.js:93:11:93:44 | documen ... bstr(1) | tst.js:93:7:93:7 | v | provenance |  |
+| tst.js:93:11:93:44 | documen ... bstr(1) | tst.js:93:7:93:7 | v | provenance |  |
+| tst.js:93:11:93:44 | documen ... bstr(1) | tst.js:93:7:93:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:97:20:97:20 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:97:20:97:20 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:97:20:97:20 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:95:18:95:18 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:97:20:97:20 | v | tst.js:102:25:102:25 | v | provenance |  |
+| tst.js:97:20:97:20 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:97:20:97:20 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:97:20:97:20 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:97:20:97:20 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:102:25:102:25 | v | tst.js:107:7:107:7 | v | provenance |  |
+| tst.js:102:25:102:25 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:102:25:102:25 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:102:25:102:25 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:107:7:107:7 | v | tst.js:112:7:112:7 | v | provenance |  |
+| tst.js:107:7:107:7 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:107:7:107:7 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:112:7:112:7 | v | tst.js:117:20:117:20 | v | provenance |  |
+| tst.js:112:7:112:7 | v | tst.js:120:18:120:18 | v | provenance |  |
+| tst.js:117:20:117:20 | v | tst.js:120:18:120:18 | v | provenance |  |
 | tst.js:132:29:132:50 | window. ... .search | tst.js:135:29:135:29 | v | provenance |  |
 | tst.js:135:29:135:29 | v | tst.js:135:49:135:49 | v | provenance |  |
 | tst.js:142:40:142:61 | window. ... .search | tst.js:139:29:139:46 | xssSourceService() | provenance |  |
@@ -1230,6 +1686,21 @@ edges
 | tst.js:168:9:168:15 | tainted | tst.js:176:45:176:51 | tainted | provenance |  |
 | tst.js:168:9:168:15 | tainted | tst.js:177:49:177:55 | tainted | provenance |  |
 | tst.js:168:19:168:42 | documen ... .search | tst.js:168:9:168:15 | tainted | provenance |  |
+| tst.js:170:31:170:37 | tainted | tst.js:172:42:172:48 | tainted | provenance |  |
+| tst.js:170:31:170:37 | tainted | tst.js:173:33:173:39 | tainted | provenance |  |
+| tst.js:170:31:170:37 | tainted | tst.js:175:54:175:60 | tainted | provenance |  |
+| tst.js:170:31:170:37 | tainted | tst.js:176:45:176:51 | tainted | provenance |  |
+| tst.js:170:31:170:37 | tainted | tst.js:177:49:177:55 | tainted | provenance |  |
+| tst.js:172:42:172:48 | tainted | tst.js:173:33:173:39 | tainted | provenance |  |
+| tst.js:172:42:172:48 | tainted | tst.js:175:54:175:60 | tainted | provenance |  |
+| tst.js:172:42:172:48 | tainted | tst.js:176:45:176:51 | tainted | provenance |  |
+| tst.js:172:42:172:48 | tainted | tst.js:177:49:177:55 | tainted | provenance |  |
+| tst.js:173:33:173:39 | tainted | tst.js:175:54:175:60 | tainted | provenance |  |
+| tst.js:173:33:173:39 | tainted | tst.js:176:45:176:51 | tainted | provenance |  |
+| tst.js:173:33:173:39 | tainted | tst.js:177:49:177:55 | tainted | provenance |  |
+| tst.js:175:54:175:60 | tainted | tst.js:176:45:176:51 | tainted | provenance |  |
+| tst.js:175:54:175:60 | tainted | tst.js:177:49:177:55 | tainted | provenance |  |
+| tst.js:176:45:176:51 | tainted | tst.js:177:49:177:55 | tainted | provenance |  |
 | tst.js:181:9:181:15 | tainted | tst.js:183:67:183:73 | tainted | provenance |  |
 | tst.js:181:9:181:15 | tainted | tst.js:184:67:184:73 | tainted | provenance |  |
 | tst.js:181:9:181:15 | tainted | tst.js:220:35:220:41 | tainted | provenance |  |
@@ -1292,35 +1763,170 @@ edges
 | tst.js:355:16:355:39 | documen ... .search | tst.js:355:7:355:12 | target | provenance |  |
 | tst.js:364:7:364:12 | target | tst.js:367:18:367:23 | target | provenance |  |
 | tst.js:364:7:364:12 | target | tst.js:369:18:369:23 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:371:3:371:8 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:372:18:372:23 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:374:3:374:8 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:375:18:375:23 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:378:18:378:23 | target | provenance |  |
 | tst.js:364:7:364:12 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:388:18:388:23 | target | provenance |  |
 | tst.js:364:7:364:12 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:364:7:364:12 | target | tst.js:391:3:391:8 | target | provenance |  |
 | tst.js:364:7:364:12 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:364:16:364:39 | documen ... .search | tst.js:364:7:364:12 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:369:18:369:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:371:3:371:8 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:372:18:372:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:374:3:374:8 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:375:18:375:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:367:18:367:23 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:369:18:369:23 | target | tst.js:369:18:369:29 | target.taint | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:371:3:371:8 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:372:18:372:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:374:3:374:8 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:375:18:375:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:369:18:369:23 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:372:18:372:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:374:3:374:8 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:375:18:375:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:371:3:371:8 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:374:3:374:8 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:375:18:375:23 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:372:18:372:23 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:374:3:374:8 | [post update] target [taint3] | tst.js:375:18:375:23 | target [taint3] | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:375:18:375:23 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:374:3:374:8 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:374:19:374:42 | documen ... .search | tst.js:374:3:374:8 | [post update] target [taint3] | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:377:3:377:8 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:375:18:375:23 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:375:18:375:23 | target [taint3] | tst.js:375:18:375:30 | target.taint3 | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:378:18:378:23 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:377:3:377:8 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:380:18:380:23 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:378:18:378:23 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:380:18:380:23 | target | tst.js:380:18:380:30 | target.taint5 | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:381:3:381:8 | target | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:380:18:380:23 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:381:3:381:8 | target | tst.js:383:3:383:8 | target | provenance |  |
+| tst.js:381:3:381:8 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:381:3:381:8 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:381:3:381:8 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:381:3:381:8 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:381:3:381:8 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:383:3:383:8 | target | tst.js:385:18:385:23 | target | provenance |  |
+| tst.js:383:3:383:8 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:383:3:383:8 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:383:3:383:8 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:383:3:383:8 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:385:18:385:23 | target | tst.js:388:18:388:23 | target | provenance |  |
+| tst.js:385:18:385:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:385:18:385:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:385:18:385:23 | target | tst.js:391:19:391:24 | target | provenance |  |
+| tst.js:388:18:388:23 | target | tst.js:389:18:389:23 | target | provenance |  |
+| tst.js:388:18:388:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:388:18:388:23 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:389:18:389:23 | target | tst.js:389:18:389:30 | target.taint7 | provenance |  |
+| tst.js:389:18:389:23 | target | tst.js:391:3:391:8 | target | provenance |  |
+| tst.js:389:18:389:23 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:391:3:391:8 | [post update] target [taint8] | tst.js:391:19:391:24 | target [taint8] | provenance |  |
 | tst.js:391:3:391:8 | [post update] target [taint8] | tst.js:392:18:392:23 | target [taint8] | provenance |  |
+| tst.js:391:3:391:8 | target | tst.js:391:19:391:24 | target | provenance |  |
 | tst.js:391:19:391:24 | target | tst.js:391:19:391:31 | target.taint8 | provenance |  |
 | tst.js:391:19:391:24 | target [taint8] | tst.js:391:19:391:31 | target.taint8 | provenance |  |
+| tst.js:391:19:391:24 | target [taint8] | tst.js:392:18:392:23 | target [taint8] | provenance |  |
 | tst.js:391:19:391:31 | target.taint8 | tst.js:391:3:391:8 | [post update] target [taint8] | provenance |  |
 | tst.js:392:18:392:23 | target [taint8] | tst.js:392:18:392:30 | target.taint8 | provenance |  |
 | tst.js:399:7:399:13 | payload | tst.js:400:18:400:24 | payload | provenance |  |
 | tst.js:399:17:399:36 | window.location.hash | tst.js:399:17:399:46 | window. ... bstr(1) | provenance |  |
 | tst.js:399:17:399:36 | window.location.hash | tst.js:399:17:399:46 | window. ... bstr(1) | provenance | Config |
 | tst.js:399:17:399:46 | window. ... bstr(1) | tst.js:399:7:399:13 | payload | provenance |  |
+| tst.js:402:7:402:11 | match | tst.js:403:7:403:11 | match | provenance |  |
 | tst.js:402:7:402:11 | match | tst.js:404:20:404:24 | match | provenance |  |
 | tst.js:402:15:402:34 | window.location.hash | tst.js:402:15:402:55 | window. ... (\\w+)/) | provenance |  |
 | tst.js:402:15:402:55 | window. ... (\\w+)/) | tst.js:402:7:402:11 | match | provenance |  |
+| tst.js:403:7:403:11 | match | tst.js:404:20:404:24 | match | provenance |  |
 | tst.js:404:20:404:24 | match | tst.js:404:20:404:27 | match[1] | provenance |  |
 | tst.js:407:18:407:37 | window.location.hash | tst.js:407:18:407:48 | window. ... it('#') [1] | provenance | Config |
 | tst.js:407:18:407:48 | window. ... it('#') [1] | tst.js:407:18:407:51 | window. ... '#')[1] | provenance |  |
 | tst.js:411:7:411:12 | target | tst.js:413:18:413:23 | target | provenance |  |
 | tst.js:411:16:411:39 | documen ... .search | tst.js:411:7:411:12 | target | provenance |  |
 | tst.js:413:18:413:23 | target | tst.js:413:18:413:89 | target. ... data>') | provenance |  |
+| tst.js:419:6:419:11 | source | tst.js:422:28:422:33 | source | provenance |  |
 | tst.js:419:6:419:11 | source | tst.js:423:28:423:33 | source | provenance |  |
 | tst.js:419:6:419:11 | source | tst.js:424:33:424:38 | source | provenance |  |
 | tst.js:419:6:419:11 | source | tst.js:425:34:425:39 | source | provenance |  |
@@ -1328,21 +1934,69 @@ edges
 | tst.js:419:6:419:11 | source | tst.js:427:44:427:49 | source | provenance |  |
 | tst.js:419:6:419:11 | source | tst.js:428:32:428:37 | source | provenance |  |
 | tst.js:419:15:419:38 | documen ... .search | tst.js:419:6:419:11 | source | provenance |  |
+| tst.js:422:28:422:33 | source | tst.js:423:28:423:33 | source | provenance |  |
+| tst.js:422:28:422:33 | source | tst.js:424:33:424:38 | source | provenance |  |
+| tst.js:422:28:422:33 | source | tst.js:425:34:425:39 | source | provenance |  |
+| tst.js:422:28:422:33 | source | tst.js:426:41:426:46 | source | provenance |  |
+| tst.js:422:28:422:33 | source | tst.js:427:44:427:49 | source | provenance |  |
+| tst.js:422:28:422:33 | source | tst.js:428:32:428:37 | source | provenance |  |
+| tst.js:423:28:423:33 | source | tst.js:424:33:424:38 | source | provenance |  |
+| tst.js:423:28:423:33 | source | tst.js:425:34:425:39 | source | provenance |  |
+| tst.js:423:28:423:33 | source | tst.js:426:41:426:46 | source | provenance |  |
+| tst.js:423:28:423:33 | source | tst.js:427:44:427:49 | source | provenance |  |
+| tst.js:423:28:423:33 | source | tst.js:428:32:428:37 | source | provenance |  |
+| tst.js:424:33:424:38 | source | tst.js:425:34:425:39 | source | provenance |  |
+| tst.js:424:33:424:38 | source | tst.js:426:41:426:46 | source | provenance |  |
+| tst.js:424:33:424:38 | source | tst.js:427:44:427:49 | source | provenance |  |
+| tst.js:424:33:424:38 | source | tst.js:428:32:428:37 | source | provenance |  |
+| tst.js:425:34:425:39 | source | tst.js:426:41:426:46 | source | provenance |  |
+| tst.js:425:34:425:39 | source | tst.js:427:44:427:49 | source | provenance |  |
+| tst.js:425:34:425:39 | source | tst.js:428:32:428:37 | source | provenance |  |
+| tst.js:426:41:426:46 | source | tst.js:427:44:427:49 | source | provenance |  |
+| tst.js:426:41:426:46 | source | tst.js:428:32:428:37 | source | provenance |  |
+| tst.js:427:44:427:49 | source | tst.js:428:32:428:37 | source | provenance |  |
 | tst.js:436:7:436:12 | source | tst.js:438:18:438:23 | source | provenance |  |
 | tst.js:436:7:436:12 | source | tst.js:439:36:439:41 | source | provenance |  |
 | tst.js:436:16:436:39 | documen ... .search | tst.js:436:7:436:12 | source | provenance |  |
+| tst.js:438:18:438:23 | source | tst.js:439:36:439:41 | source | provenance |  |
 | tst.js:439:36:439:41 | source | tst.js:439:18:439:42 | ansiToH ... source) | provenance |  |
 | tst.js:443:6:443:11 | source | tst.js:446:21:446:26 | source | provenance |  |
 | tst.js:443:6:443:11 | source | tst.js:448:19:448:24 | source | provenance |  |
 | tst.js:443:6:443:11 | source | tst.js:450:20:450:25 | source | provenance |  |
 | tst.js:443:15:443:38 | documen ... .search | tst.js:443:6:443:11 | source | provenance |  |
+| tst.js:446:21:446:26 | source | tst.js:448:19:448:24 | source | provenance |  |
+| tst.js:446:21:446:26 | source | tst.js:450:20:450:25 | source | provenance |  |
+| tst.js:448:19:448:24 | source | tst.js:450:20:450:25 | source | provenance |  |
 | tst.js:454:7:454:9 | url | tst.js:456:19:456:21 | url | provenance |  |
 | tst.js:454:7:454:9 | url | tst.js:457:26:457:28 | url | provenance |  |
 | tst.js:454:7:454:9 | url | tst.js:458:25:458:27 | url | provenance |  |
 | tst.js:454:7:454:9 | url | tst.js:459:20:459:22 | url | provenance |  |
+| tst.js:454:7:454:9 | url | tst.js:464:42:464:44 | url | provenance |  |
+| tst.js:454:7:454:9 | url | tst.js:466:7:466:9 | url | provenance |  |
 | tst.js:454:7:454:9 | url | tst.js:469:22:469:24 | url | provenance |  |
 | tst.js:454:13:454:36 | documen ... .search | tst.js:454:13:454:46 | documen ... bstr(1) | provenance | Config |
 | tst.js:454:13:454:46 | documen ... bstr(1) | tst.js:454:7:454:9 | url | provenance |  |
+| tst.js:456:19:456:21 | url | tst.js:457:26:457:28 | url | provenance |  |
+| tst.js:456:19:456:21 | url | tst.js:458:25:458:27 | url | provenance |  |
+| tst.js:456:19:456:21 | url | tst.js:459:20:459:22 | url | provenance |  |
+| tst.js:456:19:456:21 | url | tst.js:464:42:464:44 | url | provenance |  |
+| tst.js:456:19:456:21 | url | tst.js:466:7:466:9 | url | provenance |  |
+| tst.js:456:19:456:21 | url | tst.js:469:22:469:24 | url | provenance |  |
+| tst.js:457:26:457:28 | url | tst.js:458:25:458:27 | url | provenance |  |
+| tst.js:457:26:457:28 | url | tst.js:459:20:459:22 | url | provenance |  |
+| tst.js:457:26:457:28 | url | tst.js:464:42:464:44 | url | provenance |  |
+| tst.js:457:26:457:28 | url | tst.js:466:7:466:9 | url | provenance |  |
+| tst.js:457:26:457:28 | url | tst.js:469:22:469:24 | url | provenance |  |
+| tst.js:458:25:458:27 | url | tst.js:459:20:459:22 | url | provenance |  |
+| tst.js:458:25:458:27 | url | tst.js:464:42:464:44 | url | provenance |  |
+| tst.js:458:25:458:27 | url | tst.js:466:7:466:9 | url | provenance |  |
+| tst.js:458:25:458:27 | url | tst.js:469:22:469:24 | url | provenance |  |
+| tst.js:459:20:459:22 | url | tst.js:464:42:464:44 | url | provenance |  |
+| tst.js:459:20:459:22 | url | tst.js:466:7:466:9 | url | provenance |  |
+| tst.js:459:20:459:22 | url | tst.js:469:22:469:24 | url | provenance |  |
+| tst.js:464:42:464:44 | url | tst.js:466:7:466:9 | url | provenance |  |
+| tst.js:464:42:464:44 | url | tst.js:469:22:469:24 | url | provenance |  |
+| tst.js:466:7:466:9 | url | tst.js:469:22:469:24 | url | provenance |  |
 | tst.js:474:23:474:35 | location.hash | tst.js:474:23:474:45 | locatio ... bstr(1) | provenance | Config |
 | tst.js:477:18:477:30 | location.hash | tst.js:477:18:477:40 | locatio ... bstr(1) | provenance | Config |
 | tst.js:484:43:484:62 | window.location.hash | tst.js:484:33:484:63 | decodeU ... n.hash) | provenance |  |
@@ -1368,15 +2022,43 @@ edges
 | various-concat-obfuscations.js:2:6:2:12 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:2:16:2:39 | documen ... .search | various-concat-obfuscations.js:2:6:2:12 | tainted | provenance |  |
 | various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:4:4:4:31 | "<div>" ... </div>" | provenance | Config |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:5:12:5:18 | tainted | provenance |  |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:6:19:6:25 | tainted | provenance |  |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:7:14:7:20 | tainted | provenance |  |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:9:19:9:25 | tainted | provenance |  |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:10:16:10:22 | tainted | provenance |  |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:11:24:11:30 | tainted | provenance |  |
+| various-concat-obfuscations.js:4:14:4:20 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:5:4:5:26 | `<div>$ ... </div>` | provenance | Config |
+| various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:6:19:6:25 | tainted | provenance |  |
+| various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:7:14:7:20 | tainted | provenance |  |
+| various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:9:19:9:25 | tainted | provenance |  |
+| various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:10:16:10:22 | tainted | provenance |  |
+| various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:11:24:11:30 | tainted | provenance |  |
+| various-concat-obfuscations.js:5:12:5:18 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:6:4:6:26 | "<div>" ... ainted) | various-concat-obfuscations.js:6:4:6:43 | "<div>" ... /div>") | provenance |  |
 | various-concat-obfuscations.js:6:19:6:25 | tainted | various-concat-obfuscations.js:6:4:6:26 | "<div>" ... ainted) | provenance | Config |
+| various-concat-obfuscations.js:6:19:6:25 | tainted | various-concat-obfuscations.js:7:14:7:20 | tainted | provenance |  |
+| various-concat-obfuscations.js:6:19:6:25 | tainted | various-concat-obfuscations.js:9:19:9:25 | tainted | provenance |  |
+| various-concat-obfuscations.js:6:19:6:25 | tainted | various-concat-obfuscations.js:10:16:10:22 | tainted | provenance |  |
+| various-concat-obfuscations.js:6:19:6:25 | tainted | various-concat-obfuscations.js:11:24:11:30 | tainted | provenance |  |
+| various-concat-obfuscations.js:6:19:6:25 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:7:4:7:31 | ["<div> ... /div>"] | various-concat-obfuscations.js:7:4:7:38 | ["<div> ... .join() | provenance |  |
 | various-concat-obfuscations.js:7:14:7:20 | tainted | various-concat-obfuscations.js:7:4:7:31 | ["<div> ... /div>"] | provenance | Config |
+| various-concat-obfuscations.js:7:14:7:20 | tainted | various-concat-obfuscations.js:9:19:9:25 | tainted | provenance |  |
+| various-concat-obfuscations.js:7:14:7:20 | tainted | various-concat-obfuscations.js:10:16:10:22 | tainted | provenance |  |
+| various-concat-obfuscations.js:7:14:7:20 | tainted | various-concat-obfuscations.js:11:24:11:30 | tainted | provenance |  |
+| various-concat-obfuscations.js:7:14:7:20 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:9:19:9:25 | tainted | various-concat-obfuscations.js:9:4:9:34 | "<div i ...  "\\"/>" | provenance | Config |
+| various-concat-obfuscations.js:9:19:9:25 | tainted | various-concat-obfuscations.js:10:16:10:22 | tainted | provenance |  |
+| various-concat-obfuscations.js:9:19:9:25 | tainted | various-concat-obfuscations.js:11:24:11:30 | tainted | provenance |  |
+| various-concat-obfuscations.js:9:19:9:25 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:10:16:10:22 | tainted | various-concat-obfuscations.js:10:4:10:27 | `<div i ... ed}"/>` | provenance | Config |
+| various-concat-obfuscations.js:10:16:10:22 | tainted | various-concat-obfuscations.js:11:24:11:30 | tainted | provenance |  |
+| various-concat-obfuscations.js:10:16:10:22 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:11:4:11:31 | "<div i ... ainted) | various-concat-obfuscations.js:11:4:11:44 | "<div i ... t("/>") | provenance |  |
 | various-concat-obfuscations.js:11:24:11:30 | tainted | various-concat-obfuscations.js:11:4:11:31 | "<div i ... ainted) | provenance | Config |
+| various-concat-obfuscations.js:11:24:11:30 | tainted | various-concat-obfuscations.js:12:19:12:25 | tainted | provenance |  |
 | various-concat-obfuscations.js:12:4:12:34 | ["<div  ... "\\"/>"] | various-concat-obfuscations.js:12:4:12:41 | ["<div  ... .join() | provenance |  |
 | various-concat-obfuscations.js:12:19:12:25 | tainted | various-concat-obfuscations.js:12:4:12:34 | ["<div  ... "\\"/>"] | provenance | Config |
 | various-concat-obfuscations.js:14:24:14:28 | attrs | various-concat-obfuscations.js:15:28:15:32 | attrs | provenance |  |
@@ -1397,10 +2079,23 @@ edges
 | various-concat-obfuscations.js:21:17:21:46 | documen ... h.attrs | various-concat-obfuscations.js:17:24:17:28 | attrs | provenance |  |
 | various-concat-obfuscations.js:21:17:21:46 | documen ... h.attrs | various-concat-obfuscations.js:21:4:21:47 | indirec ... .attrs) | provenance | Config |
 | winjs.js:2:7:2:13 | tainted | winjs.js:3:43:3:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:3:43:3:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:3:43:3:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:3:43:3:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:3:43:3:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:3:43:3:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:4:43:4:49 | tainted | provenance |  |
+| winjs.js:2:7:2:13 | tainted | winjs.js:4:43:4:49 | tainted | provenance |  |
 | winjs.js:2:7:2:13 | tainted | winjs.js:4:43:4:49 | tainted | provenance |  |
 | winjs.js:2:17:2:40 | documen ... .search | winjs.js:2:17:2:53 | documen ... ring(1) | provenance |  |
 | winjs.js:2:17:2:40 | documen ... .search | winjs.js:2:17:2:53 | documen ... ring(1) | provenance | Config |
+| winjs.js:2:17:2:40 | documen ... .search | winjs.js:2:17:2:53 | documen ... ring(1) | provenance | Config |
 | winjs.js:2:17:2:53 | documen ... ring(1) | winjs.js:2:7:2:13 | tainted | provenance |  |
+| winjs.js:2:17:2:53 | documen ... ring(1) | winjs.js:2:7:2:13 | tainted | provenance |  |
+| winjs.js:2:17:2:53 | documen ... ring(1) | winjs.js:2:7:2:13 | tainted | provenance |  |
+| winjs.js:3:43:3:49 | tainted | winjs.js:4:43:4:49 | tainted | provenance |  |
+| winjs.js:3:43:3:49 | tainted | winjs.js:4:43:4:49 | tainted | provenance |  |
+| winjs.js:3:43:3:49 | tainted | winjs.js:4:43:4:49 | tainted | provenance |  |
 | xmlRequest.js:8:13:8:16 | json | xmlRequest.js:9:28:9:31 | json | provenance |  |
 | xmlRequest.js:8:20:8:47 | JSON.pa ... seText) | xmlRequest.js:8:13:8:16 | json | provenance |  |
 | xmlRequest.js:8:31:8:46 | xhr.responseText | xmlRequest.js:8:20:8:47 | JSON.pa ... seText) | provenance |  |

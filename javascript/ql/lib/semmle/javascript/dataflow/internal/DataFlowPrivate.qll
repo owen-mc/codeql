@@ -666,6 +666,8 @@ predicate nodeIsHidden(Node node) {
   node instanceof RestParameterStoreNode
   or
   node instanceof SsaSynthReadNode
+  or
+  node instanceof TSharedSsaReadNode
 }
 
 predicate neverSkipInPathGraph(Node node) {
@@ -1218,38 +1220,10 @@ predicate knownSinkModel(Node sink, string model) { none() }
 
 cached
 Node getNodeFromSsa2(Ssa2::Node node) {
-  exists(Ssa2::ExprNode read |
-    node = read and
-    not read.getExpr() instanceof ImplicitThisUse and
-    result = TValueNode(read.getExpr())
-  )
+  result = DataFlow::getNodeFromSharedSsa(node)
   or
-  exists(Ssa2::ExprNode read, ImplicitThisUse use |
-    node = read and
-    read.getExpr() = use and
-    result = TImplicitThisUse(use, false)
-  )
-  or
-  result = TExprPostUpdateNode(node.(Ssa2::ExprPostUpdateNode).getExpr())
-  or
-  exists(ImplicitThisUse use |
-    node.(Ssa2::ExprPostUpdateNode).getExpr() = use and
-    result = TImplicitThisUse(use, true)
-  )
-  or
-  result = TSsaSynthReadNode(node)
-  or
-  exists(Ssa2::Definition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int i |
-    node.(Ssa2::SsaDefinitionNode).getDefinition() = def and
-    def.definesAt(var, bb, i) and
-    result = TSharedSsaDefNode(var, bb, i)
-  )
-  or
-  exists(Ssa2::Definition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb |
-    node.(Ssa2::SsaDefinitionNode).getDefinition() = def and
-    def.definesAt(var, bb, -1) and
-    result = TThisNode(var.asThisContainer())
-  )
+  // Guard barriers validate both an occurrence and the variable's continuing value.
+  result = TSharedSsaReadNode(node)
 }
 
 private predicate sharedSsaFlow(Node node1, Node node2) {

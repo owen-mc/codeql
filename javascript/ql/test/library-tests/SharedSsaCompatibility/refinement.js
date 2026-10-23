@@ -100,7 +100,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
   function emptyRefinementBranches() {
     const value = SOURCE("empty-refinement-branches");
     if (value) {}
-    SINK(value); // $ refinementFlow=empty-refinement-branches refinementTaint=empty-refinement-branches MISSING: localRefinementFlow=empty-refinement-branches noRefinementBypass=empty-refinement-branches
+    SINK(value); // $ refinementFlow=empty-refinement-branches refinementTaint=empty-refinement-branches localRefinementFlow=empty-refinement-branches noRefinementBypass=empty-refinement-branches
   }
 
   function nestedSingleReadPhis(firstCondition, secondCondition) {
@@ -115,7 +115,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
     } else {
       value = "safe";
     }
-    SINK(value); // $ refinementFlow=nested-single-read-phis refinementTaint=nested-single-read-phis MISSING: localRefinementFlow=nested-single-read-phis
+    SINK(value); // $ refinementFlow=nested-single-read-phis refinementTaint=nested-single-read-phis localRefinementFlow=nested-single-read-phis
   }
 
   function nestedMultipleReadPhis(firstCondition, secondCondition, thirdCondition) {
@@ -146,7 +146,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
         if (!BARRIER(value)) return;
       }
       if (typeof value === "object") {
-        SINK(value); // $ localRefinementFlow=refinement-after-guarded-join noRefinementBypass=refinement-after-guarded-join MISSING: noRefinementFlow=refinement-after-guarded-join noRefinementTaint=refinement-after-guarded-join SPURIOUS: refinementFlow=refinement-after-guarded-join refinementTaint=refinement-after-guarded-join
+        SINK(value); // $ localRefinementFlow=refinement-after-guarded-join noRefinementBypass=refinement-after-guarded-join noRefinementFlow=refinement-after-guarded-join noRefinementTaint=refinement-after-guarded-join
       }
     }
   }
@@ -157,7 +157,7 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
       if (condition) {
         use(value);
       }
-      SINK(value); // $ barrier=conditional-read-in-refinement noRefinementTaint=conditional-read-in-refinement localRefinementFlow=conditional-read-in-refinement MISSING: noRefinementFlow=conditional-read-in-refinement noRefinementBypass=conditional-read-in-refinement SPURIOUS: refinementFlow=conditional-read-in-refinement
+      SINK(value); // $ barrier=conditional-read-in-refinement noRefinementTaint=conditional-read-in-refinement localRefinementFlow=conditional-read-in-refinement noRefinementFlow=conditional-read-in-refinement noRefinementBypass=conditional-read-in-refinement
     }
   }
 
@@ -168,9 +168,25 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
       value = "safe";
     }
     if (otherCondition) {
-      SINK(value); // $ localRefinementFlow=independent-phi-inputs MISSING: refinementFlow=independent-phi-inputs refinementTaint=independent-phi-inputs SPURIOUS: noRefinementFlow=independent-phi-inputs noRefinementTaint=independent-phi-inputs noRefinementBypass=independent-phi-inputs
+      SINK(value); // $ localRefinementFlow=independent-phi-inputs refinementFlow=independent-phi-inputs refinementTaint=independent-phi-inputs
     } else {
       use(value);
     }
+  }
+
+  function occurrenceSpecificBarrier() {
+    const value = SOURCE("occurrence-barrier");
+    BLOCKED_SINK(value); // $ noRefinementFlow=occurrence-barrier noRefinementTaint=occurrence-barrier localRefinementFlow=occurrence-barrier
+    SINK(value); // $ localRefinementFlow=occurrence-barrier refinementFlow=occurrence-barrier refinementTaint=occurrence-barrier
+  }
+
+  function occurrenceSpecificBarriersBeforeJoin(condition) {
+    const value = SOURCE("occurrence-barriers-before-join");
+    if (condition) {
+      BLOCKED_SINK(value); // $ noRefinementFlow=occurrence-barriers-before-join noRefinementTaint=occurrence-barriers-before-join localRefinementFlow=occurrence-barriers-before-join
+    } else {
+      BLOCKED_SINK(value); // $ noRefinementFlow=occurrence-barriers-before-join noRefinementTaint=occurrence-barriers-before-join localRefinementFlow=occurrence-barriers-before-join
+    }
+    SINK(value); // $ refinementFlow=occurrence-barriers-before-join refinementTaint=occurrence-barriers-before-join localRefinementFlow=occurrence-barriers-before-join
   }
 }

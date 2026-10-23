@@ -1,4 +1,10 @@
-/** Instantiates the shared SSA library for JavaScript data flow. */
+/**
+ * Instantiates the shared SSA library for JavaScript data flow.
+ *
+ * Refinements are value-preserving uncertain writes, so shared SSA routes flow
+ * through refinements and their phi inputs. Phi definitions are retained to
+ * preserve the JavaScript SSA definition-node API.
+ */
 overlay[local?]
 module;
 
@@ -26,6 +32,10 @@ module SsaConfig implements InputSig<js::Location, js::Cfg::BasicBlock> {
       bb = getEntryBlock(v.getDeclaringContainer()) and
       i = -1
     )
+    or
+    // Refinements preserve the input value but introduce a new SSA definition.
+    certain = false and
+    any(js::SsaRefinementNode refinement).definesAt(bb, i, v.asLocalVariable())
   }
 
   predicate variableRead(js::Cfg::BasicBlock bb, int i, SourceVariable v, boolean certain) {
@@ -62,6 +72,10 @@ module SsaDataflowInput implements DataFlowIntegrationInputSig {
       )
     )
   }
+
+  predicate allowFlowIntoUncertainDef(UncertainWriteDefinition def) { any() }
+
+  predicate includePhiDefsInFlowStep() { any() }
 
   cached
   Expr getARead(Definition def) {

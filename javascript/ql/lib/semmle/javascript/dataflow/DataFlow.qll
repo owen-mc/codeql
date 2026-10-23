@@ -44,6 +44,8 @@ module DataFlow {
         legacy.definesAt(bb, sharedIndex, local)
         or
         sharedIndex = -1 and
+        bb instanceof EntryBasicBlock and
+        bb.getContainer() = local.getDeclaringContainer() and
         legacy.(SsaExplicitDefinition).getDef() = any(SimpleParameter p | p.getVariable() = local)
         or
         sharedIndex = -1 and
@@ -354,6 +356,25 @@ module DataFlow {
     override File getFile() { result = write.getFile() }
 
     override AstNode getAstNode() { result = write }
+  }
+
+  /** A variable value that can flow past a barrier on just one expression occurrence. */
+  private class SharedSsaReadNode extends Node, TSharedSsaReadNode {
+    VarUse read;
+
+    SharedSsaReadNode() {
+      this = TSharedSsaReadNode(any(Ssa2::ExprNode node | node.getExpr() = read))
+    }
+
+    override BasicBlock getBasicBlock() { result = read.getBasicBlock() }
+
+    override Location getLocation() { result = read.getLocation() }
+
+    override string toString() { result = "[ssa-read] " + read.toString() }
+
+    override File getFile() { result = read.getFile() }
+
+    override AstNode getAstNode() { none() }
   }
 
   /**
@@ -1499,7 +1520,9 @@ module DataFlow {
   ExprNode exprNode(Expr e) { result = valueNode(e) }
 
   /** Gets the data flow node corresponding to `ssa`. */
-  SsaDefinitionNode ssaDefinitionNode(SsaDefinition ssa) {
+  SsaDefinitionNode ssaDefinitionNode(SsaDefinition ssa) { result = ssaDefinitionNodeInternal(ssa) }
+
+  private EarlyStageNode ssaDefinitionNodeInternal(SsaDefinition ssa) {
     ssa instanceof SsaRefinementNode and
     result = TRefinementNode(ssa)
     or
@@ -1750,162 +1773,46 @@ module DataFlow {
   }
 
   private predicate sharedPhiImmediateFlowStep(EarlyStageNode pred, EarlyStageNode succ) {
-    exists(
-      Ssa2::SsaDefinitionNode sharedNode, Ssa2::PhiNode sharedPhi,
-      Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index, SsaPhiNode legacyPhi,
-      LocalVariable local
-    |
-      sharedNode.getDefinition() = sharedPhi and
-      sharedPhi.definesAt(var, bb, index) and
-      var.asLocalVariable() = local and
-      legacyPhi.definesAt(bb, _, local) and
-      succ = TSharedSsaDefNode(var, bb, index) and
-      (
-        refinementOverlayDefinition(legacyPhi.getRephinedVariable().getDefinition()) and
-        pred = refinementOverlayNode(legacyPhi.getRephinedVariable().getDefinition())
-        or
-        not refinementOverlayDefinition(legacyPhi.getRephinedVariable().getDefinition()) and
-        pred = sharedSsaNode(legacyPhi.getRephinedVariable().getDefinition())
-      )
+    exists(SsaPhiNode phi |
+      not phi.getSourceVariable().isCaptured() and
+      pred = ssaDefinitionNodeInternal(phi.getRephinedVariable().getDefinition()) and
+      succ = ssaDefinitionNodeInternal(phi)
     )
-  }
-
-  private SsaDefinition getLegacyDefinitionForSharedEdge(Ssa2::Node ssaPred, Ssa2::Node ssaSucc) {
-    not ssaPred instanceof Ssa2::ExprPostUpdateNode and
-    not sharedNodeIsAfterRefinement(ssaPred, result) and
-    not exists(Ssa2::ExprNode read |
-      ssaPred = read and
-      read.getExpr() = result.getVariable().getAUse()
-    ) and
-    (
-      exists(Ssa2::ExprNode read, SsaVariable variable |
-        ssaSucc = read and
-        read.getExpr() = variable.getAUse() and
-        (
-          variable.getDefinition() instanceof SsaRefinementNode and
-          sharedPredRepresentsUnderlyingDefinition(ssaPred, variable.getDefinition()) and
-          result = variable.getDefinition()
-          or
-          variable.getDefinition() instanceof SsaPhiNode and
-          not exists(sharedSsaNode(variable.getDefinition())) and
-          result = variable.getDefinition()
-        )
-      )
-      or
-      exists(Ssa2::SsaSynthReadNode inputNode, SsaPhiNode legacyPhi |
-        ssaSucc = inputNode and
-        inputNode.getIndex() >= 0 and
-        inputNode.getSourceVariable().asLocalVariable() = legacyPhi.getSourceVariable() and
-        result = legacyPhi.getInputFromBlock(inputNode.getBasicBlock()).getDefinition() and
-        refinementOverlayDefinition(result) and
-        sharedPredRepresentsUnderlyingDefinition(ssaPred, result)
-      )
-      or
-      exists(Ssa2::SsaSynthReadNode sharedPhi, SsaPhiNode legacyPhi, SsaVariable input |
-        ssaSucc = sharedPhi and
-        sharedPhi.getIndex() = -1 and
-        sameSsaDefinition(legacyPhi, sharedPhi.getSourceVariable(), sharedPhi.getBasicBlock(), -1) and
-        input = legacyPhi.getAnInput() and
-        refinementOverlayDefinition(input.getDefinition()) and
-        sharedPredRepresentsUnderlyingDefinition(ssaPred, input.getDefinition()) and
-        result = input.getDefinition()
-      )
-      or
-      exists(
-        Ssa2::SsaDefinitionNode sharedNode, Ssa2::PhiNode sharedPhi, SsaPhiNode legacyPhi,
-        SsaVariable input
-      |
-        ssaSucc = sharedNode and
-        sharedNode.getDefinition() = sharedPhi and
-        sameSsaDefinition(legacyPhi, sharedPhi.getSourceVariable(), sharedPhi.getBasicBlock(), -1) and
-        input = legacyPhi.getAnInput() and
-        refinementOverlayDefinition(input.getDefinition()) and
-        sharedPredRepresentsUnderlyingDefinition(ssaPred, input.getDefinition()) and
-        result = input.getDefinition()
-      )
-    )
-  }
-
-  private predicate sharedNodeIsAfterRefinement(Ssa2::Node node, SsaRefinementNode refinement) {
-    exists(BasicBlock bb, int index, int refinementIndex |
-      (
-        node.(Ssa2::ExprNode).getExpr().hasCfgNode(bb, index)
-        or
-        node.(Ssa2::SsaNode).getBasicBlock() = bb and
-        index = node.(Ssa2::SsaNode).getIndex()
-      ) and
-      refinement.getGuard().dominates(bb) and
-      refinement.getBasicBlock().getNode(refinementIndex) = refinement.getGuard() and
-      (bb != refinement.getBasicBlock() or index > refinementIndex)
-    )
-  }
-
-  private SsaDefinition getSharedUnderlyingDefinition(SsaDefinition legacy) {
-    exists(Ssa2::Definition shared, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index |
-      shared.definesAt(var, bb, index) and
-      sameSsaDefinition(legacy, var, bb, index) and
-      result = legacy
-    )
-    or
-    not exists(
-      Ssa2::Definition shared, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index
-    |
-      shared.definesAt(var, bb, index) and
-      sameSsaDefinition(legacy, var, bb, index)
-    ) and
-    result =
-      getSharedUnderlyingDefinition(legacy.(SsaPseudoDefinition).getAnInput().getDefinition())
-  }
-
-  private predicate sharedPredRepresentsUnderlyingDefinition(
-    Ssa2::Node ssaPred, SsaDefinition legacy
-  ) {
-    exists(Ssa2::Definition shared, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index |
-      shared.definesAt(var, bb, index) and
-      sameSsaDefinition(getSharedUnderlyingDefinition(legacy), var, bb, index) and
-      (
-        ssaPred.(Ssa2::SsaDefinitionNode).getDefinition() = shared
-        or
-        exists(Ssa2::ReadNode read, BasicBlock readBlock, int readIndex |
-          ssaPred = read and
-          read.readsAt(readBlock, readIndex, var) and
-          Ssa2::ssaDefReachesRead(var, shared, readBlock, readIndex)
-        )
-        or
-        exists(Ssa2::SsaSynthReadNode read |
-          ssaPred = read and
-          read.getSourceVariable() = var and
-          if read.getIndex() = -1
-          then
-            Ssa2::ssaDefReachesEndOfBlock(read.getBasicBlock().getImmediateDominator(), shared, var)
-          else Ssa2::ssaDefReachesEndOfBlock(read.getBasicBlock(), shared, var)
-        )
-      )
-    )
-  }
-
-  private EarlyStageNode getSharedFlowPredecessor(Ssa2::Node ssaPred, Ssa2::Node ssaSucc) {
-    result = compatibilitySsaNode(getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc))
-    or
-    not exists(getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc)) and
-    result = getNodeFromSharedSsa(ssaPred)
   }
 
   private predicate ordinaryFlowStepShared(EarlyStageNode pred, EarlyStageNode succ) {
     exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
       sharedOrdinaryFlowStep(ssaPred, ssaSucc) and
-      pred = getSharedFlowPredecessor(ssaPred, ssaSucc) and
-      succ = getNodeFromSharedSsa(ssaSucc) and
+      pred = getSharedSsaFlowNode(ssaPred) and
+      succ = getSharedSsaFlowNode(ssaSucc) and
       pred != succ
     )
+    or
+    // A barrier on one use must not sanitize the variable at subsequent uses.
+    exists(Ssa2::ExprNode read |
+      pred = TSharedSsaReadNode(read) and succ = getNodeFromSharedSsa(read)
+      or
+      pred = getNodeFromSharedSsa(read) and succ = TSharedSsaReadNode(read)
+    )
+  }
+
+  private EarlyStageNode getSharedSsaFlowNode(Ssa2::Node node) {
+    result = TSharedSsaReadNode(node)
+    or
+    not node.(Ssa2::ExprNode).getExpr() instanceof VarUse and
+    result = getNodeFromSharedSsa(node)
   }
 
   pragma[inline]
   private predicate sharedSsaImmediateFlowStep(EarlyStageNode pred, EarlyStageNode succ) {
     exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
       sharedImmediateFlowStep(ssaPred, ssaSucc) and
-      pred = getSharedFlowPredecessor(ssaPred, ssaSucc) and
-      succ = getNodeFromSharedSsa(ssaSucc) and
+      pred = getNodeFromSharedSsa(ssaPred) and
+      (
+        succ = getNodeFromSharedSsa(ssaSucc)
+        or
+        succ = TSharedSsaReadNode(ssaSucc)
+      ) and
       pred != succ
     )
     or
@@ -2070,38 +1977,18 @@ module DataFlow {
   }
 
   /**
-   * INTERNAL: Local flow steps imported by global flow. Shared ordinary SSA flow is imported
-   * separately so refinement barriers can be preserved.
+   * INTERNAL: Local flow steps imported by global flow. Shared SSA flow is imported separately.
    */
   predicate localFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
     localFlowStepWithoutSharedOrdinary(pred, succ)
   }
 
   /**
-   * INTERNAL: Shared SSA steps for global flow, with JavaScript refinements inserted.
-   * Shared phi reads and inputs carry flow through joins instead of compatibility phis.
+   * INTERNAL: Shared SSA steps for global flow, including JavaScript refinements.
+   * These are the same SSA steps used by local flow.
    */
   predicate sharedSsaFlowStepForGlobal(EarlyStageNode pred, EarlyStageNode succ) {
-    exists(Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
-      sharedOrdinaryFlowStep(ssaPred, ssaSucc) and
-      (
-        exists(SsaRefinementNode refinement |
-          refinement = getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc) and
-          (
-            pred = getNodeFromSharedSsa(ssaPred) and
-            succ = TRefinementNode(refinement)
-            or
-            pred = TRefinementNode(refinement) and
-            succ = getNodeFromSharedSsa(ssaSucc)
-          )
-        )
-        or
-        not getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc) instanceof SsaRefinementNode and
-        pred = getNodeFromSharedSsa(ssaPred) and
-        succ = getNodeFromSharedSsa(ssaSucc)
-      ) and
-      pred != succ
-    )
+    ordinaryFlowStepShared(pred, succ)
   }
 
   overlay[global]
@@ -2153,100 +2040,21 @@ module DataFlow {
   }
 
   private predicate refinementFlowStep(EarlyStageNode pred, EarlyStageNode succ, boolean immediate) {
-    immediate = [true, false] and
-    (
-      exists(SsaRefinementNode refinement, Ssa2::Node ssaPred, Ssa2::Node ssaSucc |
-        (
-          immediate = true and sharedImmediateFlowStep(ssaPred, ssaSucc)
-          or
-          immediate = false and sharedOrdinaryFlowStep(ssaPred, ssaSucc)
-        ) and
-        not ssaPred instanceof Ssa2::ExprPostUpdateNode and
-        not sharedNodeIsAfterRefinement(ssaPred, refinement) and
-        (
-          getNodeFromSharedSsa(ssaSucc) = TValueNode(refinement.getVariable().getAUse())
-          or
-          getLegacyDefinitionForSharedEdge(ssaPred, ssaSucc) = refinement
-        ) and
-        not refinementOverlayDefinition(refinement.getAnInput().getDefinition()) and
-        pred = getNodeFromSharedSsa(ssaPred) and
-        succ = TRefinementNode(refinement)
-      )
-      or
-      exists(SsaRefinementNode refinement |
-        refinementOverlayDefinition(refinement.getAnInput().getDefinition()) and
-        pred = compatibilitySsaNode(refinement.getAnInput().getDefinition()) and
-        succ = TRefinementNode(refinement)
-      )
-      or
-      exists(SsaPhiNode phi, SsaVariable input |
-        not exists(sharedSsaNode(phi)) and
-        (
-          immediate = true and input = phi.getRephinedVariable()
-          or
-          immediate = false and input = phi.getAnInput()
-        ) and
-        succ = TLegacySsaPhiNode(phi)
-      |
-        refinementOverlayDefinition(input.getDefinition()) and
-        pred = refinementOverlayNode(input.getDefinition())
+    exists(SsaRefinementNode refinement |
+      (
+        immediate = true
         or
-        not refinementOverlayDefinition(input.getDefinition()) and
-        pred = sharedSsaNode(input.getDefinition())
-      )
-      or
-      exists(SsaPhiNode phi, SsaVariable variable |
-        not exists(sharedSsaNode(phi)) and
-        variable.getDefinition() = phi and
-        pred = TLegacySsaPhiNode(phi) and
-        succ = TValueNode(variable.getAUse())
-      )
+        immediate = false and refinement.getSourceVariable().isCaptured()
+      ) and
+      pred = ssaDefinitionNodeInternal(refinement.getAnInput().getDefinition()) and
+      succ = TRefinementNode(refinement)
     )
-  }
-
-  cached
-  private predicate refinementOverlayDefinition(SsaDefinition def) {
-    def instanceof SsaRefinementNode
-    or
-    exists(SsaPhiNode phi, SsaVariable input |
-      def = phi and
-      input = phi.getAnInput() and
-      refinementOverlayDefinition(input.getDefinition())
-    )
-  }
-
-  private EarlyStageNode refinementOverlayNode(SsaDefinition ssa) {
-    result = TRefinementNode(ssa)
-    or
-    ssa instanceof SsaPhiNode and
-    refinementOverlayDefinition(ssa) and
-    (
-      result = sharedSsaNode(ssa)
-      or
-      not exists(sharedSsaNode(ssa)) and
-      result = TLegacySsaPhiNode(ssa)
-    )
-  }
-
-  private EarlyStageNode sharedSsaNode(SsaDefinition legacy) {
-    exists(Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int index |
-      sameSsaDefinition(legacy, var, bb, index) and
-      exists(Ssa2::SsaDefinitionNode shared | shared.getDefinition().definesAt(var, bb, index)) and
-      result = TSharedSsaDefNode(var, bb, index)
-    )
-  }
-
-  private EarlyStageNode compatibilitySsaNode(SsaDefinition legacy) {
-    result = refinementOverlayNode(legacy)
-    or
-    legacy instanceof SsaPhiNode and
-    not exists(sharedSsaNode(legacy)) and
-    result = TLegacySsaPhiNode(legacy)
-    or
-    result = sharedSsaNode(legacy)
   }
 
   private EarlyStageNode capturedSsaNode(SsaDefinition ssa) {
+    ssa.getSourceVariable().isCaptured() and
+    result = TRefinementNode(ssa)
+    or
     exists(VarRef write |
       ssa.(SsaExplicitDefinition).getLhs() = write and
       write.getVariable().isCaptured() and
@@ -2264,7 +2072,9 @@ module DataFlow {
     result = TLegacySsaPhiNode(ssa)
   }
 
-  private EarlyStageNode getNodeFromSharedSsa(Ssa2::Node node) {
+  /** INTERNAL: Gets the JavaScript data flow node corresponding to a shared SSA node. */
+  cached
+  EarlyStageNode getNodeFromSharedSsa(Ssa2::Node node) {
     exists(Ssa2::ExprNode read |
       node = read and
       not read.getExpr() instanceof ImplicitThisUse and
@@ -2285,6 +2095,12 @@ module DataFlow {
     )
     or
     result = TSsaSynthReadNode(node)
+    or
+    exists(SsaRefinementNode refinement, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int i |
+      node.(Ssa2::SsaDefinitionNode).getDefinition().definesAt(var, bb, i) and
+      sameSsaDefinition(refinement, var, bb, i) and
+      result = TRefinementNode(refinement)
+    )
     or
     exists(Ssa2::Definition def, Ssa2::SsaConfig::SourceVariable var, BasicBlock bb, int i |
       node.(Ssa2::SsaDefinitionNode).getDefinition() = def and

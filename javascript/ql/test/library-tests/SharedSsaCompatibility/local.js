@@ -49,7 +49,7 @@ function postUpdateBeforeNestedRefinement(value) {
   if (value) {
     value.property = SOURCE("update-before-refinement");
     if (typeof value === "object") {
-      SINK(value); // $ MISSING: postUpdateFlow=update-before-refinement SPURIOUS: noPostUpdateFlow=update-before-refinement
+      SINK(value); // $ postUpdateFlow=update-before-refinement
     }
   }
 }
@@ -59,12 +59,24 @@ function postUpdateBeforeCompatibilityPhi(value) {
     value.property = SOURCE("update-before-phi");
     use(value);
   }
-  SINK(value); // $ MISSING: postUpdateFlow=update-before-phi SPURIOUS: noPostUpdateFlow=update-before-phi
+  SINK(value); // $ postUpdateFlow=update-before-phi
 }
 
 function postUpdateImmediatePredecessor(value) {
   value.property = SOURCE("update-immediate-predecessor");
   SINK(value); // $ postUpdateFlow=update-immediate-predecessor noImmediatePostUpdate=update-immediate-predecessor
+}
+
+function capturedRefinementLocalFlow() {
+  const value = SOURCE("captured-refinement");
+  function capture() {
+    use(value);
+  }
+  if (value) {
+    if (typeof value === "object") {
+      SINK(value); // $ localFlow=captured-refinement
+    }
+  }
 }
 
 class SharedSsaBase {}

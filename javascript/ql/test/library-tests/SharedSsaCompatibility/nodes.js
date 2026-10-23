@@ -36,7 +36,7 @@ function nestedPhiNodes(firstCondition, secondCondition, thirdCondition) {
     value = "third";
   }
   if (thirdCondition) {
-    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata MISSING: phiReachesCheck globalPhiReachesCheck
+    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata phiReachesCheck globalPhiReachesCheck
   } else {
     use(value);
   }

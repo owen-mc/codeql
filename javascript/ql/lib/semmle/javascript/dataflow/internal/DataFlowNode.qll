@@ -34,8 +34,11 @@ private module Cached {
     TValueNode(AST::ValueNode nd) or
     /** An SSA definition from the shared SSA library */
     TSharedSsaDefNode(Ssa2::SsaConfig::SourceVariable v, BasicBlock bb, int i) {
-      exists(Ssa2::SsaDefinitionNode node | node.getDefinition().definesAt(v, bb, i)) and
-      (exists(v.asLocalVariable()) or i != -1)
+      exists(Ssa2::SsaDefinitionNode node |
+        node.getDefinition().definesAt(v, bb, i) and
+        not node.getDefinition() instanceof Ssa2::UncertainWriteDefinition
+      ) and
+      exists(v.asLocalVariable())
     } or
     /** A JavaScript-specific type-refinement definition. */
     TRefinementNode(SsaRefinementNode refinement) or
@@ -44,19 +47,16 @@ private module Cached {
       write instanceof LValue and
       write.getVariable().(LocalVariable).isCaptured()
     } or
-    /** A JavaScript-specific SSA phi definition. */
-    TLegacySsaPhiNode(SsaPhiNode phi) {
-      not exists(Ssa2::SsaDefinitionNode shared |
-        shared.getDefinition().(Ssa2::PhiNode).getBasicBlock() = phi.getBasicBlock() and
-        shared.getDefinition().getSourceVariable().asLocalVariable() = phi.getSourceVariable()
-      )
-    } or
+    /** An SSA phi definition for a captured variable. */
+    TLegacySsaPhiNode(SsaPhiNode phi) { phi.getSourceVariable().isCaptured() } or
     /** The implicit initialization of a captured variable. */
     TCapturedSsaInitNode(LocalVariable variable) { variable.isCaptured() } or
     /** A JavaScript-specific capture definition. */
     TCapturedSsaCaptureNode(SsaVariableCapture capture) or
     /** A synthesized variable read from the shared SSA library. */
     TSsaSynthReadNode(Ssa2::SsaSynthReadNode read) or
+    /** The variable value at a read, separate from the expression occurrence. */
+    TSharedSsaReadNode(Ssa2::ExprNode read) { read.getExpr() instanceof VarUse } or
     TCapturedVariableNode(LocalVariable v) { v.isCaptured() } or
     TPropNode(@property p) or
     TRestPatternNode(DestructuringPattern dp, Expr rest) { rest = dp.getRest() } or
@@ -151,13 +151,14 @@ import Cached
 private class TEarlyStageNode =
   TValueNode or TSharedSsaDefNode or TRefinementNode or TCapturedVariableWriteNode or
       TLegacySsaPhiNode or TCapturedSsaInitNode or TCapturedSsaCaptureNode or TSsaSynthReadNode or
-      TCapturedVariableNode or TPropNode or TRestPatternNode or TElementPatternNode or
-      TElementNode or TReflectiveCallNode or TThisNode or TFunctionSelfReferenceNode or
-      TDestructuredModuleImportNode or THtmlAttributeNode or TFunctionReturnNode or
-      TExceptionalFunctionReturnNode or TExceptionalInvocationReturnNode or TGlobalAccessPathRoot or
-      TTemplatePlaceholderTag or TReflectiveParametersNode or TExprPostUpdateNode or
-      TNewCallThisArgument or TStaticArgumentArrayNode or TDynamicArgumentArrayNode or
-      TStaticParameterArrayNode or TDynamicParameterArrayNode or TImplicitThisUse;
+      TSharedSsaReadNode or TCapturedVariableNode or TPropNode or TRestPatternNode or
+      TElementPatternNode or TElementNode or TReflectiveCallNode or TThisNode or
+      TFunctionSelfReferenceNode or TDestructuredModuleImportNode or THtmlAttributeNode or
+      TFunctionReturnNode or TExceptionalFunctionReturnNode or TExceptionalInvocationReturnNode or
+      TGlobalAccessPathRoot or TTemplatePlaceholderTag or TReflectiveParametersNode or
+      TExprPostUpdateNode or TNewCallThisArgument or TStaticArgumentArrayNode or
+      TDynamicArgumentArrayNode or TStaticParameterArrayNode or TDynamicParameterArrayNode or
+      TImplicitThisUse;
 
 /**
  * A data-flow node that is not a flow summary node.

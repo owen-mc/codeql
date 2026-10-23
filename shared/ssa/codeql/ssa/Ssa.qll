@@ -1484,6 +1484,15 @@ module Make<
     default predicate includeWriteDefsInFlowStep() { any() }
 
     /**
+     * Holds if phi definitions should always have a data flow node, even when
+     * they have a unique next reference. This is useful for language-specific
+     * APIs that expose a node for each SSA definition.
+     *
+     * Phi reads may still be skipped.
+     */
+    default predicate includePhiDefsInFlowStep() { none() }
+
+    /**
      * Holds if barrier guards should be supported on input edges to phi
      * nodes. Disable this only if barrier guards are not going to be used.
      */
@@ -1667,6 +1676,7 @@ module Make<
      * flow edges.
      */
     private predicate phiHasUniqNextNode(SsaPhiExt phi) {
+      not (phi instanceof PhiNode and DfInput::includePhiDefsInFlowStep()) and
       not relevantBackEdge(phi, _) and
       exists(int nextPhiInput, int nextPhi, int nextRef |
         1 = nextPhiInput + nextPhi + nextRef and
