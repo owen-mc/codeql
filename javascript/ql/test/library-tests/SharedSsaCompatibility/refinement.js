@@ -248,14 +248,14 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
       } else {
         if (!BARRIER(this)) return;
       }
-      SINK(this); // $ localRefinementFlow=this-guard MISSING: noRefinementFlow=this-guard noRefinementTaint=this-guard SPURIOUS: refinementFlow=this-guard refinementTaint=this-guard
+      SINK(this); // $ localRefinementFlow=this-guard noRefinementFlow=this-guard noRefinementTaint=this-guard
     }
 
     occurrenceBarrierThisMethod() {
       this.property = SOURCE("this-occurrence-barrier");
       BLOCKED_SINK(this.property); // $ noRefinementFlow=this-occurrence-barrier noRefinementTaint=this-occurrence-barrier
       BLOCKED_SINK(this); // $ noRefinementFlow=this-occurrence-barrier noRefinementTaint=this-occurrence-barrier
-      SINK(this.property); // $ MISSING: refinementFlow=this-occurrence-barrier refinementTaint=this-occurrence-barrier SPURIOUS: noRefinementFlow=this-occurrence-barrier noRefinementTaint=this-occurrence-barrier
+      SINK(this.property); // $ refinementFlow=this-occurrence-barrier refinementTaint=this-occurrence-barrier
     }
   }
 }

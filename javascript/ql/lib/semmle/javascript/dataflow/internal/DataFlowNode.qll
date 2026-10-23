@@ -58,8 +58,8 @@ private module Cached {
     TCapturedSsaCaptureNode(SsaVariableCapture capture) or
     /** A synthesized variable read from the shared SSA library. */
     TSsaSynthReadNode(Ssa2::SsaSynthReadNode read) or
-    /** The variable value at a read, separate from the expression occurrence. */
-    TSharedSsaReadNode(Ssa2::ExprNode read) { read.getExpr() instanceof VarUse } or
+    /** The variable or 'this' value at a read, separate from the expression occurrence. */
+    TSharedSsaReadNode(Ssa2::ExprNode read) or
     TCapturedVariableNode(LocalVariable v) { v.isCaptured() } or
     TPropNode(@property p) or
     TRestPatternNode(DestructuringPattern dp, Expr rest) { rest = dp.getRest() } or

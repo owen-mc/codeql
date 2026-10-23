@@ -41,9 +41,9 @@ class SsaSynthReadNode extends DataFlow::Node, TSsaSynthReadNode {
   override File getFile() { result = read.getBasicBlock().getFile() }
 }
 
-/** A variable value at a read that can flow past a barrier on just one expression occurrence. */
+/** A variable or 'this' value at a read that can flow past a barrier on just one expression occurrence. */
 class SharedSsaReadNode extends DataFlow::Node, TSharedSsaReadNode {
-  private VarUse read;
+  private ControlFlowNode read;
 
   SharedSsaReadNode() {
     this = TSharedSsaReadNode(any(Ssa2::ExprNode node | node.getExpr() = read))
@@ -1239,7 +1239,7 @@ Node getNodeFromSsa2(Ssa2::Node node) {
 private Node getSharedSsaFlowNode(Ssa2::Node node) {
   result = TSharedSsaReadNode(node)
   or
-  not node.(Ssa2::ExprNode).getExpr() instanceof VarUse and
+  not node instanceof Ssa2::ExprNode and
   result = DataFlow::getNodeFromSharedSsa(node)
 }
 

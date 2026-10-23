@@ -1785,8 +1785,12 @@ module DataFlow {
       )
     )
     or
-    // flow from 'this' parameter into 'this' expressions
+    // flow from 'this' parameter into 'this' expressions when not handled by shared SSA
     exists(ThisExpr thiz |
+      (
+        LocalVariableOrThis::thisInContainer(thiz.getBindingContainer()).isCaptured() or
+        not thiz.getBasicBlock() instanceof ReachableBasicBlock
+      ) and
       pred = TThisNode(thiz.getBindingContainer()) and
       succ = TValueNode(thiz)
     )
@@ -1797,8 +1801,12 @@ module DataFlow {
       succ = TValueNode(call)
     )
     or
-    // Pass 'this' into implicit uses of 'this'
+    // Pass 'this' into implicit uses of 'this' when not handled by shared SSA
     exists(ImplicitThisUse use |
+      (
+        LocalVariableOrThis::thisInContainer(use.getBindingContainer()).isCaptured() or
+        not use.(ControlFlowNode).getBasicBlock() instanceof ReachableBasicBlock
+      ) and
       pred = TThisNode(use.getBindingContainer()) and
       succ = TImplicitThisUse(use, false)
     )
