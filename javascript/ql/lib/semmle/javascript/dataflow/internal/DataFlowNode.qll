@@ -45,7 +45,12 @@ private module Cached {
       write.getVariable().(LocalVariable).isCaptured()
     } or
     /** A JavaScript-specific SSA phi definition. */
-    TLegacySsaPhiNode(SsaPhiNode phi) or
+    TLegacySsaPhiNode(SsaPhiNode phi) {
+      not exists(Ssa2::SsaDefinitionNode shared |
+        shared.getDefinition().(Ssa2::PhiNode).getBasicBlock() = phi.getBasicBlock() and
+        shared.getDefinition().getSourceVariable().asLocalVariable() = phi.getSourceVariable()
+      )
+    } or
     /** The implicit initialization of a captured variable. */
     TCapturedSsaInitNode(LocalVariable variable) { variable.isCaptured() } or
     /** A JavaScript-specific capture definition. */

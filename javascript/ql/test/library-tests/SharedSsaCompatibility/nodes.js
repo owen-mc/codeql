@@ -6,7 +6,7 @@ function ordinaryPhiNodes(condition, otherCondition) {
     value = "second";
   }
   if (otherCondition) {
-    CHECK(value); // $ uniquePhiDefinition phiReachesCheck globalPhiReachesCheck MISSING: phiNodeMetadata
+    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata phiReachesCheck globalPhiReachesCheck
   } else {
     use(value);
   }
@@ -17,7 +17,7 @@ function refinedPhiNodes(value, condition) {
     value = "safe";
   }
   if (condition) {
-    CHECK(value); // $ phiNodeMetadata phiReachesCheck globalPhiReachesCheck MISSING: uniquePhiDefinition
+    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata phiReachesCheck globalPhiReachesCheck
   } else {
     use(value);
   }
@@ -36,7 +36,7 @@ function nestedPhiNodes(firstCondition, secondCondition, thirdCondition) {
     value = "third";
   }
   if (thirdCondition) {
-    CHECK(value); // $ uniquePhiDefinition MISSING: phiNodeMetadata phiReachesCheck globalPhiReachesCheck
+    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata MISSING: phiReachesCheck globalPhiReachesCheck
   } else {
     use(value);
   }

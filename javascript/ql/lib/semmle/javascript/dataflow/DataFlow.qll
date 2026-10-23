@@ -315,12 +315,7 @@ module DataFlow {
         ssa.(SsaExplicitDefinition).getLhs() = write
       )
       or
-      this = TLegacySsaPhiNode(ssa) and
-      (
-        refinementOverlayDefinition(ssa)
-        or
-        not exists(sharedSsaNode(ssa))
-      )
+      this = TLegacySsaPhiNode(ssa)
       or
       exists(LocalVariable variable |
         this = TCapturedSsaInitNode(variable) and
@@ -359,30 +354,6 @@ module DataFlow {
     override File getFile() { result = write.getFile() }
 
     override AstNode getAstNode() { result = write }
-  }
-
-  /** A shared SSA definition for `this`. */
-  private class SharedThisSsaDefinitionNode extends Node, TSharedSsaDefNode {
-    Ssa2::SsaConfig::SourceVariable var;
-    BasicBlock bb;
-    int index;
-
-    SharedThisSsaDefinitionNode() {
-      this = TSharedSsaDefNode(var, bb, index) and
-      exists(var.asThisContainer())
-    }
-
-    override BasicBlock getBasicBlock() { result = bb }
-
-    override Location getLocation() {
-      if index = -1 then result = bb.getLocation() else result = bb.getNode(index).getLocation()
-    }
-
-    override string toString() { result = var.toString() }
-
-    override File getFile() { result = bb.getFile() }
-
-    override AstNode getAstNode() { none() }
   }
 
   /**
@@ -1550,16 +1521,6 @@ module DataFlow {
     ssa instanceof SsaVariableCapture and
     result = TCapturedSsaCaptureNode(ssa)
     or
-    ssa instanceof SsaPhiNode and
-    ssa.getSourceVariable().isCaptured() and
-    result = TLegacySsaPhiNode(ssa)
-    or
-    refinementOverlayDefinition(ssa) and
-    ssa instanceof SsaPhiNode and
-    result = TLegacySsaPhiNode(ssa)
-    or
-    ssa instanceof SsaPhiNode and
-    not exists(sharedSsaNode(ssa)) and
     result = TLegacySsaPhiNode(ssa)
   }
 
