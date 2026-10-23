@@ -64,7 +64,7 @@ function postUpdateBeforeCompatibilityPhi(value) {
 
 function postUpdateImmediatePredecessor(value) {
   value.property = SOURCE("update-immediate-predecessor");
-  SINK(value); // $ postUpdateFlow=update-immediate-predecessor MISSING: noImmediatePostUpdate=update-immediate-predecessor
+  SINK(value); // $ postUpdateFlow=update-immediate-predecessor noImmediatePostUpdate=update-immediate-predecessor
 }
 
 class SharedSsaBase {}

@@ -1747,9 +1747,6 @@ module DataFlow {
 
   private predicate sharedImmediateFlowStep(Ssa2::Node pred, Ssa2::Node succ) {
     Ssa2::localMustFlowStep(_, pred, succ)
-    or
-    pred instanceof Ssa2::ExprPostUpdateNode and
-    Ssa2::localFlowStep(_, pred, succ, true)
   }
 
   private predicate sharedPhiImmediateFlowStep(EarlyStageNode pred, EarlyStageNode succ) {

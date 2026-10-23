@@ -1164,8 +1164,6 @@ getImmediatePredecessor
 | arguments.js:2:14:2:14 | f | arguments.js:11:5:11:5 | f |
 | arguments.js:2:16:2:16 | x | arguments.js:2:16:2:16 | x |
 | arguments.js:2:16:2:16 | x | arguments.js:3:24:3:24 | x |
-| arguments.js:4:28:4:36 | [post update] arguments | arguments.js:5:25:5:33 | arguments |
-| arguments.js:5:25:5:33 | [post update] arguments | arguments.js:6:20:6:28 | arguments |
 | arguments.js:6:13:6:16 | args | arguments.js:7:24:7:27 | args |
 | arguments.js:6:20:6:28 | arguments | arguments.js:6:13:6:16 | args |
 | arguments.js:8:9:8:17 | arguments | arguments.js:9:27:9:35 | arguments |
@@ -1250,7 +1248,6 @@ getImmediatePredecessor
 | tst.js:32:10:32:10 | g | tst.js:35:1:35:1 | g |
 | tst.js:32:10:32:10 | g | tst.js:60:1:60:1 | g |
 | tst.js:32:10:32:10 | g | tst.js:62:4:62:4 | g |
-| tst.js:35:1:35:1 | [post update] g | tst.js:60:1:60:1 | g |
 | tst.js:37:5:37:5 | o | tst.js:43:1:43:1 | o |
 | tst.js:37:5:37:5 | o | tst.js:44:1:44:1 | o |
 | tst.js:37:5:37:5 | o | tst.js:61:3:61:3 | o |
@@ -1261,13 +1258,10 @@ getImmediatePredecessor
 | tst.js:37:5:37:5 | o | tst.js:85:23:85:23 | o |
 | tst.js:37:9:42:1 | {\\n  x:  ... ;\\n  }\\n} | tst.js:37:5:37:5 | o |
 | tst.js:39:4:39:3 | this | tst.js:40:5:40:8 | this |
-| tst.js:43:1:43:1 | [post update] o | tst.js:44:1:44:1 | o |
-| tst.js:44:1:44:1 | [post update] o | tst.js:61:3:61:3 | o |
 | tst.js:46:10:46:11 | "" | tst.js:46:1:46:11 | global = "" |
 | tst.js:49:1:54:1 | class A ... `\\n  }\\n} | tst.js:49:7:49:7 | A |
 | tst.js:49:7:49:7 | A | tst.js:55:1:55:1 | A |
 | tst.js:50:14:50:13 | this | tst.js:51:5:51:9 | implicit 'this' |
-| tst.js:61:3:61:3 | [post update] o | tst.js:62:1:62:1 | o |
 | tst.js:64:1:67:1 | functio ... lysed\\n} | tst.js:64:11:64:11 | h |
 | tst.js:64:11:64:11 | h | tst.js:68:12:68:12 | h |
 | tst.js:68:5:68:8 | iter | tst.js:69:1:69:4 | iter |
