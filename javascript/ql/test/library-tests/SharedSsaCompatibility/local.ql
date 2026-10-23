@@ -1,4 +1,6 @@
 import javascript
+import semmle.javascript.dataflow.internal.DataFlowNode
+import semmle.javascript.dataflow.internal.sharedlib.Ssa as Ssa2
 import utils.test.InlineExpectationsTest
 
 private DataFlow::PostUpdateNode postUpdateForSource(string value) {
@@ -16,7 +18,7 @@ module InlineTest implements TestSig {
     result =
       [
         "localFlow", "postUpdateFlow", "noPostUpdateFlow", "noImmediatePostUpdate", "noSuperFlow",
-        "noThisSelfFlow"
+        "noThisSelfFlow", "superPostUpdateToThisFlow", "fieldReadContainerMismatch"
       ]
   }
 
@@ -77,6 +79,25 @@ module InlineTest implements TestSig {
         thisNode = DataFlow::thisNode(constructor) and
         not thisNode.getASuccessor() = thisNode and
         location = call.getLocation()
+      )
+      or
+      tag = "superPostUpdateToThisFlow" and
+      value = "" and
+      exists(SuperCall call, Function constructor, ThisExpr thiz |
+        constructor = call.getEnclosingFunction() and
+        thiz.getBinder() = constructor and
+        DataFlow::valueNode(call.getCallee()).getPostUpdateNode().getASuccessor+() =
+          DataFlow::valueNode(thiz) and
+        location = call.getLocation()
+      )
+      or
+      tag = "fieldReadContainerMismatch" and
+      value = "" and
+      exists(FieldDefinition field, Ssa2::ExprNode read, DataFlow::Node node |
+        read.getExpr() = field and
+        node = TSharedSsaReadNode(read) and
+        node.getContainer() != field.getDeclaringClass().getConstructor().getBody() and
+        location = field.getLocation()
       )
     )
   }
