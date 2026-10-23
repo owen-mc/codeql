@@ -44,13 +44,16 @@ private module Cached {
     TRefinementNode(SsaRefinementNode refinement) or
     /** A write to a captured variable. */
     TCapturedVariableWriteNode(VarRef write) {
-      write instanceof LValue and
+      any(SsaExplicitDefinition def).getLhs() = write and
       write.getVariable().(LocalVariable).isCaptured()
     } or
     /** An SSA phi definition for a captured variable. */
     TLegacySsaPhiNode(SsaPhiNode phi) { phi.getSourceVariable().isCaptured() } or
     /** The implicit initialization of a captured variable. */
-    TCapturedSsaInitNode(LocalVariable variable) { variable.isCaptured() } or
+    TCapturedSsaInitNode(LocalVariable variable) {
+      any(SsaImplicitInit init).getSourceVariable() = variable and
+      variable.isCaptured()
+    } or
     /** A JavaScript-specific capture definition. */
     TCapturedSsaCaptureNode(SsaVariableCapture capture) or
     /** A synthesized variable read from the shared SSA library. */

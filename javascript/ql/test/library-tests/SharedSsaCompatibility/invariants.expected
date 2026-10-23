@@ -12,4 +12,7 @@ ambiguousReadNode
 nonUniqueSsaDefinition
 nonUniqueSsaVariable
 missingSsaNodeMetadata
+orphanSsaDefinitionNode
+ssaDefinitionHasAstNode
+unmappedWriteDefSourceNode
 postUpdateMustFlow

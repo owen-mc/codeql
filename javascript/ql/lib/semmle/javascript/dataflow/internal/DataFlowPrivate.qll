@@ -32,12 +32,13 @@ class SsaSynthReadNode extends DataFlow::Node, TSsaSynthReadNode {
   override string toString() { result = "[ssa-synth-read] " + read.getSourceVariable().getName() }
 
   cached
-  override StmtContainer getContainer() {
-    result = read.getSourceVariable().getDeclaringContainer()
-  }
+  override BasicBlock getBasicBlock() { result = read.getBasicBlock() }
 
   cached
   override Location getLocation() { result = read.getLocation() }
+
+  cached
+  override File getFile() { result = read.getBasicBlock().getFile() }
 }
 
 class FlowSummaryNode extends DataFlow::Node, TFlowSummaryNode {

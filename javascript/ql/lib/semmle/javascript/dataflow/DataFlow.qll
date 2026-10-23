@@ -44,13 +44,7 @@ module DataFlow {
         legacy.definesAt(bb, sharedIndex, local)
         or
         sharedIndex = -1 and
-        bb instanceof EntryBasicBlock and
-        bb.getContainer() = local.getDeclaringContainer() and
-        legacy.(SsaExplicitDefinition).getDef() = any(SimpleParameter p | p.getVariable() = local)
-        or
-        sharedIndex = -1 and
         legacy instanceof SsaImplicitInit and
-        not local.isParameter() and
         legacy.definesAt(bb, 0, local)
       )
     )
@@ -339,23 +333,6 @@ module DataFlow {
     override File getFile() { result = ssa.getBasicBlock().getFile() }
 
     override AstNode getAstNode() { none() }
-  }
-
-  /** A data-flow node representing a write to a captured variable. */
-  private class CapturedVariableWriteNode extends Node, TCapturedVariableWriteNode {
-    VarRef write;
-
-    CapturedVariableWriteNode() { this = TCapturedVariableWriteNode(write) }
-
-    override BasicBlock getBasicBlock() { result = write.getBasicBlock() }
-
-    override Location getLocation() { result = write.getLocation() }
-
-    override string toString() { result = write.toString() }
-
-    override File getFile() { result = write.getFile() }
-
-    override AstNode getAstNode() { result = write }
   }
 
   /** A variable value that can flow past a barrier on just one expression occurrence. */
@@ -1632,15 +1609,11 @@ module DataFlow {
     exists(Ssa2::Definition ssa, BasicBlock bb, int i, Ssa2::SsaConfig::SourceVariable var |
       ssa.definesAt(var, bb, i) and
       var.asLocalVariable() = lvalue.(VarRef).getVariable() and
-      bb.defAt(i, var.asLocalVariable(), lvalue.(LValue).getDefNode()) and
+      bb.defAt(i, var.asLocalVariable(), lvalue.(LValue).getDefNode(), lvalue) and
       result = TSharedSsaDefNode(var, bb, i)
     )
     or
-    exists(LocalVariable captured |
-      captured = lvalue.(VarRef).getVariable() and
-      captured.isCaptured() and
-      result = TCapturedVariableWriteNode(lvalue)
-    )
+    result = TCapturedVariableWriteNode(lvalue)
     or
     result = TValueNode(lvalue.(DestructuringPattern))
   }
@@ -2122,17 +2095,7 @@ module DataFlow {
       def.definesAt(var, bb, i) and
       bb.defAt(i, var.asLocalVariable(), write) and
       write.getTarget() instanceof VarRef and
-      result = TValueNode(defSourceNode(write))
-    )
-    or
-    exists(
-      Ssa2::WriteDefinition def, Ssa2::SsaConfig::SourceVariable var, EntryBasicBlock bb,
-      SimpleParameter parameter
-    |
-      node.(Ssa2::WriteDefSourceNode).getDefinition() = def and
-      def.definesAt(var, bb, -1) and
-      var.asLocalVariable() = parameter.getVariable() and
-      result = TValueNode(parameter)
+      result = TValueNode(write.getSource())
     )
     or
     exists(Ssa2::WriteDefinition def, Ssa2::SsaConfig::SourceVariable var, EntryBasicBlock bb |

@@ -18,6 +18,7 @@ query predicate missingSsaNodeMetadata(DataFlow::Node node) {
   (
     node instanceof TSharedSsaDefNode or
     node instanceof TSharedSsaReadNode or
+    node instanceof TSsaSynthReadNode or
     node instanceof TRefinementNode or
     node instanceof TLegacySsaPhiNode or
     node instanceof TCapturedVariableWriteNode or
@@ -31,6 +32,27 @@ query predicate missingSsaNodeMetadata(DataFlow::Node node) {
     exists(node.getLocation()) and
     exists(node.getFile())
   )
+}
+
+query predicate orphanSsaDefinitionNode(DataFlow::Node node) {
+  (
+    node instanceof TSharedSsaDefNode or
+    node instanceof TRefinementNode or
+    node instanceof TLegacySsaPhiNode or
+    node instanceof TCapturedVariableWriteNode or
+    node instanceof TCapturedSsaInitNode or
+    node instanceof TCapturedSsaCaptureNode
+  ) and
+  not node instanceof DataFlow::SsaDefinitionNode
+}
+
+query predicate ssaDefinitionHasAstNode(DataFlow::SsaDefinitionNode node, AstNode ast) {
+  ast = node.getAstNode()
+}
+
+query predicate unmappedWriteDefSourceNode(Ssa2::WriteDefSourceNode node, int mapped) {
+  mapped = count(DataFlow::getNodeFromSharedSsa(node)) and
+  mapped != 1
 }
 
 query predicate postUpdateMustFlow(DataFlow::PostUpdateNode update, DataFlow::Node node) {

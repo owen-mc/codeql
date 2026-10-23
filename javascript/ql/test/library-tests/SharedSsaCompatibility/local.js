@@ -79,6 +79,19 @@ function capturedRefinementLocalFlow() {
   }
 }
 
+function parameterReadBeforeDeclaration(first = second, second = SOURCE("later-parameter")) {
+  SINK(first);
+  SINK(second); // $ localFlow=later-parameter
+}
+
+function unreachableLocalSsaCode() {
+  const liveBeforeReturn = "safe";
+  return liveBeforeReturn;
+  const deadLocal = "dead";
+  use(deadLocal);
+  use(liveBeforeReturn);
+}
+
 class SharedSsaBase {}
 
 class SharedSsaDerived extends SharedSsaBase {

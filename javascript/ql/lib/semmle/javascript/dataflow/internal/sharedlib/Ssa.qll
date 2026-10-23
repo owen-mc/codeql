@@ -24,25 +24,31 @@ module SsaConfig implements InputSig<js::Location, js::Cfg::BasicBlock> {
   }
 
   predicate variableWrite(js::Cfg::BasicBlock bb, int i, SourceVariable v, boolean certain) {
-    certain = true and
+    bb instanceof js::ReachableBasicBlock and
     (
-      bb.defAt(i, v.asLocalVariable(), _)
+      certain = true and
+      (
+        bb.defAt(i, v.asLocalVariable(), _)
+        or
+        // Implicit initialization
+        bb = getEntryBlock(v.getDeclaringContainer().getFunctionBoundary()) and
+        i = -1
+      )
       or
-      // Implicit initialization and function parameters
-      bb = getEntryBlock(v.getDeclaringContainer()) and
-      i = -1
+      // Refinements preserve the input value but introduce a new SSA definition.
+      certain = false and
+      any(js::SsaRefinementNode refinement).definesAt(bb, i, v.asLocalVariable())
     )
-    or
-    // Refinements preserve the input value but introduce a new SSA definition.
-    certain = false and
-    any(js::SsaRefinementNode refinement).definesAt(bb, i, v.asLocalVariable())
   }
 
   predicate variableRead(js::Cfg::BasicBlock bb, int i, SourceVariable v, boolean certain) {
-    bb.useAt(i, v.asLocalVariable(), _) and certain = true
-    or
+    bb instanceof js::ReachableBasicBlock and
     certain = true and
-    bb.getNode(i).(ThisUse).getBindingContainer() = v.asThisContainer()
+    (
+      bb.useAt(i, v.asLocalVariable(), _)
+      or
+      bb.getNode(i).(ThisUse).getBindingContainer() = v.asThisContainer()
+    )
   }
 }
 
@@ -63,10 +69,9 @@ module SsaDataflowInput implements DataFlowIntegrationInputSig {
       (
         exists(js::VarDef write |
           bb.defAt(i, v.asLocalVariable(), write) and
-          write.getTarget() instanceof js::VarRef
+          write.getTarget() instanceof js::VarRef and
+          exists(write.getSource())
         )
-        or
-        i = -1 and v.asLocalVariable() = any(js::SimpleParameter p).getVariable()
         or
         i = -1 and exists(v.asThisContainer())
       )
