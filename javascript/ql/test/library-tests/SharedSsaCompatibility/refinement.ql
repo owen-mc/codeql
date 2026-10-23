@@ -4,6 +4,8 @@ import utils.test.InlineExpectationsTest
 module RefinementConfig implements DataFlow::ConfigSig {
   predicate isSource(DataFlow::Node source) {
     source.(DataFlow::InvokeNode).getCalleeName() = "SOURCE"
+    or
+    source = any(DataFlow::InvokeNode call | call.getCalleeName() = "READ_SOURCE").getArgument(0)
   }
 
   predicate isSink(DataFlow::Node sink) {
@@ -52,10 +54,20 @@ module InlineTest implements TestSig {
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
     element = "" and
-    location.getFile().getBaseName() = "refinement.js" and
-    exists(DataFlow::InvokeNode source, DataFlow::InvokeNode sink, VarRef sinkArgument |
-      source.getCalleeName() = "SOURCE" and
-      value = source.getArgument(0).getStringValue() and
+    location.getFile().getBaseName() = ["refinement.js", "namespace.ts"] and
+    exists(
+      DataFlow::InvokeNode sourceCall, DataFlow::Node source, DataFlow::InvokeNode sink,
+      VarRef sinkArgument
+    |
+      (
+        sourceCall.getCalleeName() = "SOURCE" and
+        source = sourceCall and
+        value = sourceCall.getArgument(0).getStringValue()
+        or
+        sourceCall.getCalleeName() = "READ_SOURCE" and
+        source = sourceCall.getArgument(0) and
+        value = sourceCall.getArgument(1).getStringValue()
+      ) and
       sink.getCalleeName() = ["SINK", "BLOCKED_SINK"] and
       source.getContainer() = sink.getContainer() and
       sink.getArgument(0) = DataFlow::valueNode(sinkArgument) and
@@ -69,10 +81,10 @@ module InlineTest implements TestSig {
         or
         tag = "noRefinementTaint" and not RefinementTaint::flow(source, sink.getArgument(0))
         or
-        tag = "localRefinementFlow" and source.flowsTo(sink.getArgument(0))
+        tag = "localRefinementFlow" and source.getASuccessor*() = sink.getArgument(0)
         or
         tag = "noRefinementBypass" and
-        source.flowsTo(sink.getArgument(0)) and
+        source.getASuccessor*() = sink.getArgument(0) and
         not localStepWithoutRefinement*(source, sink.getArgument(0))
         or
         tag = "barrier" and

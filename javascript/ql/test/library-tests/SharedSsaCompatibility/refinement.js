@@ -189,4 +189,55 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
     }
     SINK(value); // $ refinementFlow=occurrence-barriers-before-join refinementTaint=occurrence-barriers-before-join localRefinementFlow=occurrence-barriers-before-join
   }
+
+  function readOccurrenceSourceDoesNotContaminateVariable() {
+    const value = "safe";
+    READ_SOURCE(value, "read-occurrence-source");
+    SINK(value); // $ MISSING: noRefinementFlow=read-occurrence-source noRefinementTaint=read-occurrence-source SPURIOUS: localRefinementFlow=read-occurrence-source refinementFlow=read-occurrence-source refinementTaint=read-occurrence-source
+  }
+
+  function indirectBarrierGuardWithReadBeforeJoin() {
+    let value = SOURCE("indirect-barrier-read-join");
+    const ok = BARRIER(value);
+    if (ok) {
+      use(value);
+    } else {
+      value = "safe";
+    }
+    SINK(value); // $ localRefinementFlow=indirect-barrier-read-join MISSING: noRefinementFlow=indirect-barrier-read-join noRefinementTaint=indirect-barrier-read-join SPURIOUS: refinementFlow=indirect-barrier-read-join refinementTaint=indirect-barrier-read-join
+  }
+
+  function indirectBarrierGuardEmptyBranchBeforeJoin() {
+    let value = SOURCE("indirect-barrier-empty-join");
+    const ok = BARRIER(value);
+    if (ok) {
+    } else {
+      value = "safe";
+    }
+    SINK(value); // $ localRefinementFlow=indirect-barrier-empty-join MISSING: noRefinementFlow=indirect-barrier-empty-join noRefinementTaint=indirect-barrier-empty-join SPURIOUS: refinementFlow=indirect-barrier-empty-join refinementTaint=indirect-barrier-empty-join
+  }
+
+  function indirectBarrierGuardAfterRefinementBeforeJoin() {
+    let value = SOURCE("indirect-barrier-after-refinement-join");
+    const ok = BARRIER(value);
+    if (typeof value === "object") {
+      if (ok) {
+      } else {
+        value = "safe";
+      }
+      SINK(value); // $ localRefinementFlow=indirect-barrier-after-refinement-join noRefinementBypass=indirect-barrier-after-refinement-join MISSING: noRefinementFlow=indirect-barrier-after-refinement-join noRefinementTaint=indirect-barrier-after-refinement-join SPURIOUS: refinementFlow=indirect-barrier-after-refinement-join refinementTaint=indirect-barrier-after-refinement-join
+    }
+  }
+
+  function barrierGuardInsideWithStatement(scopeObject) {
+    let value = SOURCE("barrier-in-with");
+    with (scopeObject) {
+      if (BARRIER(value)) {
+        use(value);
+      } else {
+        value = "safe";
+      }
+    }
+    SINK(value); // $ localRefinementFlow=barrier-in-with MISSING: noRefinementFlow=barrier-in-with noRefinementTaint=barrier-in-with SPURIOUS: refinementFlow=barrier-in-with refinementTaint=barrier-in-with
+  }
 }

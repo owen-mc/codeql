@@ -1,9 +1,14 @@
 import "dummy";
 
-let capturedWrite = 0; // $ capturedWrite=capturedWrite ssaDefinition=capturedWrite
+let capturedWrite = 0; // $ capturedWrite=capturedWrite ssaDefinition=capturedWrite MISSING: noSsaAstNode=capturedWrite
 
 function readCaptured() {
   return capturedWrite; // $ noCapturedWrite=capturedWrite
+}
+
+function unreachableCapturedWrites() {
+  return;
+  capturedWrite = 2; // $ SPURIOUS: capturedWrite=capturedWrite MISSING: noCapturedWrite=capturedWrite
 }
 
 function writeCaptured() {

@@ -29,8 +29,8 @@ module InlineTest implements TestSig {
   string getARelevantTag() {
     result =
       [
-        "capturedWrite", "noCapturedWrite", "ssaDefinition", "localCapturedFlow", "capturedFlow",
-        "legacyCapturedFlow"
+        "capturedWrite", "noCapturedWrite", "ssaDefinition", "noSsaAstNode", "localCapturedFlow",
+        "capturedFlow", "legacyCapturedFlow"
       ]
   }
 
@@ -58,6 +58,14 @@ module InlineTest implements TestSig {
         node = DataFlow::lvalueNode(write) and
         node = DataFlow::ssaDefinitionNode(definition) and
         node.getSsaVariable() = definition.getVariable() and
+        location = write.getLocation() and
+        value = write.getVariable().getName()
+      )
+      or
+      tag = "noSsaAstNode" and
+      exists(VarDecl write |
+        write.getVariable().getName() = "capturedWrite" and
+        not exists(DataFlow::lvalueNode(write).getAstNode()) and
         location = write.getLocation() and
         value = write.getVariable().getName()
       )
