@@ -45,6 +45,28 @@ function compatibilityPhiPostUpdateReads(value) {
   }
 }
 
+function postUpdateBeforeNestedRefinement(value) {
+  if (value) {
+    value.property = SOURCE("update-before-refinement");
+    if (typeof value === "object") {
+      SINK(value); // $ MISSING: postUpdateFlow=update-before-refinement SPURIOUS: noPostUpdateFlow=update-before-refinement
+    }
+  }
+}
+
+function postUpdateBeforeCompatibilityPhi(value) {
+  if (value) {
+    value.property = SOURCE("update-before-phi");
+    use(value);
+  }
+  SINK(value); // $ MISSING: postUpdateFlow=update-before-phi SPURIOUS: noPostUpdateFlow=update-before-phi
+}
+
+function postUpdateImmediatePredecessor(value) {
+  value.property = SOURCE("update-immediate-predecessor");
+  SINK(value); // $ postUpdateFlow=update-immediate-predecessor MISSING: noImmediatePostUpdate=update-immediate-predecessor
+}
+
 class SharedSsaBase {}
 
 class SharedSsaDerived extends SharedSsaBase {

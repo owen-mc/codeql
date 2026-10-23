@@ -96,4 +96,81 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
       SINK(value); // $ noRefinementFlow=filtered-phi-input noRefinementTaint=filtered-phi-input localRefinementFlow=filtered-phi-input noRefinementBypass=filtered-phi-input refinementFlow=replacement-phi-input refinementTaint=replacement-phi-input localRefinementFlow=replacement-phi-input
     }
   }
+
+  function emptyRefinementBranches() {
+    const value = SOURCE("empty-refinement-branches");
+    if (value) {}
+    SINK(value); // $ refinementFlow=empty-refinement-branches refinementTaint=empty-refinement-branches MISSING: localRefinementFlow=empty-refinement-branches noRefinementBypass=empty-refinement-branches
+  }
+
+  function nestedSingleReadPhis(firstCondition, secondCondition) {
+    let value;
+    if (firstCondition) {
+      if (secondCondition) {
+        value = SOURCE("nested-single-read-phis");
+      } else {
+        value = "safe";
+      }
+      otherOperation();
+    } else {
+      value = "safe";
+    }
+    SINK(value); // $ refinementFlow=nested-single-read-phis refinementTaint=nested-single-read-phis MISSING: localRefinementFlow=nested-single-read-phis
+  }
+
+  function nestedMultipleReadPhis(firstCondition, secondCondition, thirdCondition) {
+    let value;
+    if (firstCondition) {
+      if (secondCondition) {
+        value = SOURCE("nested-multiple-read-phis");
+      } else {
+        value = "safe";
+      }
+      otherOperation();
+    } else {
+      value = "safe";
+    }
+    if (thirdCondition) {
+      SINK(value); // $ refinementFlow=nested-multiple-read-phis refinementTaint=nested-multiple-read-phis localRefinementFlow=nested-multiple-read-phis
+    } else {
+      use(value);
+    }
+  }
+
+  function refinementAfterGuardedJoin(condition) {
+    const value = SOURCE("refinement-after-guarded-join");
+    if (value) {
+      if (condition) {
+        if (!BARRIER(value)) return;
+      } else {
+        if (!BARRIER(value)) return;
+      }
+      if (typeof value === "object") {
+        SINK(value); // $ localRefinementFlow=refinement-after-guarded-join noRefinementBypass=refinement-after-guarded-join MISSING: noRefinementFlow=refinement-after-guarded-join noRefinementTaint=refinement-after-guarded-join SPURIOUS: refinementFlow=refinement-after-guarded-join refinementTaint=refinement-after-guarded-join
+      }
+    }
+  }
+
+  function conditionalReadInsideFalsyRefinement(condition) {
+    const value = SOURCE("conditional-read-in-refinement");
+    if (!value) {
+      if (condition) {
+        use(value);
+      }
+      SINK(value); // $ barrier=conditional-read-in-refinement noRefinementTaint=conditional-read-in-refinement localRefinementFlow=conditional-read-in-refinement MISSING: noRefinementFlow=conditional-read-in-refinement noRefinementBypass=conditional-read-in-refinement SPURIOUS: refinementFlow=conditional-read-in-refinement
+    }
+  }
+
+  function independentPhiInputRefinements(condition, otherCondition) {
+    let value = SOURCE("independent-phi-inputs");
+    if (condition) {
+    } else if (value) {
+      value = "safe";
+    }
+    if (otherCondition) {
+      SINK(value); // $ localRefinementFlow=independent-phi-inputs MISSING: refinementFlow=independent-phi-inputs refinementTaint=independent-phi-inputs SPURIOUS: noRefinementFlow=independent-phi-inputs noRefinementTaint=independent-phi-inputs noRefinementBypass=independent-phi-inputs
+    } else {
+      use(value);
+    }
+  }
 }

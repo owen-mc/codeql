@@ -13,7 +13,11 @@ private DataFlow::PostUpdateNode postUpdateForSource(string value) {
 
 module InlineTest implements TestSig {
   string getARelevantTag() {
-    result = ["localFlow", "postUpdateFlow", "noPostUpdateFlow", "noSuperFlow", "noThisSelfFlow"]
+    result =
+      [
+        "localFlow", "postUpdateFlow", "noPostUpdateFlow", "noImmediatePostUpdate", "noSuperFlow",
+        "noThisSelfFlow"
+      ]
   }
 
   predicate hasActualResult(Location location, string element, string tag, string value) {
@@ -45,6 +49,16 @@ module InlineTest implements TestSig {
         update = postUpdateForSource(value) and
         update.getContainer() = sink.getContainer() and
         not update.getASuccessor+() = sink.getArgument(0) and
+        location = sink.getLocation()
+      )
+      or
+      tag = "noImmediatePostUpdate" and
+      value = "update-immediate-predecessor" and
+      exists(DataFlow::InvokeNode sink, DataFlow::PostUpdateNode update |
+        sink.getCalleeName() = "SINK" and
+        update = postUpdateForSource(value) and
+        update.getContainer() = sink.getContainer() and
+        not sink.getArgument(0).getImmediatePredecessor() = update and
         location = sink.getLocation()
       )
       or

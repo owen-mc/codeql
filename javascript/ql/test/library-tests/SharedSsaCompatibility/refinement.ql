@@ -70,6 +70,7 @@ module InlineTest implements TestSig {
         tag = "localRefinementFlow" and source.flowsTo(sink.getArgument(0))
         or
         tag = "noRefinementBypass" and
+        source.flowsTo(sink.getArgument(0)) and
         not localStepWithoutRefinement*(source, sink.getArgument(0))
         or
         tag = "barrier" and
