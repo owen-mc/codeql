@@ -1,1 +1,3 @@
-WARNING: type 'Configuration' has been deprecated and may be removed in future (captured.ql:20,36-59)
+WARNING: type 'BarrierGuardNode' has been deprecated and may be removed in future (captured.ql:33,40-66)
+WARNING: type 'BarrierGuardNode' has been deprecated and may be removed in future (captured.ql:44,37-63)
+WARNING: type 'Configuration' has been deprecated and may be removed in future (captured.ql:37,36-59)

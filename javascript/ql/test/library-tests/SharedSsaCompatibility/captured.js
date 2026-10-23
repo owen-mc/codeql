@@ -89,3 +89,12 @@ function readTopLevelPhi() {
   SINK(topLevelPhi); // $ capturedFlow=top-level-phi legacyCapturedFlow=top-level-phi
 }
 readTopLevelPhi();
+
+function legacyGuardedPhi(condition) {
+  let value = SOURCE("legacy-guarded-phi");
+  if (condition && BARRIER(value)) {
+  } else {
+    value = "safe";
+  }
+  SINK(value); // $ SPURIOUS: legacyCapturedFlow=legacy-guarded-phi
+}

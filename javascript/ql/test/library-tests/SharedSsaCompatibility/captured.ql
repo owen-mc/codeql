@@ -13,9 +13,26 @@ module CapturedConfig implements DataFlow::ConfigSig {
       sink = call.getArgument(0)
     )
   }
+
+  predicate isBarrier(DataFlow::Node node) {
+    node = DataFlow::MakeBarrierGuard<SimpleBarrierGuard>::getABarrierNode()
+  }
 }
 
 module CapturedFlow = DataFlow::Global<CapturedConfig>;
+
+class SimpleBarrierGuard extends DataFlow::InvokeNode {
+  SimpleBarrierGuard() { this.getCalleeName() = "BARRIER" }
+
+  predicate blocksExpr(boolean outcome, Expr expr) {
+    outcome = true and
+    expr = this.getArgument(0).asExpr()
+  }
+}
+
+class LegacySimpleBarrierGuard extends DataFlow::BarrierGuardNode, SimpleBarrierGuard {
+  override predicate blocks(boolean outcome, Expr expr) { this.blocksExpr(outcome, expr) }
+}
 
 class LegacyCapturedConfig extends DataFlow::Configuration {
   LegacyCapturedConfig() { this = "LegacyCapturedConfig" }
@@ -23,6 +40,10 @@ class LegacyCapturedConfig extends DataFlow::Configuration {
   override predicate isSource(DataFlow::Node source) { CapturedConfig::isSource(source) }
 
   override predicate isSink(DataFlow::Node sink) { CapturedConfig::isSink(sink) }
+
+  override predicate isBarrierGuard(DataFlow::BarrierGuardNode guard) {
+    guard instanceof LegacySimpleBarrierGuard
+  }
 }
 
 module InlineTest implements TestSig {
