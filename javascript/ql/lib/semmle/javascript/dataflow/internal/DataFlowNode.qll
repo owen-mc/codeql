@@ -56,10 +56,12 @@ private module Cached {
     } or
     /** A JavaScript-specific capture definition. */
     TCapturedSsaCaptureNode(SsaVariableCapture capture) or
-    /** A synthesized variable read from the shared SSA library. */
-    TSsaSynthReadNode(Ssa2::SsaSynthReadNode read) or
+    /** A synthesized phi input, phi read, or post-update continuation. */
+    TSsaSynthReadNode(Ssa2::Node read) {
+      read instanceof Ssa2::SsaSynthReadNode or Ssa2::isPostUpdateRead(read)
+    } or
     /** The variable or 'this' value at a read, separate from the expression occurrence. */
-    TSharedSsaReadNode(Ssa2::ExprNode read) or
+    TSharedSsaReadNode(Ssa2::ExprNode read) { not Ssa2::isPostUpdateRead(read) } or
     TCapturedVariableNode(LocalVariable v) { v.isCaptured() } or
     TPropNode(@property p) or
     TRestPatternNode(DestructuringPattern dp, Expr rest) { rest = dp.getRest() } or

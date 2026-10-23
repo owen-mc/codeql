@@ -5,7 +5,11 @@ import utils.test.InlineExpectationsTest
 
 private DataFlow::PostUpdateNode postUpdateForSource(string value) {
   exists(Assignment assignment, PropAccess property, DataFlow::InvokeNode source |
-    assignment.getTarget() = property and
+    (
+      assignment.getTarget() = property
+      or
+      assignment.getTarget().(ArrayPattern).getElement(0) = property
+    ) and
     assignment.getRhs() = source.asExpr() and
     source.getCalleeName() = "SOURCE" and
     source.getArgument(0).getStringValue() = value and
@@ -75,7 +79,9 @@ module InlineTest implements TestSig {
         value =
           [
             "store-completion", "call-completion", "nested-call-completion",
-            "overwritten-call-argument", "loop-completion"
+            "overwritten-call-argument", "loop-completion", "refined-call-argument",
+            "computed-store-completion", "exceptional-call-completion",
+            "destructuring-store-completion"
           ] and
         sink.getCalleeName() = "SINK" and
         update = postUpdateForSource(value) and

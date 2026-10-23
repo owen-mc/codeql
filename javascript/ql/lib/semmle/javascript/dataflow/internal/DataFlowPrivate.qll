@@ -24,21 +24,33 @@ private class Node = DataFlow::Node;
 class PostUpdateNode = DataFlow::PostUpdateNode;
 
 class SsaSynthReadNode extends DataFlow::Node, TSsaSynthReadNode {
-  private Ssa2::SsaSynthReadNode read;
+  private Ssa2::Node read;
 
   SsaSynthReadNode() { this = TSsaSynthReadNode(read) }
 
   cached
-  override string toString() { result = "[ssa-synth-read] " + read.getSourceVariable().getName() }
+  override string toString() {
+    exists(string variable |
+      variable = read.(Ssa2::SsaSynthReadNode).getSourceVariable().getName()
+      or
+      variable = read.(Ssa2::ExprNode).getSourceVariable().getName()
+    |
+      result = "[ssa-synth-read] " + variable
+    )
+  }
 
   cached
-  override BasicBlock getBasicBlock() { result = read.getBasicBlock() }
+  override BasicBlock getBasicBlock() {
+    result = read.(Ssa2::SsaSynthReadNode).getBasicBlock()
+    or
+    result = read.(Ssa2::ExprNode).getExpr().getBasicBlock()
+  }
 
   cached
   override Location getLocation() { result = read.getLocation() }
 
   cached
-  override File getFile() { result = read.getBasicBlock().getFile() }
+  override File getFile() { result = this.getBasicBlock().getFile() }
 }
 
 /** A variable or 'this' value at a read that can flow past a barrier on just one expression occurrence. */
@@ -1244,7 +1256,7 @@ Node getNodeFromSsa2(Ssa2::Node node) {
 private Node getSharedSsaFlowNode(Ssa2::Node node) {
   result = TSharedSsaReadNode(node)
   or
-  not node instanceof Ssa2::ExprNode and
+  (not node instanceof Ssa2::ExprNode or Ssa2::isPostUpdateRead(node)) and
   result = DataFlow::getNodeFromSharedSsa(node)
 }
 

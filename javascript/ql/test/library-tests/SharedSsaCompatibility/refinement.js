@@ -180,6 +180,12 @@ function filteredPhiInputWithReplacement(condition, otherCondition) {
     SINK(value); // $ localRefinementFlow=occurrence-barrier refinementFlow=occurrence-barrier refinementTaint=occurrence-barrier
   }
 
+  function guardedCallResultDoesNotValidateArgument() {
+    const value = SOURCE("guarded-call-result");
+    if (!BARRIER(transform(value))) return;
+    SINK(value); // $ localRefinementFlow=guarded-call-result refinementFlow=guarded-call-result refinementTaint=guarded-call-result
+  }
+
   function occurrenceSpecificBarriersBeforeJoin(condition) {
     const value = SOURCE("occurrence-barriers-before-join");
     if (condition) {

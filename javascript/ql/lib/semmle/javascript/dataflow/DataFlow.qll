@@ -1713,6 +1713,7 @@ module DataFlow {
   private predicate sharedReadInsideWith(Ssa2::Node node) {
     exists(Ssa2::ExprNode read, WithStmt with |
       node = read and
+      not Ssa2::isPostUpdateRead(read) and
       read.getExpr().(AstNode).getParent+() = with.getBody()
     )
   }
@@ -2024,6 +2025,7 @@ module DataFlow {
   EarlyStageNode getNodeFromSharedSsa(Ssa2::Node node) {
     exists(Ssa2::ExprNode read |
       node = read and
+      not Ssa2::isPostUpdateRead(read) and
       not read.getExpr() instanceof ImplicitThisUse and
       result = TValueNode(read.getExpr())
     )
@@ -2036,6 +2038,7 @@ module DataFlow {
     or
     exists(Ssa2::ExprPostUpdateNode post |
       node = post and
+      not Ssa2::isPostUpdateRead(post.getPreUpdateNode()) and
       not post.getExpr() instanceof ImplicitThisUse and
       result = TExprPostUpdateNode(post.getExpr())
     )

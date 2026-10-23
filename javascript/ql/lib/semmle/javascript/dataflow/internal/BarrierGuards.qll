@@ -338,6 +338,7 @@ module MakeStateBarrierGuard<
     exists(BarrierGuard g, ConditionGuardNode cond |
       cond.getTest() = guard and
       barrierGuardUsedInCondition(g, cond, branch) and
+      Ssa2::isExplicitRead(test) and
       g.blocksExpr(branch, test, state)
     )
   }

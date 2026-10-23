@@ -19,12 +19,12 @@ function postUpdateOrdering(value) {
 }
 
 function assignmentUpdateCompletion(value) {
-  value.property = SOURCE("store-completion", SINK(value)); // $ MISSING: noPostUpdateFlow=store-completion noGlobalPostUpdateFlow=store-completion SPURIOUS: postUpdateFlow=store-completion globalPostUpdateFlow=store-completion
+  value.property = SOURCE("store-completion", SINK(value)); // $ noPostUpdateFlow=store-completion noGlobalPostUpdateFlow=store-completion
   SINK(value); // $ postUpdateFlow=store-completion globalPostUpdateFlow=store-completion
 }
 
 function callUpdateCompletion(value) {
-  UPDATE("call-completion", value, SINK(value)); // $ MISSING: noPostUpdateFlow=call-completion noGlobalPostUpdateFlow=call-completion SPURIOUS: postUpdateFlow=call-completion globalPostUpdateFlow=call-completion
+  UPDATE("call-completion", value, SINK(value)); // $ noPostUpdateFlow=call-completion noGlobalPostUpdateFlow=call-completion
   SINK(value); // $ postUpdateFlow=call-completion globalPostUpdateFlow=call-completion
 }
 
@@ -35,6 +35,39 @@ function nestedCallUpdateCompletion(value) {
 function overwrittenCallArgument(value) {
   UPDATE("overwritten-call-argument", value, value = {});
   SINK(value); // $ noPostUpdateFlow=overwritten-call-argument noGlobalPostUpdateFlow=overwritten-call-argument
+}
+
+function unusedOverwrittenCallArgument(value) {
+  UPDATE("unused-overwritten-call-argument", value, value = {});
+}
+
+function refinedCallArgument(value) {
+  UPDATE("refined-call-argument", value, typeof value === "object" ? 1 : 2);
+  SINK(value); // $ postUpdateFlow=refined-call-argument globalPostUpdateFlow=refined-call-argument
+}
+
+function computedStoreCompletion(value) {
+  value[
+    SINK(value) // $ noPostUpdateFlow=computed-store-completion noGlobalPostUpdateFlow=computed-store-completion
+  ] = SOURCE(
+    "computed-store-completion",
+    SINK(value) // $ noPostUpdateFlow=computed-store-completion noGlobalPostUpdateFlow=computed-store-completion
+  );
+  SINK(value); // $ postUpdateFlow=computed-store-completion globalPostUpdateFlow=computed-store-completion
+}
+
+function destructuringStoreCompletion(value) {
+  [value.first, value[SINK(value)]] = SOURCE("destructuring-store-completion"); // $ postUpdateFlow=destructuring-store-completion globalPostUpdateFlow=destructuring-store-completion
+  SINK(value); // $ postUpdateFlow=destructuring-store-completion globalPostUpdateFlow=destructuring-store-completion
+}
+
+function exceptionalCallUpdate(value) {
+  try {
+    UPDATE("exceptional-call-completion", value);
+  } catch (error) {
+    SINK(value); // $ postUpdateFlow=exceptional-call-completion globalPostUpdateFlow=exceptional-call-completion
+  }
+  SINK(value); // $ postUpdateFlow=exceptional-call-completion globalPostUpdateFlow=exceptional-call-completion
 }
 
 function loopUpdateCompletion(value) {
