@@ -18,6 +18,42 @@ function postUpdateOrdering(value) {
   SINK(value); // $ postUpdateFlow=post-update
 }
 
+function assignmentUpdateCompletion(value) {
+  value.property = SOURCE("store-completion", SINK(value)); // $ MISSING: noPostUpdateFlow=store-completion noGlobalPostUpdateFlow=store-completion SPURIOUS: postUpdateFlow=store-completion globalPostUpdateFlow=store-completion
+  SINK(value); // $ postUpdateFlow=store-completion globalPostUpdateFlow=store-completion
+}
+
+function callUpdateCompletion(value) {
+  UPDATE("call-completion", value, SINK(value)); // $ MISSING: noPostUpdateFlow=call-completion noGlobalPostUpdateFlow=call-completion SPURIOUS: postUpdateFlow=call-completion globalPostUpdateFlow=call-completion
+  SINK(value); // $ postUpdateFlow=call-completion globalPostUpdateFlow=call-completion
+}
+
+function nestedCallUpdateCompletion(value) {
+  use(UPDATE("nested-call-completion", value), SINK(value)); // $ postUpdateFlow=nested-call-completion globalPostUpdateFlow=nested-call-completion
+}
+
+function overwrittenCallArgument(value) {
+  UPDATE("overwritten-call-argument", value, value = {});
+  SINK(value); // $ noPostUpdateFlow=overwritten-call-argument noGlobalPostUpdateFlow=overwritten-call-argument
+}
+
+function loopUpdateCompletion(value) {
+  while (condition()) {
+    SINK(value); // $ postUpdateFlow=loop-completion globalPostUpdateFlow=loop-completion
+    UPDATE("loop-completion", value);
+    SINK(value); // $ postUpdateFlow=loop-completion globalPostUpdateFlow=loop-completion
+  }
+}
+
+function reflectiveReadInference() {
+  const value = () => 42;
+  CHECK_TYPE(value); // $ noReflectiveValue
+  with ({}) {
+    CHECK_TYPE(value); // $ reflectiveValue
+  }
+  CHECK_TYPE(value); // $ noReflectiveValue
+}
+
 function nestedRefinementPostUpdate(value) {
   if (value) {
     if (typeof value === "object") {

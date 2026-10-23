@@ -11,14 +11,31 @@ private DataFlow::PostUpdateNode postUpdateForSource(string value) {
     source.getArgument(0).getStringValue() = value and
     result.getPreUpdateNode() = DataFlow::valueNode(property.getBase())
   )
+  or
+  exists(DataFlow::InvokeNode call |
+    call.getCalleeName() = "UPDATE" and
+    call.getArgument(0).getStringValue() = value and
+    result.getPreUpdateNode() = call.getArgument(1)
+  )
 }
+
+module PostUpdateConfig implements DataFlow::ConfigSig {
+  predicate isSource(DataFlow::Node source) { source = postUpdateForSource(_) }
+
+  predicate isSink(DataFlow::Node sink) {
+    sink = any(DataFlow::InvokeNode call | call.getCalleeName() = "SINK").getArgument(0)
+  }
+}
+
+module PostUpdateFlow = DataFlow::Global<PostUpdateConfig>;
 
 module InlineTest implements TestSig {
   string getARelevantTag() {
     result =
       [
         "localFlow", "postUpdateFlow", "noPostUpdateFlow", "noImmediatePostUpdate", "noSuperFlow",
-        "noThisSelfFlow", "superPostUpdateToThisFlow", "fieldReadContainerMismatch"
+        "noThisSelfFlow", "superPostUpdateToThisFlow", "fieldReadContainerMismatch",
+        "globalPostUpdateFlow", "noGlobalPostUpdateFlow", "reflectiveValue", "noReflectiveValue"
       ]
   }
 
@@ -52,6 +69,36 @@ module InlineTest implements TestSig {
         update.getContainer() = sink.getContainer() and
         not update.getASuccessor+() = sink.getArgument(0) and
         location = sink.getLocation()
+      )
+      or
+      exists(DataFlow::InvokeNode sink, DataFlow::PostUpdateNode update |
+        value =
+          [
+            "store-completion", "call-completion", "nested-call-completion",
+            "overwritten-call-argument", "loop-completion"
+          ] and
+        sink.getCalleeName() = "SINK" and
+        update = postUpdateForSource(value) and
+        update.getContainer() = sink.getContainer() and
+        location = sink.getLocation() and
+        (
+          tag = "globalPostUpdateFlow" and PostUpdateFlow::flow(update, sink.getArgument(0))
+          or
+          tag = "noGlobalPostUpdateFlow" and not PostUpdateFlow::flow(update, sink.getArgument(0))
+        )
+      )
+      or
+      exists(DataFlow::InvokeNode call |
+        call.getCalleeName() = "CHECK_TYPE" and
+        location = call.getLocation() and
+        value = "" and
+        (
+          tag = "reflectiveValue" and
+          call.getArgument(0).analyze().getALocalValue().isIndefinite("eval")
+          or
+          tag = "noReflectiveValue" and
+          not call.getArgument(0).analyze().getALocalValue().isIndefinite("eval")
+        )
       )
       or
       tag = "noImmediatePostUpdate" and

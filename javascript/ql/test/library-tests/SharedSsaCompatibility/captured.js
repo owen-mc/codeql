@@ -98,3 +98,17 @@ function legacyGuardedPhi(condition) {
   }
   SINK(value);
 }
+
+function legacyGuardedWithReads(condition) {
+  let value = SOURCE("legacy-with-guard");
+  use(value);
+  with ({}) {
+    if (condition) {
+      if (!BARRIER(value)) return;
+      use(value);
+    } else {
+      value = "safe";
+    }
+  }
+  SINK(value); // $ SPURIOUS: legacyCapturedFlow=legacy-with-guard
+}
