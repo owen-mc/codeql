@@ -1,8 +1,11 @@
 import javascript
 import semmle.javascript.dataflow.internal.DataFlowNode
+import semmle.javascript.dataflow.internal.DataFlowImplConsistency as DataFlowImplConsistency
 import semmle.javascript.dataflow.internal.sharedlib.Ssa as Ssa2
 import Ssa2::Consistency
 import Ssa2::DfConsistency
+
+query predicate localFlowIsLocal = DataFlowImplConsistency::Consistency::localFlowIsLocal/3;
 
 query predicate nonUniqueSsaDefinition(SsaDefinition definition, int nodes) {
   nodes = count(DataFlow::ssaDefinitionNode(definition)) and

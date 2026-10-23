@@ -1160,21 +1160,6 @@ private predicate isBlockedLegacyNode(Node node) {
   legacyBarrier(node)
 }
 
-private predicate isBlockedLegacyPredecessor(Node node) {
-  isBlockedLegacyNode(node)
-  or
-  exists(SsaPhiNode phi |
-    node = TLegacySsaPhiNode(phi) and
-    phi.getSourceVariable().isCaptured()
-  )
-}
-
-private predicate isBlockedLegacySuccessor(Node node) {
-  isBlockedLegacyNode(node)
-  or
-  exists(SsaPhiNode phi | node = TLegacySsaPhiNode(phi))
-}
-
 /**
  * Holds if `thisNode` represents a value of `this` that is being tracked by the
  * variable capture library.
@@ -1220,9 +1205,12 @@ private predicate imprecisePostUpdateStep(DataFlow::PostUpdateNode postUpdate, D
  */
 overlay[global]
 private predicate valuePreservingStep(Node node1, Node node2) {
-  DataFlow::localFlowStepForGlobal(node1, node2) and
-  not isBlockedLegacyPredecessor(node1) and
-  not isBlockedLegacySuccessor(node2) and
+  (
+    DataFlow::localFlowStepForGlobal(node1, node2) or
+    sharedSsaFlow(node1, node2)
+  ) and
+  not isBlockedLegacyNode(node1) and
+  not isBlockedLegacyNode(node2) and
   not isThisNodeTrackedByVariableCapture(node1)
   or
   imprecisePostUpdateStep(node1, node2)
@@ -1282,8 +1270,6 @@ predicate simpleLocalFlowStep(Node node1, Node node2) {
   valuePreservingStep(node1, node2) and
   nodeGetEnclosingCallable(pragma[only_bind_out](node1)) =
     nodeGetEnclosingCallable(pragma[only_bind_out](node2))
-  or
-  sharedSsaFlow(node1, node2)
   or
   exists(FlowSummaryImpl::Private::SummaryNode input, FlowSummaryImpl::Private::SummaryNode output |
     FlowSummaryPrivate::Steps::summaryStoreStep(input, MkAwaited(), output) and

@@ -16,3 +16,4 @@ orphanSsaDefinitionNode
 ssaDefinitionHasAstNode
 unmappedWriteDefSourceNode
 postUpdateMustFlow
+localFlowIsLocal

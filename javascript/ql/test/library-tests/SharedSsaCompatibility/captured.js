@@ -84,7 +84,7 @@ if (unknownCondition()) {
 } else {
   topLevelPhi = "safe"; // $ ssaDefinition=topLevelPhi
 }
-SINK(topLevelPhi); // $ legacyCapturedFlow=top-level-phi MISSING: capturedFlow=top-level-phi
+SINK(topLevelPhi); // $ capturedFlow=top-level-phi legacyCapturedFlow=top-level-phi
 function readTopLevelPhi() {
   SINK(topLevelPhi); // $ capturedFlow=top-level-phi legacyCapturedFlow=top-level-phi
 }

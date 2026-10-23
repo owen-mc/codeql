@@ -54,7 +54,7 @@ function capturedPhiNodes(condition, otherCondition) {
   }
   capture();
   if (otherCondition) {
-    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata phiReachesCheck MISSING: globalPhiReachesCheck
+    CHECK(value); // $ uniquePhiDefinition phiNodeMetadata phiReachesCheck globalPhiReachesCheck
   } else {
     use(value);
   }
